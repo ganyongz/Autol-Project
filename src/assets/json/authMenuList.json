@@ -827,6 +827,20 @@
       },
       "children": [
         {
+          "path": "/system/user",
+          "name": "userList",
+          "component": "/system/user/userList",
+          "meta": {
+            "icon": "Menu",
+            "title": "用户管理",
+            "isLink": "",
+            "isHide": false,
+            "isFull": false,
+            "isAffix": false,
+            "isKeepAlive": true
+          }
+        },
+        {
           "path": "/system/accountManage",
           "name": "accountManage",
           "component": "/system/accountManage/index",
