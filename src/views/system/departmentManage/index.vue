@@ -70,10 +70,13 @@
 
       <el-main style="border-radius: 10px">
         <el-scrollbar>
-          <el-table :data="tableData">
-            <el-table-column prop="date" label="Date" width="140" />
-            <el-table-column prop="name" label="Name" width="120" />
-            <el-table-column prop="address" label="Address" />
+          <el-table :data="tableData" height="800px">
+            <el-table-column prop="date" label="部门名称" width="140" />
+            <el-table-column prop="name" label="部门编号" width="120" />
+            <el-table-column prop="address" label="部门简称" />
+            <el-table-column prop="address" label="部门类型" />
+            <el-table-column prop="address" label="排序" />
+            <el-table-column prop="address" label="地址" />
           </el-table>
         </el-scrollbar>
       </el-main>
