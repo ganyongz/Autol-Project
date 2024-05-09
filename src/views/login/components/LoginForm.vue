@@ -22,7 +22,7 @@
   <div class="login-btn">
     <el-button :icon="CircleClose" round size="large" @click="resetForm(loginFormRef)"> 重置 </el-button>
     <el-button :icon="UserFilled" round size="large" type="primary" :loading="loading" @click="login(loginFormRef)">
-      登录 111
+      登录 1
     </el-button>
   </div>
 </template>
@@ -57,7 +57,7 @@ const loginRules = reactive({
 
 const loading = ref(false);
 const loginForm = reactive<Login.ReqLoginForm>({
-  userName: "test2",
+  userName: "",
   password: "p123456"
 });
 

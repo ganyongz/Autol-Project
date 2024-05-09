@@ -1,43 +1,99 @@
 <template>
-  <div class="table-box">
-    <ProTable ref="proTable" title="菜单列表" row-key="path" :indent="20" :columns="columns" :data="menuData">
-      <!-- 表格 header 按钮 -->
-      <template #tableHeader>
-        <el-button type="primary" :icon="CirclePlus">新增菜单 </el-button>
-      </template>
-      <!-- 菜单图标 -->
-      <template #icon="scope">
-        <el-icon :size="18">
-          <component :is="scope.row.meta.icon"></component>
-        </el-icon>
-      </template>
-      <!-- 菜单操作 -->
-      <template #operation>
-        <el-button type="primary" link :icon="EditPen"> 编辑 </el-button>
-        <el-button type="primary" link :icon="Delete"> 删除 </el-button>
-      </template>
-    </ProTable>
+  <div>
+    <!-- 菜单管理 -->
+    <el-button type="primary" @click="addRootMenu">新增菜单</el-button>
+    <el-table :data="tableData" style="width: 100%; margin-bottom: 20px" row-key="id" border default-expand-all>
+      <el-table-column prop="title" label="菜单名称" />
+      <el-table-column prop="url" label="菜单路由" />
+      <el-table-column prop="icon" label="图标" />
+      <el-table-column prop="iconType" label="菜单/按钮">
+        <template #default="scope">
+          <span v-if="scope.row.iconType == '1'">按钮</span>
+          <span v-else>菜单</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="isActive" label="状态">
+        <template #default="scope">
+          <span v-if="scope.row.isActive == '0'"> 禁用 </span>
+          <span v-else>启用</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="description" label="描述" />
+      <el-table-column fixed="right" label="操作" width="220">
+        <template #default="scope">
+          <el-button link type="primary" @click="edit(scope.row)"> 编辑 </el-button>
+          <el-button link type="primary" @click="addLevel(scope.row)"> 新增下级 </el-button>
+          <el-button link type="danger" @click="deleteFun([scope.row.id])">删除</el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+    <addEdit
+      :visible="dialogVisible"
+      :dynamic-title="title"
+      :row-data="rowData"
+      @close-dialog="handleDialogClose"
+      @submit-form="submitEvent"
+      v-if="dialogVisible"
+    />
   </div>
 </template>
 
-<script setup lang="ts" name="menuMange">
-import { ref } from "vue";
-import { ColumnProps } from "@/components/ProTable/interface";
-import { Delete, EditPen, CirclePlus } from "@element-plus/icons-vue";
-import authMenuList from "@/assets/json/authMenuList.json";
-import ProTable from "@/components/ProTable/index.vue";
+<script lang="ts" setup>
+import { ref, onBeforeMount } from "vue";
+import addEdit from "@/views/system/menuMange/addEdit.vue";
+import { getMenuList, deleteByIds } from "@/api/system/menuMange";
+import { useHandleData } from "@/hooks/useHandleData";
+import { ElMessage } from "element-plus";
 
-const proTable = ref();
+let tableData = ref([]);
+const addLevel = (row: any) => {
+  rowData.value = row;
+  dialogVisible.value = true;
+  title.value = "新增下级";
+};
+onBeforeMount(() => {
+  getMenuListFun();
+});
+// 新增
+const dialogVisible = ref(false);
+const title = ref("新增");
+const addRootMenu = () => {
+  rowData.value = {};
+  dialogVisible.value = true; //打开
+  title.value = "新增";
+};
+const handleDialogClose = () => {
+  dialogVisible.value = false; //关闭
+};
+// 保存
+const submitEvent = () => {
+  dialogVisible.value = false;
+  getMenuListFun();
+};
+// 编辑
+const rowData = ref();
+const edit = (row: any) => {
+  rowData.value = row;
+  dialogVisible.value = true;
+  title.value = "编辑";
+};
+// 获取菜单列表
+// const internalInstance = getCurrentInstance();
+const getMenuListFun = async () => {
+  let res: any = await getMenuList();
+  if (res.code == "200") {
+    tableData.value = res.data as any;
+    // internalInstance.ctx.$forceUpdate();
+    console.log(tableData.value, "菜单table");
+  } else {
+    ElMessage.error(res?.mssage);
+  }
+};
 
-const menuData = ref(authMenuList.data);
-
-// 表格配置项
-const columns: ColumnProps[] = [
-  { prop: "meta.title", label: "菜单名称", align: "left", search: { el: "input" } },
-  { prop: "meta.icon", label: "菜单图标" },
-  { prop: "name", label: "菜单 name", search: { el: "input" } },
-  { prop: "path", label: "菜单路径", width: 300, search: { el: "input" } },
-  { prop: "component", label: "组件路径", width: 300 },
-  { prop: "operation", label: "操作", width: 250, fixed: "right" }
-];
+// 删除
+const deleteFun = async (id: any) => {
+  await useHandleData(deleteByIds, id, `删除`);
+  getMenuListFun();
+};
 </script>
+<style scoped lang="scss"></style>

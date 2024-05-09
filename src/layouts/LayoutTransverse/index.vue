@@ -20,7 +20,7 @@
           </el-sub-menu>
           <el-menu-item v-else :key="subItem.path + 'el-menu-item'" :index="subItem.path" @click="handleClickMenu(subItem)">
             <el-icon>
-              <component :is="subItem.meta.icon"></component>
+              <component :is="subItem.meta.icon ? subItem.meta.icon : ''"></component>
             </el-icon>
             <template #title>
               <span>{{ subItem.meta.title }}</span>

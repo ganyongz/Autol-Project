@@ -179,7 +179,7 @@ const addLevelDepart = () => {
   Object.keys(formData.value).forEach(key => (formData.value[key] = ""));
   formData.value.parentId = setParentId.value;
 };
-// 删除部门
+// 删除
 const deleteDepart = async () => {
   await useHandleData(deleteDepartById, { id: formData.value?.id }, `删除【${formData.value.deptName}】部门`);
   departTreeFun();
