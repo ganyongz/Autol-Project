@@ -897,6 +897,21 @@
           }
         },
         {
+          "path": "/system/functionPosition",
+          "name": "functionPosition",
+          "component": "/system/functionPosition/index",
+          "meta": {
+            "icon": "Menu",
+            "title": "功能位置",
+            "isLink": "",
+            "isHide": false,
+            "isFull": false,
+            "isAffix": false,
+            "isKeepAlive": true
+          }
+        },
+
+        {
           "path": "/system/dictManage",
           "name": "dictManage",
           "component": "/system/dictManage/index",

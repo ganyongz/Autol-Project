@@ -36,7 +36,7 @@
         <el-input v-model="ruleForm.icon" autocomplete="off" />
       </el-form-item>
 
-      <el-form-item label="父级id" :label-width="formLabelWidth">
+      <el-form-item label="父级id" :label-width="formLabelWidth" readonly>
         <el-input v-model="ruleForm.parentId" autocomplete="off" />
       </el-form-item>
 

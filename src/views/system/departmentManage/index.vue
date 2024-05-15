@@ -132,7 +132,6 @@ const departTreeFun = async () => {
   } else {
     ElMessage.error(res?.mssage);
   }
-  console.log(res, "获取部门树");
 };
 departTreeFun();
 // 默认展开
@@ -161,7 +160,6 @@ const submitFun = async () => {
 // 点击部门
 const setParentId = ref();
 const handleNode = (val: any) => {
-  console.log("节点数据", val);
   formData.value.id = val.id;
   formData.value.address = val?.address; //字段里没有
   formData.value.deptType = val?.deptType;
