@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="screenAdd">
-      <el-select v-model="params.type" placeholder="请选择用户类型" style="width: 240px; margin-left: 20px" class="mRight">
+      <el-select v-model="params.type" placeholder="请选择用户类型" style="width: 240px" class="mRight">
         <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
       </el-select>
       <el-input v-model="params.userName" style="width: 240px" class="mRight" placeholder="请输入用户名" />
@@ -111,6 +111,9 @@ defineExpose({ multipleSelection });
   border: 1px solid var(--el-border-color-light);
   border-radius: 6px;
   box-shadow: 0 0 12px rgb(0 0 0 / 5%);
+  div {
+    margin: 5px;
+  }
 }
 .mRight {
   margin-right: 20px;

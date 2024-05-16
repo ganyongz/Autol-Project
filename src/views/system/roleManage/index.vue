@@ -14,6 +14,7 @@
           :data="treeData"
           :props="defaultProps"
           @node-click="handleNodeClick"
+          highlight-current
           :expand-on-click-node="false"
         >
           <template #default="{ node, data }">
@@ -174,7 +175,7 @@ const editRole = (val: any) => {
   IsShowAdd.value = true;
   myDialog1.value.open();
 };
-// 绑定用户=========================================
+// 绑定用户
 const addUsersRef = ref();
 const title2 = ref("新增角色用户");
 const myDialog2 = ref();

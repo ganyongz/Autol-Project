@@ -2,10 +2,19 @@ import http from "@/api";
 /**
  * @name 部门管理模块
  */
-// 部门列表
-// export const getUserListByPage = (params: any) => {
-//   return http.post(`Lub/UserController/Page`, params);
-// };
+// 部门下用户分页查询
+export const getDeptUserPage = (params: any) => {
+  return http.post(`Lub/dept/deptUserPage`, params);
+};
+// 部门下删除用户
+export const deptDeleteUser = (params: any) => {
+  return http.post(`Lub/dept/deptDeleteUser`, params);
+};
+// 部门下新增用户
+export const deptAddUser = (params: any) => {
+  return http.post(`Lub/dept/deptAddUser`, params);
+};
+
 // 部门结构树
 export const getDepartTree = () => {
   return http.post(`Lub/dept/tree`);

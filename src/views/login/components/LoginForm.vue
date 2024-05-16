@@ -69,7 +69,7 @@ const login = (formEl: FormInstance | undefined) => {
     loading.value = true;
     try {
       // 1.执行登录接口
-      const { data } = await loginApi1({ ...loginForm });
+      const { data }: { [key: string]: any } = await loginApi1({ ...loginForm });
       userStore.setToken(data.token);
       userStore.setUserType(data.userType);
       // 2.添加动态路由
