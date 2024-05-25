@@ -176,12 +176,20 @@ const formData = ref({
 });
 // 添加顶级部门
 const addRootDepart = () => {
-  Object.keys(formData.value).forEach(key => (formData.value[key] = ""));
+  Object.keys(formData.value).forEach(key => {
+    if (key !== "type") {
+      formData.value[key] = "";
+    }
+  });
   formData.value.parentId = "-1";
 };
 // 添加下级部门
 const addLevelDepart = () => {
-  Object.keys(formData.value).forEach(key => (formData.value[key] = ""));
+  Object.keys(formData.value).forEach(key => {
+    if (key !== "type") {
+      formData.value[key] = "";
+    }
+  });
   formData.value.parentId = setParentId.value;
 };
 // 新增或编辑
