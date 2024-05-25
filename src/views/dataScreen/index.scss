@@ -1,7 +1,9 @@
 .dataScreen-container {
   width: 100%;
   height: 100%;
-  background: url("./images/bg.png") no-repeat;
+  background: url("./images/big_bg01.png") no-repeat;
+
+  // background: url("./images/bg.png") no-repeat;
   background-repeat: no-repeat;
   background-attachment: fixed;
   background-position: center;
@@ -9,7 +11,7 @@
   background-size: cover;
   .dataScreen-content {
     position: fixed;
-    top: 50%;
+    top: 45%;
     left: 50%;
     z-index: 999;
     display: flex;
@@ -109,12 +111,12 @@
       display: flex;
       flex: 1;
       width: 100%;
-      padding: 12px 42px 20px;
+      padding: 60px 42px 0;
       .dataScreen-lf {
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-        width: 394px;
+        width: 750px;
         height: 100%;
         margin-right: 40px;
         .dataScreen-top,
@@ -126,7 +128,7 @@
           padding-top: 54px;
         }
         .dataScreen-top {
-          height: 37%;
+          height: 48%;
           background: url("./images/dataScreen-main-lt.png") no-repeat;
           background-size: 100% 100%;
         }
@@ -136,7 +138,7 @@
           background-size: 100% 100%;
         }
         .dataScreen-bottom {
-          height: 27%;
+          height: 48%;
           margin-bottom: 0;
           background: url("./images/dataScreen-main-lb.png") no-repeat;
           background-size: 100% 100%;
@@ -216,7 +218,7 @@
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-        width: 394px;
+        width: 750px;
         height: 100%;
         .dataScreen-top,
         .dataScreen-center,
@@ -227,7 +229,7 @@
           padding-top: 54px;
         }
         .dataScreen-top {
-          height: 37%;
+          height: 48%;
           background: url("./images/dataScreen-main-rt.png") no-repeat;
           background-size: 100% 100%;
         }
@@ -237,7 +239,7 @@
           background-size: 100% 100%;
         }
         .dataScreen-bottom {
-          height: 27%;
+          height: 48%;
           margin-bottom: 0;
           background: url("./images/dataScreen-main-rb.png") no-repeat;
           background-size: 100% 100%;
@@ -252,19 +254,21 @@
         span {
           margin-bottom: 12px;
           font-family: YouSheBiaoTiHei;
-          font-size: 18px;
-          line-height: 16px;
+          font-size: 30px;
+          line-height: 30px;
           color: #ffffff;
           letter-spacing: 1px;
         }
         img {
-          width: 68px;
-          height: 7px;
+          width: 100px;
+          height: 10px;
         }
       }
       .dataScreen-main-chart {
         width: 100%;
         height: 100%;
+        margin: 0 auto;
+        text-align: center;
       }
     }
   }

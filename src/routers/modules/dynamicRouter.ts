@@ -39,7 +39,7 @@ export const initDynamicRouter = async () => {
       if (item.component && typeof item.component == "string") {
         item.component = modules["/src/views" + item.component + ".vue"];
       }
-      if (item.meta.isFull) {
+      if (item.meta.title == "驾驶舱") {
         router.addRoute(item as unknown as RouteRecordRaw);
       } else {
         router.addRoute("layout", item as unknown as RouteRecordRaw);
