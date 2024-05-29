@@ -30,3 +30,11 @@ export const addRoleUser = (params: any) => {
 export const noBindRoleUserPage = (params: any) => {
   return http.post(`Lub/role/noBindRoleUserPage`, params);
 };
+// 角色关联菜单
+export const role_addMenu = (params: any) => {
+  return http.post(`Lub/role/addMenu`, params);
+};
+// 角色关联菜单
+export const role_roleMenuList = (params: any) => {
+  return http.get(`Lub/role/roleMenuList`, {}, { params });
+};

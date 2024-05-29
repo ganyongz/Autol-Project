@@ -33,6 +33,7 @@
       <el-container>
         <el-header>
           <el-button style="margin-left: 10px" type="primary" @click="bindUsers">绑定用户</el-button>
+          <el-button style="margin-left: 10px" type="primary" @click="bindMeus">绑定菜单</el-button>
         </el-header>
         <el-main>
           <el-table :data="tableData" style="width: 100%">
@@ -58,7 +59,6 @@
             </el-table-column>
           </el-table>
         </el-main>
-        <!-- <el-footer>Footer</el-footer> -->
       </el-container>
     </el-container>
     <!-- 新增角色弹框 -->
@@ -86,18 +86,31 @@
         </div>
       </template>
     </myDialog>
+    <!-- 绑定菜单弹框 -->
+    <myDialog :title="title3" ref="myDialog3" draggable width="900px" :before-close="beforeClose3">
+      <template #content>
+        <addMenu ref="addMenusRef" :key="menuKey" :role-id="roleId"></addMenu>
+      </template>
+      <template #footer>
+        <div style="text-align: center">
+          <el-button type="primary" size="default" @click="submitMenus">保存</el-button>
+          <el-button size="default" @click="beforeClose3">取消</el-button>
+        </div>
+      </template>
+    </myDialog>
   </div>
 </template>
 
 <script setup lang="ts" name="roleManage">
 import { ref } from "vue";
 import { ElMessage } from "element-plus";
-import { getRoleList, deleteRoleByIds, getUserList, addRoleUser, deleteRoleUser } from "@/api/system/roleManage";
+import { getRoleList, deleteRoleByIds, getUserList, addRoleUser, deleteRoleUser, role_addMenu } from "@/api/system/roleManage";
 import { useHandleData } from "@/hooks/useHandleData";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import myDialog from "@/components/dialog/myDialog.vue";
 import addEditRole from "@/views/system/roleManage/addEditRole.vue";
 import addUsers from "@/views/system/roleManage/userList.vue";
+import addMenu from "@/views/system/roleManage/menuList.vue";
 let tableData = ref();
 interface Tree {
   label: string;
@@ -193,10 +206,8 @@ const bindUsers = () => {
 };
 const submitUsers = async () => {
   //绑定用户
-  console.log(addUsersRef.value.multipleSelection);
   const objectsArray = addUsersRef.value.multipleSelection.length > 0 ? addUsersRef.value.multipleSelection : [];
   const idsArray = objectsArray.map(obj => obj.id);
-  console.log("ids", idsArray);
   let res: any = await addRoleUser({ roleId: roleId.value, userIdList: idsArray });
   if (res.code == "200") {
     ElMessage.success("绑定成功");
@@ -211,11 +222,40 @@ const deleteFun = async (ids: any) => {
   await useHandleData(deleteRoleUser, { roleId: roleId.value, userIdList: ids }, `删除`);
   getUserListFun(roleId.value); //刷新列表
 };
+// 绑定菜单 -----------------
+const addMenusRef = ref();
+const title3 = ref("绑定角色菜单");
+const myDialog3 = ref();
+const beforeClose3 = () => {
+  myDialog3.value.close();
+};
+let menuKey = ref(0);
+const bindMeus = () => {
+  if (!!roleId.value) {
+    menuKey.value++;
+    myDialog3.value.open();
+  } else {
+    ElMessage.warning("请选择一个角色分组");
+  }
+};
+const submitMenus = async () => {
+  let res: any = await role_addMenu({ roleId: roleId.value, menuIdList: addMenusRef.value.checkedArrIds });
+  if (res.code == "200") {
+    ElMessage.success("绑定成功");
+    myDialog3.value.close();
+  } else {
+    ElMessage.error(res?.mssage);
+  }
+};
+
 getRoleListFun();
 </script>
-<style scoped>
+<style scoped lang="scss">
 .content-box {
   align-items: normal;
+  .el-container .el-header {
+    justify-content: left;
+  }
 }
 .el-aside {
   border-radius: 10px;

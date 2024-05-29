@@ -35,7 +35,7 @@ export const useAuthStore = defineStore({
     async getAuthMenuList() {
       const { data } = await getAuthMenuListApi();
       let data1: any = data;
-      this.authMenuList = data1.map((org: any) => mapTree(org));
+      this.authMenuList = !!data1 ? data1.map((org: any) => mapTree(org)) : [];
       // this.authMenuList = data;
       console.log("菜单数据", this.authMenuList);
     },
