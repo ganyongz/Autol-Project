@@ -3,7 +3,7 @@
     <el-card v-for="(item, index) in 28" :key="index" class="box-card" shadow="hover">
       <div class="left">
         <div>#{{ index }}机组</div>
-        <img src="" alt="暂无图片" />
+        <img src="../images/xiaofengji.gif" height="100px" width="100%" alt="暂无图片" />
       </div>
       <div class="right">
         <el-button type="primary">正常</el-button>

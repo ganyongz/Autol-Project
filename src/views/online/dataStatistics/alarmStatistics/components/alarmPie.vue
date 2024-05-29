@@ -1,0 +1,59 @@
+<template>
+  <p style="margin: 10px 0 10px 10px">报警总数：0</p>
+  <div ref="chartDom" style="width: 600px; height: 400px"></div>
+</template>
+
+<script lang="ts" setup>
+// 报警饼图
+import * as echarts from "echarts";
+import { onMounted, ref } from "vue";
+type EChartsOption = echarts.EChartsOption;
+let chartDom = ref();
+let option: EChartsOption;
+
+option = {
+  // title: {
+  //   text: "Referer of a Website",
+  //   subtext: "Fake Data",
+  //   left: "center"
+  // },
+  tooltip: {
+    trigger: "item"
+  },
+  legend: {
+    orient: "vertical",
+    left: "right",
+    top: "50px",
+    right: "0"
+  },
+  series: [
+    {
+      name: "",
+      type: "pie",
+      radius: "50%",
+      data: [
+        { value: 1048, name: "阈值报警" },
+        { value: 735, name: "窄带报警" },
+        { value: 580, name: "频段报警" },
+        { value: 484, name: "包络值报警" },
+        { value: 100, name: "无量纲报警" },
+        { value: 300, name: "统计量报警" },
+        { value: 200, name: "变化率报警" }
+      ],
+      emphasis: {
+        itemStyle: {
+          shadowBlur: 10,
+          shadowOffsetX: 0,
+          shadowColor: "rgba(0, 0, 0, 0.5)"
+        }
+      }
+    }
+  ]
+};
+
+onMounted(() => {
+  let myChart = echarts.init(chartDom.value);
+  option && myChart.setOption(option);
+});
+</script>
+<style scoped lang=""></style>
