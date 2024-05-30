@@ -222,7 +222,7 @@ const deleteFun = async (ids: any) => {
   await useHandleData(deleteRoleUser, { roleId: roleId.value, userIdList: ids }, `删除`);
   getUserListFun(roleId.value); //刷新列表
 };
-// 绑定菜单 -----------------
+// 绑定菜单
 const addMenusRef = ref();
 const title3 = ref("绑定角色菜单");
 const myDialog3 = ref();

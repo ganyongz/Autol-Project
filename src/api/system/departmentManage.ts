@@ -19,11 +19,23 @@ export const deptAddUser = (params: any) => {
 export const getDepartTree = () => {
   return http.post(`Lub/dept/tree`);
 };
-// 删除
+// 删除部门
 export const deleteDepartById = (params: any) => {
   return http.post(`Lub/dept/deleteById`, {}, { params });
 };
 // 新增&更新
 export const addOrUpdateUser = (params: any) => {
   return http.post(`/Lub/dept/addOrUpdate`, params);
+};
+// 部门下全部的设备清单(未绑定)
+export const dept_deptNoBindEquipTree = (params: any) => {
+  return http.get(`/Lub/dept/deptNoBindEquipTree`, {}, { params });
+};
+// 部门下已绑定设备树
+export const dept_deptBindEquipTree = (params: any) => {
+  return http.get(`/Lub/dept/deptBindEquipTree`, {}, { params });
+};
+// 部门下绑定设备
+export const dept_deptBindEquip = (params: any) => {
+  return http.post(`/Lub/dept/deptBindEquip`, params);
 };

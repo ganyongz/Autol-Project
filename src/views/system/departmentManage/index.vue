@@ -18,7 +18,17 @@
             :default-expanded-keys="defaultExpanded"
             highlight-current
             @node-click="handleNode"
-          />
+            :expand-on-click-node="false"
+          >
+            <template #default="{ node, data }">
+              <span class="custom-tree-node">
+                <span class="treeTitle">{{ node.label }}</span>
+                <span>
+                  <el-icon @click="editRole(data)"><Search /></el-icon>
+                </span>
+              </span>
+            </template>
+          </el-tree>
         </el-scrollbar>
       </el-aside>
 
@@ -98,6 +108,18 @@
         </el-main>
       </el-container>
     </el-container>
+    <!-- 绑定设备弹框 -->
+    <myDialog :title="title3" ref="myDialog3" draggable width="900px" :before-close="beforeClose3">
+      <template #content>
+        <equip-list ref="addEquipRef" :key="menuKey" :dept-id="bumenId"></equip-list>
+      </template>
+      <template #footer>
+        <div style="text-align: center">
+          <el-button type="primary" size="default" @click="submitEquip">保存</el-button>
+          <el-button size="default" @click="beforeClose3">取消</el-button>
+        </div>
+      </template>
+    </myDialog>
     <!-- 添加用户弹框 -->
     <myDialog :title="title2" ref="myDialog2" draggable width="900px" :before-close="beforeClose2">
       <template #content>
@@ -123,12 +145,14 @@ import {
   deleteDepartById,
   getDeptUserPage,
   deptAddUser,
-  deptDeleteUser
+  deptDeleteUser,
+  dept_deptBindEquip
 } from "@/api/system/departmentManage";
 import { ElMessage } from "element-plus";
 import { useHandleData } from "@/hooks/useHandleData";
 import addUsers from "@/views/system/roleManage/userList.vue";
 import myDialog from "@/components/dialog/myDialog.vue";
+import equipList from "@/views/system/departmentManage/components/equipList.vue";
 const tableData = ref(); //人员列表
 const filterText = ref(""); //部门筛选
 let treeData = ref();
@@ -264,8 +288,35 @@ const submitUsers = async () => {
 };
 // 删除部门用户
 const deleteFun = async (ids: any) => {
-  await useHandleData(deptDeleteUser, ids, `删除`);
+  await useHandleData(deptDeleteUser, { deptId: nodeParams.value.deptId, userIdList: ids }, `删除`);
   getUserListFun(); //刷新列表
+};
+// 查看部门设备
+let bumenId = ref();
+const editRole = data => {
+  console.log(data);
+  bumenId.value = data.id;
+  menuKey.value++;
+  myDialog3.value.open();
+};
+// 部门绑定设备
+const addEquipRef = ref();
+const title3 = ref("绑定部门设备");
+const myDialog3 = ref();
+const beforeClose3 = () => {
+  myDialog3.value.close();
+};
+let menuKey = ref(0);
+const submitEquip = async () => {
+  console.log("选中的设备", addEquipRef.value.checkedArrIds);
+
+  let res: any = await dept_deptBindEquip({ deptId: bumenId.value, equipIdList: addEquipRef.value.checkedArrIds });
+  if (res.code == "200") {
+    ElMessage.success("绑定成功");
+    myDialog3.value.close();
+  } else {
+    ElMessage.error(res?.mssage);
+  }
 };
 </script>
 <style scoped lang="scss">
@@ -357,5 +408,12 @@ const deleteFun = async (ids: any) => {
       color: black;
     }
   }
+}
+.treeTitle {
+  display: inline-block;
+  width: 170px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 </style>
