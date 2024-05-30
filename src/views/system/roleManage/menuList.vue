@@ -1,18 +1,11 @@
 <template>
   <div>
-    <el-tree
-      :data="treeData"
-      show-checkbox
-      node-key="id"
-      :default-checked-keys="defaultCheckedIds"
-      :props="defaultProps"
-      @check="handleCheck"
-    ></el-tree>
+    <el-tree ref="treeRef" node-key="id" :data="menuTree" :props="defaultProps" @check="handleSelectionChange" show-checkbox />
   </div>
 </template>
 
 <script setup lang="ts" name="userlist">
-import { ref, toRefs } from "vue";
+import { ref, toRefs, nextTick } from "vue";
 import { getMenuList } from "@/api/system/menuMange";
 import { role_roleMenuList } from "@/api/system/roleManage";
 import { ElMessage } from "element-plus";
@@ -28,51 +21,54 @@ const defaultProps = {
   label: "title",
   id: "id"
 };
-let checkedArrIds = ref();
-let treeData = ref();
-console.log(roleId.value);
-// 处理勾选事件
-const handleCheck = (data: any, checked: boolean, indeterminate: boolean) => {
-  console.log(data, checked, indeterminate);
-  checkedArrIds.value = [...checked["checkedKeys"], ...checked["halfCheckedKeys"]];
-};
-
-// const handleCheck = (checkedNodes: any, checkedKeys: any) => {
-//   console.log(checkedNodes, checkedKeys, "数据来了-----");
-
-//   treeData.value = treeData.value.map((node: any) => {
-//     const found = checkedKeys && checkedKeys.includes(node.id);
-//     const indeterminate = found ? false : checkedKeys && checkedKeys.some(key => node.id === key);
-//     return {
-//       ...node,
-//       checked: found,
-//       indeterminate: indeterminate
-//     };
-//   });
-// };
+// 权限Tree
+let menuTree = ref([]);
+const treeRef = ref();
+const currentIds = ref();
 
 // 获取菜单列表
 const getMenuListFun = async () => {
   let res: any = await getMenuList();
   if (res.code == "200") {
-    treeData.value = res.data as any;
+    menuTree.value = res.data as any;
   } else {
     ElMessage.error(res?.mssage);
   }
 };
 // 查询角色已关联的菜单
-let defaultCheckedIds = ref([]);
 const getCheckedMenus = async () => {
   let res: any = await role_roleMenuList({ roleId: roleId.value });
   if (res.code == "200") {
     let dataArray = res.data as any;
     let objectsArray = dataArray.length > 0 ? dataArray : [];
-    defaultCheckedIds.value = objectsArray.map(obj => obj.id);
-    checkedArrIds.value = defaultCheckedIds.value;
-    console.log(defaultCheckedIds.value, "菜单list");
+    checkedArrIds.value = objectsArray.map(obj => obj.id);
+    currentIds.value = [];
+    handleObj(dataArray);
+    nextTick(() => {
+      currentIds.value.forEach((item: any) => {
+        // 选中树，获取到树的节点，如果存在isLeaf，则设置回显
+        const node = treeRef.value.getNode(item);
+        if (node.isLeaf) {
+          treeRef.value.setChecked(node, true);
+        }
+      });
+    });
   } else {
     ElMessage.error(res?.mssage);
   }
+};
+// 递归处理勾选tree节点
+const handleObj = (data: any) => {
+  data.forEach((item: any) => {
+    currentIds.value.push(item.id);
+    if (item.children && item.children.length) {
+      handleObj(item.children);
+    }
+  });
+};
+let checkedArrIds = ref();
+const handleSelectionChange = (a, b) => {
+  checkedArrIds.value = [...b["checkedKeys"], ...b["halfCheckedKeys"]];
 };
 
 getCheckedMenus();
