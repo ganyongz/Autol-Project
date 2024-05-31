@@ -24,7 +24,7 @@
               <span class="custom-tree-node">
                 <span class="treeTitle">{{ node.label }}</span>
                 <span>
-                  <el-icon @click="editRole(data)"><Search /></el-icon>
+                  <el-icon @click="editRole(data)"><Setting /></el-icon>
                 </span>
               </span>
             </template>
@@ -111,7 +111,7 @@
     <!-- 绑定设备弹框 -->
     <myDialog :title="title3" ref="myDialog3" draggable width="900px" :before-close="beforeClose3">
       <template #content>
-        <equip-list ref="addEquipRef" :key="menuKey" :dept-id="bumenId"></equip-list>
+        <equip-list ref="addEquipRef" :key="menuKey" :dept-id="bumenId" :bind-equip-ids="bindEquipIds"></equip-list>
       </template>
       <template #footer>
         <div style="text-align: center">
@@ -293,9 +293,10 @@ const deleteFun = async (ids: any) => {
 };
 // 查看部门设备
 let bumenId = ref();
+let bindEquipIds = ref();
 const editRole = data => {
-  console.log(data);
   bumenId.value = data.id;
+  bindEquipIds.value = data.bindEquipIds;
   menuKey.value++;
   myDialog3.value.open();
 };
@@ -314,6 +315,7 @@ const submitEquip = async () => {
   if (res.code == "200") {
     ElMessage.success("绑定成功");
     myDialog3.value.close();
+    departTreeFun();
   } else {
     ElMessage.error(res?.mssage);
   }

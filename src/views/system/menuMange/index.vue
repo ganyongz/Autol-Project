@@ -18,7 +18,8 @@
           <span v-else>启用</span>
         </template>
       </el-table-column>
-      <el-table-column prop="level" label="等级"></el-table-column>
+      <!-- <el-table-column prop="level" label="等级"></el-table-column> -->
+      <el-table-column prop="sort" label="排序"></el-table-column>
       <el-table-column prop="description" label="描述" />
       <el-table-column fixed="right" label="操作" width="220">
         <template #default="scope">

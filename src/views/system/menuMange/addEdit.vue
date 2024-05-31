@@ -29,7 +29,7 @@
       </el-form-item>
 
       <el-form-item label="等级" :label-width="formLabelWidth">
-        <el-input v-model="ruleForm.level" autocomplete="off" />
+        <el-input v-model="ruleForm.sort" autocomplete="off" />
       </el-form-item>
 
       <el-form-item label="图标" :label-width="formLabelWidth">
@@ -86,15 +86,13 @@ const props = defineProps({
   }
 });
 let { visible, dynamicTitle, rowData } = toRefs(props);
-console.log("数据111111子页面-------", rowData.value);
-
 interface RuleForm {
   id: string;
   name: string;
   title: string;
   url: string;
   parentId: string;
-  level: number;
+  sort: number;
   icon: string;
   iconType: number;
   isActive: boolean;
@@ -106,7 +104,7 @@ let ruleForm = reactive({
   title: "",
   url: "",
   parentId: "-1",
-  level: 0,
+  sort: 0,
   icon: "",
   iconType: 0,
   isActive: true,
