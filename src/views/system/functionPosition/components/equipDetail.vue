@@ -1,8 +1,12 @@
 <template>
   <div>
+    <el-button type="primary" @click="submitForm(ruleFormRef)">保存</el-button>
+    <el-button type="danger" @click="deleteFun">删除</el-button>
+    <el-button type="success" plain @click="submitForm(ruleFormRef)">添加部件</el-button>
+    <p>基础信息</p>
     <el-form
       ref="ruleFormRef"
-      style="max-width: 600px"
+      style="max-width: 600px; margin-left: 30px"
       :model="ruleForm"
       :rules="rules"
       label-width="auto"
@@ -70,30 +74,32 @@
         </el-upload>
       </el-form-item>
 
-      <div style="text-align: center">
+      <!-- <div style="text-align: center">
         <el-button type="primary" @click="submitForm(ruleFormRef)"> 保存 </el-button>
         <el-button @click="resetForm(ruleFormRef)">关闭</el-button>
-      </div>
+      </div> -->
     </el-form>
   </div>
 </template>
 
-<script lang="ts" setup>
-import { reactive, ref, toRefs, onBeforeMount } from "vue";
+<script lang="ts" setup name="equipDetail">
+import { reactive, ref, toRefs } from "vue";
+import { useHandleData } from "@/hooks/useHandleData";
+import { equip_equipInfo, equip_addOrUpdate, equip_deleteById } from "@/api/system/functionPosition";
 import { ElMessage, type ComponentSize, type FormInstance, type FormRules } from "element-plus";
 import type { UploadProps } from "element-plus";
+// 设备详情
 const props = defineProps({
-  rowData: {
+  nodeData: {
     type: Object,
-    default: null
-  },
-  title: {
-    type: String,
-    default: ""
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    default: () => {}
   }
 });
-const { rowData, title } = toRefs(props);
+const { nodeData } = toRefs(props);
+console.log(nodeData.value, "父级传来的数据");
 interface RuleForm {
+  id: string;
   installLocationId: string;
   name: string;
   equipImageUrl: string;
@@ -109,6 +115,7 @@ interface RuleForm {
 const formSize = ref<ComponentSize>("default");
 const ruleFormRef = ref<FormInstance>();
 let ruleForm = reactive<RuleForm>({
+  id: "",
   installLocationId: "",
   name: "",
   equipImageUrl: "",
@@ -125,23 +132,25 @@ const rules = reactive<FormRules<RuleForm>>({
   name: [{ required: true, message: "请输入名称", trigger: "blur" }]
 });
 // 方法区
-
-const emit = defineEmits(["closeDialog", "submitForm"]);
 const submitForm = async (formEl: FormInstance | undefined) => {
   if (!formEl) return;
   await formEl.validate(async (valid, fields) => {
     if (valid) {
-      emit("submitForm");
+      saveForm();
     } else {
       console.log("error submit!", fields);
     }
   });
 };
 
-const resetForm = (formEl: FormInstance | undefined) => {
-  if (!formEl) return;
-  formEl.resetFields();
-  emit("closeDialog");
+const saveForm = async () => {
+  // 添加设备
+  let res: any = await equip_addOrUpdate(ruleForm);
+  if (res.code == "200") {
+    ElMessage.success("保存成功");
+  } else {
+    ElMessage.error(res?.mssage);
+  }
 };
 // 上传
 const imageUrl = ref("");
@@ -173,39 +182,37 @@ const departTreeFun = async () => {
   if (res.code == "200") {
     deptData = res.data;
     showSelect.value = true;
+    getEquipDetailFun();
   } else {
     ElMessage.error(res?.mssage);
   }
 };
-onBeforeMount(() => {
-  departTreeFun();
-  ruleForm.installLocationId = rowData.value.id;
-  if (rowData?.value && title.value == "编辑") {
-    console.log(rowData?.value, "数据呢----");
-    ruleForm = rowData.value as any;
+// 获取详情
+const getEquipDetailFun = async () => {
+  let res: any = await equip_equipInfo({ id: nodeData.value["id"] });
+  if (res.code == "200") {
+    let data = res.data as any;
+    ruleForm.id = data.id;
+    ruleForm.installLocationId = data.installLocationId;
+    ruleForm.name = data.name;
+    ruleForm.equipImageUrl = data.equipImageUrl;
+    ruleForm.remark = data.remark;
+    ruleForm.code = data.code;
+    ruleForm.deptId = data.deptId;
+    ruleForm.sort = data.sort;
+    ruleForm.useVib = data.useVib;
+    ruleForm.useLub = data.useLub;
+    ruleForm.useOil = data.useOil;
   } else {
+    ElMessage.error(res?.mssage);
   }
-});
+};
+// 删除设备
+const deleteFun = async () => {
+  await useHandleData(equip_deleteById, { id: nodeData.value?.id }, `删除【${nodeData.value.name}】设备`);
+};
+departTreeFun();
 // 暴露
 defineExpose({ ruleForm });
 </script>
-<style scoped>
-.avatar-uploader .el-upload {
-  position: relative;
-  overflow: hidden;
-  cursor: pointer;
-  border: 1px dashed var(--el-border-color);
-  border-radius: 6px;
-  transition: var(--el-transition-duration-fast);
-}
-.avatar-uploader .el-upload:hover {
-  border-color: var(--el-color-primary);
-}
-.el-icon.avatar-uploader-icon {
-  width: 178px;
-  height: 178px;
-  font-size: 28px;
-  color: #8c939d;
-  text-align: center;
-}
-</style>
+<style scoped lang=""></style>

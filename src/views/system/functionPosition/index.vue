@@ -49,8 +49,8 @@
 
               <el-row :gutter="20">
                 <el-col :span="12">
-                  <el-form-item label="层级" required>
-                    <el-input v-model="formData.level" />
+                  <el-form-item label="排序" required>
+                    <el-input v-model="formData.sort" />
                   </el-form-item>
                 </el-col>
 
@@ -68,11 +68,13 @@
             </el-form>
           </div>
         </el-main>
+        <!-- 设备 -->
+        <equipDetail :node-data="nodeData" :key="nodeData.id" v-if="formData.type == '2'" />
       </el-container>
     </el-container>
     <myDialog :title="detailParams.title" ref="myDialog1" draggable width="700px" :before-close="beforeClose1">
       <template #content>
-        <addEquipment
+        <add-equipment
           v-if="IsShowAdd"
           ref="addEditRoleRef"
           :row-data="rowData"
@@ -91,11 +93,16 @@ import { ElMessage } from "element-plus";
 import { getLocationTree, locationAddOrUpdate, deleteById, equip_addOrUpdate } from "@/api/system/functionPosition";
 import { useHandleData } from "@/hooks/useHandleData";
 import addEquipment from "@/views/system/functionPosition/components/addEquipment.vue";
+import equipDetail from "@/views/system/functionPosition/components/equipDetail.vue";
+
 // 点击节点
 const setParentId = ref();
+const nodeData = ref();
 const handleNodeClick = (val: any) => {
+  console.log(val, "菜单数据");
+  nodeData.value = val;
   formData.value.id = val.id;
-  formData.value.level = val?.displayOrder;
+  formData.value.sort = val?.displayOrder;
   formData.value.name = val?.name;
   formData.value.type = val.type;
   formData.value.locationPurpose = val?.locationPurpose; //字段里没有
@@ -169,7 +176,7 @@ const defaultProps = {
 const formData = ref({
   id: "",
   parentId: "-1",
-  level: null, //层级 从1 开始
+  sort: null, //层级 从1 开始
   name: "",
   type: undefined, //类型
   locationPurpose: "" //使用范围区分系统使用

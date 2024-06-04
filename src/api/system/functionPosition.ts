@@ -19,7 +19,7 @@ export const deleteById = (params: any) => {
 export const equip_addOrUpdate = (params: any) => {
   return http.post(`Lub/equip/addOrUpdate`, params);
 };
-// 删除位置，并同步删除子集以及设备
+// 删除设备，并同步删除子集
 export const equip_deleteById = (params: any) => {
   return http.post(`Lub/equip/deleteById`, {}, { params });
 };
