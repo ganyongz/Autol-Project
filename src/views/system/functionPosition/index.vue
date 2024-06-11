@@ -70,6 +70,10 @@
         </el-main>
         <!-- 设备 -->
         <equipDetail :node-data="nodeData" :key="nodeData.id" v-if="formData.type == '2'" />
+        <!-- 部件 -->
+        <unit :node-data="nodeData" :key="nodeData.id" v-if="formData.type == '3'" />
+        <!-- 测点 -->
+        <detailPoint :node-data="nodeData" :key="nodeData.id" v-if="formData.type == '4'" />
       </el-container>
     </el-container>
     <myDialog :title="detailParams.title" ref="myDialog1" draggable width="700px" :before-close="beforeClose1">
@@ -94,7 +98,8 @@ import { getLocationTree, locationAddOrUpdate, deleteById, equip_addOrUpdate } f
 import { useHandleData } from "@/hooks/useHandleData";
 import addEquipment from "@/views/system/functionPosition/components/addEquipment.vue";
 import equipDetail from "@/views/system/functionPosition/components/equipDetail.vue";
-
+import unit from "@/views/system/functionPosition/components/unit.vue";
+import detailPoint from "@/views/system/functionPosition/components/detailPoint.vue";
 // 点击节点
 const setParentId = ref();
 const nodeData = ref();

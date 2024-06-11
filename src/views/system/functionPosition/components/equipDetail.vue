@@ -1,8 +1,8 @@
 <template>
   <div>
-    <el-button type="primary" @click="submitForm(ruleFormRef)">保存</el-button>
+    <el-button type="primary" @click="submitEquipment(ruleFormRef)">保存</el-button>
     <el-button type="danger" @click="deleteFun">删除</el-button>
-    <el-button type="success" plain @click="submitForm(ruleFormRef)">添加部件</el-button>
+    <el-button type="success" plain @click="addUnitFun('添加部件', ruleForm)">添加部件</el-button>
     <p>基础信息</p>
     <el-form
       ref="ruleFormRef"
@@ -73,21 +73,30 @@
           <el-icon v-else class="avatar-uploader-icon"><Plus /></el-icon>
         </el-upload>
       </el-form-item>
-
-      <!-- <div style="text-align: center">
-        <el-button type="primary" @click="submitForm(ruleFormRef)"> 保存 </el-button>
-        <el-button @click="resetForm(ruleFormRef)">关闭</el-button>
-      </div> -->
     </el-form>
+    <myDialog :title="title" ref="myDialog1" draggable width="700px" :before-close="beforeClose1">
+      <template #content>
+        <addUnit
+          v-if="IsShowAdd"
+          ref="addEditRoleRef"
+          :row-data="rowData"
+          :title="title"
+          @close-dialog="closeDialog"
+          @submit-form="submitForm"
+        />
+      </template>
+    </myDialog>
   </div>
 </template>
 
 <script lang="ts" setup name="equipDetail">
 import { reactive, ref, toRefs } from "vue";
 import { useHandleData } from "@/hooks/useHandleData";
-import { equip_equipInfo, equip_addOrUpdate, equip_deleteById } from "@/api/system/functionPosition";
+import { equip_equipInfo, equip_addOrUpdate, equip_deleteById, equipPart_addOrUpdate } from "@/api/system/functionPosition";
 import { ElMessage, type ComponentSize, type FormInstance, type FormRules } from "element-plus";
 import type { UploadProps } from "element-plus";
+import myDialog from "@/components/dialog/myDialog.vue";
+import addUnit from "@/views/system/functionPosition/components/addUnit.vue";
 // 设备详情
 const props = defineProps({
   nodeData: {
@@ -132,7 +141,8 @@ const rules = reactive<FormRules<RuleForm>>({
   name: [{ required: true, message: "请输入名称", trigger: "blur" }]
 });
 // 方法区
-const submitForm = async (formEl: FormInstance | undefined) => {
+// 保存设备
+const submitEquipment = async (formEl: FormInstance | undefined) => {
   if (!formEl) return;
   await formEl.validate(async (valid, fields) => {
     if (valid) {
@@ -210,6 +220,43 @@ const getEquipDetailFun = async () => {
 // 删除设备
 const deleteFun = async () => {
   await useHandleData(equip_deleteById, { id: nodeData.value?.id }, `删除【${nodeData.value.name}】设备`);
+};
+// 添加部件
+const addUnitFun = (title: string, row: any) => {
+  if (row.id) {
+    IsShowAdd.value = true;
+    console.log(title, row);
+    rowData.value = row;
+    myDialog1.value.open();
+  } else {
+    ElMessage.error("请选择一个功能位置");
+  }
+};
+// 新增部件
+let addEditRoleRef = ref();
+let rowData = ref();
+let title = ref("新增部件");
+const myDialog1 = ref();
+const IsShowAdd = ref(false);
+const beforeClose1 = () => {
+  IsShowAdd.value = false;
+  myDialog1.value.close();
+};
+const closeDialog = () => {
+  // 取消
+  myDialog1.value.close();
+  IsShowAdd.value = false;
+};
+const submitForm = async () => {
+  // 添加设备
+  let res: any = await equipPart_addOrUpdate(addEditRoleRef.value.ruleForm);
+  if (res.code == "200") {
+    ElMessage.success("保存成功");
+  } else {
+    ElMessage.error(res?.mssage);
+  }
+  myDialog1.value.close();
+  IsShowAdd.value = false;
 };
 departTreeFun();
 // 暴露
