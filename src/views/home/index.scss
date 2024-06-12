@@ -4,9 +4,13 @@
   justify-content: center;
   width: 100%;
   height: 100%;
-  .home-bg {
-    width: 70%;
-    max-width: 1200px;
-    margin-bottom: 20px;
-  }
+  background-image: url("../../assets/images/welcome.gif");
+  background-size: 100% 100%;
+  background-size: cover;
+
+  // .home-bg {
+  //   width: 70%;
+  //   max-width: 1200px;
+  //   margin-bottom: 20px;
+  // }
 }
