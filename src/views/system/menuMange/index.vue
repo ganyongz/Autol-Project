@@ -1,8 +1,8 @@
 <template>
   <div>
-    <!-- 菜单管理 -->
+    <!-- 菜单管理 default-expand-all -->
     <el-button type="primary" @click="addRootMenu">新增菜单</el-button>
-    <el-table :data="tableData" style="width: 100%; margin-bottom: 20px" row-key="id" border default-expand-all>
+    <el-table :data="tableData" style="width: 100%; margin-bottom: 20px" row-key="id" border>
       <el-table-column prop="title" label="菜单名称" />
       <el-table-column prop="url" label="菜单路由" />
       <el-table-column prop="icon" label="图标" />
@@ -84,14 +84,28 @@ const edit = (row: any) => {
 const getMenuListFun = async () => {
   let res: any = await getMenuList();
   if (res.code == "200") {
-    tableData.value = res.data as any;
-    // internalInstance.ctx.$forceUpdate();
-    console.log(tableData.value, "菜单table");
+    let dataArr = res.data;
+    if (dataArr.length > 0) {
+      handleObj(dataArr);
+    }
   } else {
     ElMessage.error(res?.mssage);
   }
 };
-
+// 递归处理节点
+const handleObj = (data: any) => {
+  tableData.value = data.map((item: any | never) => {
+    if (item.buttons !== null && item.buttons.length) {
+      item.children = [...item.children, ...item.buttons];
+    }
+    if (item.children !== null && item.children.length && !item?.children.some((item: any) => item.iconType == 1)) {
+      handleObj(item.children);
+      return item;
+    }
+    return item;
+  });
+  // console.log(tableData.value, "菜单table");
+};
 // 删除
 const deleteFun = async (id: any) => {
   await useHandleData(deleteByIds, id, `删除`);
