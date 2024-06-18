@@ -1,5 +1,6 @@
 <template>
   <div class="contentBox">
+    <!-- 设备预览（单个设备） -->
     <el-container>
       <el-header><div style="margin: 0 auto">#09风机</div></el-header>
       <el-container>
@@ -65,8 +66,39 @@
 
 <script lang="ts" setup name="anlageuebersicht">
 import { ref } from "vue";
+import { ElMessage } from "element-plus";
+import { equip_card, equip_equipInfo } from "@/api/online/anlageuebersicht";
 let cardTop = ref(100);
 let cardLeft = ref(150);
+// 接收页面
+import { useRoute } from "vue-router";
+const route = useRoute();
+const query = route;
+console.log(query, "路由传参----------1");
+//获取卡片内容
+let cardcontent = ref();
+const getCardContent = async () => {
+  const res: any = await equip_card({ equipId: query["id"] });
+  if (res.code == "200") {
+    cardcontent.value = res.data;
+    console.log(cardcontent.value, "卡片内容");
+  } else {
+    ElMessage.error(res?.mssage);
+  }
+};
+getCardContent();
+//设备详情信息（包含设备基本信息，振动等展示数据） 未完待续 。。。。。。。。。。。。。。。。。。。。。。。
+let equipInfo = ref();
+const getequipInfo = async () => {
+  const res: any = await equip_equipInfo({ equipId: query["id"] });
+  if (res.code == "200") {
+    equipInfo.value = res.data;
+    console.log(equipInfo.value, "设备详情信息（包含设备基本信息，振动等展示数据）");
+  } else {
+    ElMessage.error(res?.mssage);
+  }
+};
+getequipInfo();
 </script>
 <style scoped lang="scss">
 .contentBox {

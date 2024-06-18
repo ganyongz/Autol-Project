@@ -1,23 +1,56 @@
 <template>
-  <div class="flex flex-wrap gap-4 list">
-    <el-card v-for="(item, index) in 28" :key="index" class="box-card" shadow="hover">
-      <div class="left">
-        <div>#{{ index }}机组</div>
-        <img src="../images/xiaofengji.gif" height="100px" width="100%" alt="暂无图片" />
-      </div>
-      <div class="right">
-        <el-button type="primary">正常</el-button>
-        <p>震动检测最大值：100</p>
-        <p>运行总时长：987h</p>
-        <p>单次运行时长：1.25h</p>
-      </div>
-    </el-card>
+  <div>
+    <el-collapse v-for="(item, index) in equipmentList" :key="item['topLocationId']" v-model="activeName" accordion>
+      <el-collapse-item :title="item['topLocationName']" :name="index">
+        <div class="flex flex-wrap gap-4 list">
+          <el-card v-for="it in item['equipList']" :key="it['id']" class="box-card" shadow="hover" @click="toDetail(it)">
+            <div class="left">
+              <div>{{ it["name"] }}</div>
+              <img :src="it['equipImageUrl']" height="100px" width="100%" alt="暂无图片" />
+            </div>
+            <div class="right">
+              <el-button type="primary">正常</el-button>
+              <p>震动检测最大值：100</p>
+              <p>运行总时长：987h</p>
+              <p>单次运行时长：1.25h</p>
+            </div>
+          </el-card>
+        </div>
+      </el-collapse-item>
+    </el-collapse>
   </div>
 </template>
 
 <script lang="ts" setup name="overview">
-// import { ref } from "vue";
-// let equipmentList = ref([]);
+import { ref } from "vue";
+import { ElMessage } from "element-plus";
+import { Overview_List } from "@/api/online/overview";
+import { useRouter } from "vue-router";
+const router = useRouter();
+let equipmentList = ref([]);
+// let imagesUrl = "../images/xiaofengji.gif";
+let activeName = ref(0);
+// 方法区
+//获取列表
+const getList = async () => {
+  const res: any = await Overview_List({});
+  if (res.code == "200") {
+    equipmentList.value = res.data;
+  } else {
+    ElMessage.error(res?.mssage);
+  }
+};
+getList();
+// 跳转至详情
+const toDetail = (rowData: Object) => {
+  console.log(rowData, "1234567");
+  router.push({
+    name: "anlageuebersicht",
+    query: {
+      id: rowData["id"]
+    }
+  });
+};
 </script>
 <style scoped lang="scss">
 .list {
@@ -53,7 +86,5 @@
   float: right;
   width: calc(100% - 200px);
   height: 140px;
-
-  // border: 1px solid red;
 }
 </style>
