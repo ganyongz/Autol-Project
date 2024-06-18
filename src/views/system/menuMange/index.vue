@@ -100,7 +100,6 @@ const handleObj = (data: any) => {
     }
     if (item.children !== null && item.children.length && !item?.children.some((item: any) => item.iconType == 1)) {
       handleObj(item.children);
-      return item;
     }
     return item;
   });
