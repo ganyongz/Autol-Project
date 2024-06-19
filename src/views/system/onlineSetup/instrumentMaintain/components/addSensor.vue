@@ -140,11 +140,9 @@ const resetForm = (formEl: FormInstance | undefined) => {
 
 onBeforeMount(() => {
   if (rowData?.value && title.value == "新增传感器") {
-    debugger;
     ruleForm.value.collectorId = rowData.value.id;
   } else {
     //编辑
-    console.log(rowData?.value, "数据呢----");
     ruleForm.value = rowData.value as any;
   }
 });

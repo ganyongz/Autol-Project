@@ -64,3 +64,11 @@ export const equipPoint_addOrUpdate = (params: any) => {
 export const equipPoint_findById = (params: any) => {
   return http.get(`Lub/equipPoint/findById`, {}, { params });
 };
+// 绑定数据测点
+export const equipPoint_bindServerPointId = (params: any) => {
+  return http.post(`Lub/equipPoint/bindServerPointId`, params);
+};
+// 解绑数据测点
+export const equipPoint_unbindingServerPointId = (params: any) => {
+  return http.get(`Lub/equipPoint/unbindingServerPointId`, {}, { params });
+};

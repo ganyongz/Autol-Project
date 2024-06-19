@@ -29,7 +29,16 @@
     </el-table>
     <fieldset>
       <legend>Topic信息</legend>
-      <el-table :data="topic_tableData" :default-sort="{ prop: 'date', order: 'descending' }" height="400px" style="width: 100%">
+      <el-table
+        ref="taskTableRef"
+        :data="topic_tableData"
+        :default-sort="{ prop: 'date', order: 'descending' }"
+        height="400px"
+        @selection-change="handleSelectionChange"
+        style="width: 100%"
+      >
+        <el-table-column type="selection" width="55" />
+        <el-table-column prop="name" label="名称" sortable />
         <el-table-column prop="topic" label="订阅主题" sortable />
         <el-table-column prop="mqttServerId" label="mqtt服务id" sortable />
         <el-table-column prop="topicType" label="主题类型" sortable />
@@ -73,7 +82,7 @@
 </template>
 
 <script lang="ts" setup name="collector">
-import { ref } from "vue";
+import { ref, toRefs, nextTick } from "vue";
 import { useHandleData } from "@/hooks/useHandleData";
 import { ElMessage } from "element-plus";
 import addMqtt from "@/views/system/onlineSetup/instrumentMaintain/components/addMqtt.vue";
@@ -87,6 +96,13 @@ import {
   MqttServer_deleteTopicIds
 } from "@/api/system/mqtt";
 
+const props = defineProps({
+  pointDetail: {
+    type: Object,
+    default: null
+  }
+});
+const { pointDetail } = toRefs(props);
 let tableData = ref([]);
 let topic_tableData = ref([]);
 // 方法区
@@ -146,10 +162,21 @@ const handleRow = (row: any) => {
 };
 // topic相关
 //获取topic列表
+const multipleSelection = ref([]);
 const getSensorList = async (rowData: any) => {
   const res: any = await MqttServer_TopicList({ mqttServerId: rowData.id });
   if (res.code == "200") {
     topic_tableData.value = res.data;
+    // 获取数据后，遍历选中(选中回显)
+    multipleSelection.value[0] = pointDetail.value["bindServerPointId"] as never;
+    nextTick(() => {
+      topic_tableData.value.forEach(item => {
+        let result = multipleSelection.value.find(val => val == item["id"]);
+        if (result) {
+          taskTableRef.value.toggleRowSelection(item, true);
+        }
+      });
+    });
   } else {
     ElMessage.error(res?.mssage);
   }
@@ -188,7 +215,18 @@ const closeDialog2 = () => {
   myDialog2.value.close();
   IsShowSensor.value = false;
 };
-
+// table 勾选
+const taskTableRef = ref(); // 表格ref
+const handleSelectionChange = async (selection: any) => {
+  if (selection.length > 1) {
+    let del_row = selection.shift();
+    await taskTableRef.value.toggleRowSelection(del_row, false); // 用于多选表格，切换某一行的选中状态，如果使用了第二个参数，则是设置这一行选中与否（selected 为 true 则选中）；第二个参数为true时又变成了多选
+    return;
+  }
+  multipleSelection.value = selection;
+};
+// 暴露
+defineExpose({ multipleSelection });
 getCollectorList(); //获取MQTT
 </script>
 <style scoped lang="scss">
@@ -200,5 +238,10 @@ fieldset legend {
   padding: 0 20px; /**  文字与线之间的缝隙大小 */
   margin: 0 20px; /**  文字距离左右边框的距离 */
   color: #01649e;
+}
+
+// 隐藏全选按钮
+:deep(.el-table th.el-table__cell:nth-child(1) .cell) {
+  visibility: hidden;
 }
 </style>

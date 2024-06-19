@@ -11,6 +11,10 @@
       :size="formSize"
       status-icon
     >
+      <el-form-item label="名称" prop="name">
+        <el-input v-model="ruleForm.name" />
+      </el-form-item>
+
       <el-form-item label="订阅主题" prop="topic">
         <el-input v-model="ruleForm.topic" />
       </el-form-item>
@@ -56,6 +60,7 @@ const { rowData, title } = toRefs(props);
 
 interface RuleForm {
   id: string;
+  name: string;
   mqttServerId: string;
   topic: string;
   topicType: string;
@@ -67,6 +72,7 @@ const formSize = ref<ComponentSize>("default");
 const ruleFormRef = ref<FormInstance>();
 let ruleForm = ref<RuleForm>({
   id: "",
+  name: "",
   mqttServerId: "",
   topic: "",
   topicType: "",
@@ -99,7 +105,6 @@ const resetForm = (formEl: FormInstance | undefined) => {
 
 onBeforeMount(() => {
   if (rowData?.value && title.value == "新增") {
-    debugger;
     ruleForm.value.mqttServerId = rowData.value.id;
   } else {
     //编辑

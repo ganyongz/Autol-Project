@@ -27,12 +27,12 @@
         <el-input v-model="ruleForm.sort" />
       </el-form-item>
       <el-form-item label="振动类型" prop="vibType">
-        <el-select v-model="ruleForm.vibType" placeholder="请选择" style="width: 240px">
+        <el-select v-model="ruleForm.vibType" placeholder="请选择" style="width: 100%">
           <el-option v-for="item in typeOptions" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
       </el-form-item>
       <el-form-item label="测点类型" prop="pointType">
-        <el-select v-model="ruleForm.pointType" placeholder="请选择" style="width: 240px">
+        <el-select v-model="ruleForm.pointType" placeholder="请选择" style="width: 100%">
           <el-option v-for="item in pointTypeOptions" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
       </el-form-item>
