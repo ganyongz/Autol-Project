@@ -8,7 +8,7 @@
           <el-select v-model="scope.row.thresholdType" placeholder="请选择" style="width: 100%" v-if="scope.row.seen">
             <el-option v-for="item in thresholdTypeOptions" :key="item.value" :label="item.label" :value="item.value" />
           </el-select>
-          <span v-else>{{ scope.row.thresholdType }}</span>
+          <span v-else>{{ scope.row.thresholdType == 1 ? "超上限" : "超下限" }}</span>
         </template>
       </el-table-column>
 
@@ -85,9 +85,7 @@ const props = defineProps({
 });
 const thresholdTypeOptions = [
   { value: 1, label: "超上限" },
-  { value: 2, label: "超下限" },
-  { value: 3, label: "区间内" },
-  { value: 4, label: "区间外" }
+  { value: 2, label: "超下限" }
 ];
 const { nodeData } = toRefs(props);
 let newData = ref({

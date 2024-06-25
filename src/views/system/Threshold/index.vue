@@ -125,13 +125,24 @@ const getTableList = (params: any) => {
 //     </el-button>
 //   );
 // };
-
+// 报警类型枚举
+const getAlarmStatus = reactive([
+  { value: 1, label: "超上限" },
+  { value: 2, label: "超下限" }
+]);
 // 表格配置项
 const columns: any = reactive([
   { type: "selection", fixed: "left", width: 70 },
-  { type: "sort", label: "Sort", width: 80 },
+  // { type: "sort", label: "Sort", width: 80 },
   // { type: "expand", label: "Expand", width: 85 },
   { prop: "name", label: "名称" },
+  {
+    prop: "type",
+    label: "报警类型",
+    tag: true,
+    enum: getAlarmStatus,
+    fieldNames: { label: "label", value: "value" }
+  },
   { prop: "lowValue", label: "低报" },
   { prop: "lowerValue", label: "低低报" },
   { prop: "highValue", label: "高报" },

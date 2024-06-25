@@ -22,15 +22,31 @@
     </el-card>
     <el-card>
       <el-tabs v-model="activeName" class="demo-tabs" @tab-click="tabHandleClick">
-        <el-tab-pane label="离线测点" name="first">
+        <el-tab-pane label="测点" name="first">
           <!-- 部件id -> formInline.id -->
           <el-button type="primary" @click="openEquipPoint('新增测点', { id: formInline.id })">新增测点</el-button>
           <el-button ty>删除</el-button>
           <el-table :data="tableData" style="width: 100%">
             <el-table-column prop="name" label="测点名称" />
-            <el-table-column prop="vibType" label="测量类型" />
-            <el-table-column prop="pointType" label="报告类型" />
-            <el-table-column prop="pointUnit" label="单位" />
+            <el-table-column prop="code" label="测点编码" />
+            <el-table-column prop="pointUnit" label="测点单位" />
+            <el-table-column prop="vibType" label="振动类型">
+              <template #default="scoped">
+                <p v-for="item in typeOptions" :key="item.value">
+                  <span v-if="item.value == scoped.row['vibType']">{{ item.label }}</span>
+                </p>
+              </template>
+            </el-table-column>
+            <el-table-column prop="pointType" label="测点类型">
+              <template #default="scoped">
+                <p v-for="item in pointTypeOptions" :key="item.value">
+                  <span v-if="item.value == scoped.row['pointType']">{{ item.label }}</span>
+                </p>
+              </template>
+            </el-table-column>
+            <el-table-column prop="bindServerPointName" label="绑定数据测点名称" />
+            <el-table-column prop="serverPointType" label="绑定数据测点类型" />
+
             <el-table-column fixed="right" label="操作">
               <template #default="scoped">
                 <el-button link type="primary" @click="openEquipPoint('编辑测点', scoped.row)">编辑</el-button>
@@ -80,7 +96,17 @@ let props = defineProps({
 });
 const { nodeData } = toRefs(props);
 console.log(nodeData.value, "父亲传来的数据");
-
+const pointTypeOptions = [
+  { value: "Vib", label: "振动" },
+  { value: "StartStop", label: "启停" },
+  { value: "Temperature", label: "温度" },
+  { value: "RotateSpeed", label: "转速" }
+]; //测点类型
+const typeOptions = [
+  { value: "Acceleration", label: "加速度" },
+  { value: "Speed", label: "速度" },
+  { value: "Displacement", label: "位移" }
+]; //振动类型
 const formInline = reactive({
   equipId: nodeData.value.id, //所属设备id
   name: "",
@@ -159,7 +185,7 @@ const saveEquipPoint = async () => {
     ElMessage.error(res?.mssage);
   }
 };
-// 删除离线测点
+// 删除测点
 const deleteEquipPoint = async (rowData: Object) => {
   await useHandleData(equipPoint_deleteById, { id: rowData["id"] }, `删除【${nodeData.value.name}】测点`);
   getEquipPointList();
