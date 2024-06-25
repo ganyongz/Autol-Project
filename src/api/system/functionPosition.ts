@@ -28,7 +28,7 @@ export const equip_deleteById = (params: any) => {
 export const equip_equipInfo = (params: any) => {
   return http.get(`Lub/equip/equipInfo`, {}, { params });
 };
-// 设备下部件列表
+// 设备下部件列表 未使用 ----？？
 export const equip_findPartList = (params: any) => {
   return http.get(`Lub/equip/findPartList`, {}, { params });
 };
@@ -71,4 +71,25 @@ export const equipPoint_bindServerPointId = (params: any) => {
 // 解绑数据测点
 export const equipPoint_unbindingServerPointId = (params: any) => {
   return http.get(`Lub/equipPoint/unbindingServerPointId`, {}, { params });
+};
+// iiiii: 测点绑定阈值报警策略
+// 测点下阈值报警策略列表
+export const equipPoint_pointThresholdTactics = (params: any) => {
+  return http.get(`Lub/equipPoint/pointThresholdTactics`, {}, { params });
+};
+// 通过模板绑定阈值报警策略
+export const equipPoint_bindThresholdTacticsByTemplate = (params: any) => {
+  return http.get(`Lub/equipPoint/bindThresholdTacticsByTemplate`, {}, { params });
+};
+// 绑定自定义阈值报警策略
+export const equipPoint_bindThresholdTacticsByCustomize = (params: any) => {
+  return http.post(`Lub/equipPoint/bindThresholdTacticsByCustomize`, params);
+};
+// 删除阈值报警策略
+export const equipPoint_deleteThresholdTactics = (params: any) => {
+  return http.get(`Lub/equipPoint/deleteThresholdTactics`, {}, { params });
+};
+// 更新阈值报警策略
+export const equipPoint_updateThresholdTactics = (params: any) => {
+  return http.post(`Lub/equipPoint/updateThresholdTactics`, params);
 };

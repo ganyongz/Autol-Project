@@ -2,7 +2,7 @@
   <div>
     <el-button type="primary" @click="submitEquipment(ruleFormRef)">保存</el-button>
     <el-button type="danger" @click="deleteFun">删除</el-button>
-    <el-button type="success" plain @click="addUnitFun('添加部件', ruleForm)">添加部件</el-button>
+    <el-button type="success" plain @click="addUnitFun(ruleForm)">添加部件</el-button>
     <p>基础信息</p>
     <el-form
       ref="ruleFormRef"
@@ -222,10 +222,9 @@ const deleteFun = async () => {
   await useHandleData(equip_deleteById, { id: nodeData.value?.id }, `删除【${nodeData.value.name}】设备`);
 };
 // 添加部件
-const addUnitFun = (title: string, row: any) => {
+const addUnitFun = (row: any) => {
   if (row.id) {
     IsShowAdd.value = true;
-    console.log(title, row);
     rowData.value = row;
     myDialog1.value.open();
   } else {

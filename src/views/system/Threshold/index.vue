@@ -12,7 +12,7 @@
       <template #tableHeader="scope">
         <el-button type="primary" :icon="CirclePlus" @click="openDialog('新增', {})">新增报警策略</el-button>
         <el-button v-auth="'batchAdd'" type="primary" :icon="Upload" plain @click="batchAdd">批量添加</el-button>
-        <el-button v-auth="'export'" type="primary" :icon="Download" plain @click="downloadFile">导出数据</el-button>
+        <el-button type="primary" :icon="Download" plain @click="downloadFile">导出数据</el-button>
         <el-button v-if="false" type="primary" plain @click="toDetail">To 子集详情页面</el-button>
         <el-button type="danger" :icon="Delete" plain @click="batchDelete(scope.selectedListIds)"> 批量删除 </el-button>
       </template>
@@ -52,11 +52,15 @@
         />
       </template>
     </myDialog>
+    <div style="text-align: center">
+      <el-button type="primary" @click="submitForm2"> 保存 </el-button>
+      <el-button @click="resetForm">关闭</el-button>
+    </div>
   </div>
 </template>
 
 <script setup lang="tsx" name="useProTable">
-import { ref, reactive } from "vue";
+import { ref, reactive, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { useHandleData } from "@/hooks/useHandleData";
 import { useDownload } from "@/hooks/useDownload";
@@ -71,12 +75,21 @@ import { getThresholdList, Threshold_delete } from "@/api/system/Threshold";
 import addEditRole from "@/views/system/Threshold/addEditRole.vue";
 
 const router = useRouter();
+const emit = defineEmits(["closeDialog", "submitForm"]);
+const resetForm = () => {
+  emit("closeDialog");
+};
+const submitForm2 = () => {
+  emit("submitForm", proTable.value?.selectedListIds);
+};
 
 // 跳转详情页
 const toDetail = () => {
   router.push(`/proTable/useProTable/detail/${Math.random().toFixed(3)}?params=detail-page`);
 };
-
+onMounted(() => {
+  proTable.value?.getTableList(); //估计没有也行
+});
 // ProTable 实例
 const proTable = ref<ProTableInstance>();
 
