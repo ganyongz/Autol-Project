@@ -2,6 +2,8 @@
   width: 100%;
   height: 100%;
   background: url("./images/big_bg01.png") no-repeat;
+
+  // background: url("./images/bg.png") no-repeat;
   background-repeat: no-repeat;
   background-attachment: fixed;
   background-position: center;
@@ -9,7 +11,7 @@
   background-size: cover;
   .dataScreen-content {
     position: fixed;
-    top: 50%;
+    top: 45%;
     left: 50%;
     z-index: 999;
     display: flex;
@@ -109,14 +111,12 @@
       display: flex;
       flex: 1;
       width: 100%;
-      padding: 12px 42px 20px;
-
-      // 左侧 111
+      padding: 60px 42px 0;
       .dataScreen-lf {
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-        width: 450px;
+        width: 750px;
         height: 100%;
         margin-right: 40px;
         .dataScreen-top,
@@ -125,13 +125,11 @@
           position: relative;
           box-sizing: border-box;
           width: 100%;
-
-          // padding-top: 54px;
+          padding-top: 54px;
         }
         .dataScreen-top {
-          height: 37%;
-
-          // background: url("./images/dataScreen-main-lt.png") no-repeat;
+          height: 48%;
+          background: url("./images/dataScreen-main-lt.png") no-repeat;
           background-size: 100% 100%;
         }
         .dataScreen-center {
@@ -140,95 +138,87 @@
           background-size: 100% 100%;
         }
         .dataScreen-bottom {
-          height: 27%;
+          height: 48%;
           margin-bottom: 0;
           background: url("./images/dataScreen-main-lb.png") no-repeat;
           background-size: 100% 100%;
         }
       }
-
-      // 中间 222
       .dataScreen-ct {
         display: flex;
         flex: 1;
         flex-direction: column;
         justify-content: space-between;
         height: 100%;
-        margin-top: 30px;
         margin-right: 40px;
-
-        // border: 2px solid yellow;
-
-        // .dataScreen-map {
-        //   position: relative;
-        //   box-sizing: border-box;
-        //   flex: 1;
-        //   width: 100%;
-        //   margin-top: 78px;
-        //   .dataScreen-map-title {
-        //     position: absolute;
-        //     top: 10px;
-        //     left: 0;
-        //     z-index: 99;
-        //     box-sizing: border-box;
-        //     display: flex;
-        //     align-items: center;
-        //     width: 270px;
-        //     height: 25px;
-        //     padding-left: 30px;
-        //     font-size: 14px;
-        //     color: #ffffff;
-        //     letter-spacing: 5px;
-        //     background: url("./images/map-title-bg.png") no-repeat;
-        //     background-size: 100% 100%;
-        //   }
-        //   .dataScreen-alarm {
-        //     position: absolute;
-        //     top: 0;
-        //     left: 0;
-        //     z-index: 99;
-        //     box-sizing: border-box;
-        //     width: 100%;
-        //     height: 76px;
-        //     padding: 2px 30px;
-        //     overflow: hidden;
-        //     background: url("./images/dataScreen-warn-bg.png") no-repeat;
-        //     background-size: 100% 100%;
-        //     .map-item {
-        //       display: flex;
-        //       align-items: center;
-        //       height: 37px;
-        //       cursor: pointer;
-        //       img {
-        //         width: 15px;
-        //         height: 15px;
-        //         margin-top: 3px;
-        //         margin-right: 6px;
-        //       }
-        //       span {
-        //         font-size: 18px;
-        //         color: rgb(255 183 0 / 74.7%);
-        //       }
-        //     }
-        //   }
-        // }
-        // .dataScreen-cb {
-        //   position: relative;
-        //   box-sizing: border-box;
-        //   width: 100%;
-        //   height: 252px;
-        //   padding-top: 54px;
-        //   background: url("./images/dataScreen-main-cb.png") no-repeat;
-        //   background-size: 100% 100%;
-        // }
+        .dataScreen-map {
+          position: relative;
+          box-sizing: border-box;
+          flex: 1;
+          width: 100%;
+          margin-top: 78px;
+          .dataScreen-map-title {
+            position: absolute;
+            top: 10px;
+            left: 0;
+            z-index: 99;
+            box-sizing: border-box;
+            display: flex;
+            align-items: center;
+            width: 270px;
+            height: 25px;
+            padding-left: 30px;
+            font-size: 14px;
+            color: #ffffff;
+            letter-spacing: 5px;
+            background: url("./images/map-title-bg.png") no-repeat;
+            background-size: 100% 100%;
+          }
+          .dataScreen-alarm {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 99;
+            box-sizing: border-box;
+            width: 100%;
+            height: 76px;
+            padding: 2px 30px;
+            overflow: hidden;
+            background: url("./images/dataScreen-warn-bg.png") no-repeat;
+            background-size: 100% 100%;
+            .map-item {
+              display: flex;
+              align-items: center;
+              height: 37px;
+              cursor: pointer;
+              img {
+                width: 15px;
+                height: 15px;
+                margin-top: 3px;
+                margin-right: 6px;
+              }
+              span {
+                font-size: 18px;
+                color: rgb(255 183 0 / 74.7%);
+              }
+            }
+          }
+        }
+        .dataScreen-cb {
+          position: relative;
+          box-sizing: border-box;
+          width: 100%;
+          height: 252px;
+          padding-top: 54px;
+          background: url("./images/dataScreen-main-cb.png") no-repeat;
+          background-size: 100% 100%;
+        }
       }
-
-      // 右侧 333
       .dataScreen-rg {
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-        width: 450px;
+        width: 750px;
         height: 100%;
         .dataScreen-top,
         .dataScreen-center,
@@ -239,7 +229,7 @@
           padding-top: 54px;
         }
         .dataScreen-top {
-          height: 37%;
+          height: 48%;
           background: url("./images/dataScreen-main-rt.png") no-repeat;
           background-size: 100% 100%;
         }
@@ -249,7 +239,7 @@
           background-size: 100% 100%;
         }
         .dataScreen-bottom {
-          height: 27%;
+          height: 48%;
           margin-bottom: 0;
           background: url("./images/dataScreen-main-rb.png") no-repeat;
           background-size: 100% 100%;
@@ -264,19 +254,21 @@
         span {
           margin-bottom: 12px;
           font-family: YouSheBiaoTiHei;
-          font-size: 18px;
-          line-height: 16px;
+          font-size: 30px;
+          line-height: 30px;
           color: #ffffff;
           letter-spacing: 1px;
         }
         img {
-          width: 68px;
-          height: 7px;
+          width: 100px;
+          height: 10px;
         }
       }
       .dataScreen-main-chart {
         width: 100%;
         height: 100%;
+        margin: 0 auto;
+        text-align: center;
       }
     }
   }

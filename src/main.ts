@@ -30,6 +30,7 @@ import router from "@/routers";
 import I18n from "@/languages/index";
 // pinia store
 import pinia from "@/stores";
+import DataVVue3 from "@kjgl77/datav-vue3";
 // errorHandler
 import errorHandler from "@/utils/errorHandler";
 
@@ -42,4 +43,4 @@ Object.keys(Icons).forEach(key => {
   app.component(key, Icons[key as keyof typeof Icons]);
 });
 
-app.use(ElementPlus).use(directives).use(router).use(I18n).use(pinia).mount("#app");
+app.use(ElementPlus).use(directives).use(router).use(I18n).use(pinia).use(DataVVue3).mount("#app");
