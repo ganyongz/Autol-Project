@@ -1,9 +1,9 @@
 /* stylelint-disable scss/double-slash-comment-whitespace-inside */
 <template>
-  <div>
-    <el-container class="layout-container-demo" style="height: auto">
+  <div class="main-box">
+    <el-container class="layout-container-demo">
       <!-- 部门管理 -->
-      <el-aside width="240px" style="margin-right: 10px; border-radius: 10px">
+      <el-aside width="240px" style="margin-right: 10px; border-radius: 10px" class="table-main">
         <el-input v-model="filterText" style="width: 216px; margin: 8px" placeholder="部门搜索" :suffix-icon="Search" />
         <el-scrollbar>
           <el-tree
@@ -80,9 +80,9 @@
           </div>
         </el-header>
 
-        <el-main style="border-radius: 10px">
+        <el-main style="border-radius: 10px" class="card table-main">
           <el-scrollbar>
-            <el-table :data="tableData" height="800px">
+            <el-table :data="tableData">
               <el-table-column prop="userName" label="名称" />
               <el-table-column prop="realName" label="真实名称" />
               <el-table-column prop="sex" label="性别">
@@ -105,6 +105,16 @@
               </el-table-column>
             </el-table>
           </el-scrollbar>
+          <!-- 分页 -->
+          <el-pagination
+            v-model:current-page="nodeParams.pageNum"
+            v-model:page-size="nodeParams.pageSize"
+            :page-sizes="[10, 20, 30, 40, 50, 100]"
+            layout="total, sizes, prev, pager, next, jumper"
+            :total="total"
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+          />
         </el-main>
       </el-container>
     </el-container>
@@ -137,7 +147,6 @@
 
 <script lang="ts" setup name="departmentManage">
 import { nextTick, ref } from "vue";
-// import { ElTree } from "element-plus";
 import { Search } from "@element-plus/icons-vue";
 import {
   getDepartTree,
@@ -207,8 +216,8 @@ const formData = ref({
 // 获取部门列表参数
 const nodeParams = ref({
   deptId: "",
-  pageNum: "1",
-  pageSize: "10"
+  pageNum: 1,
+  pageSize: 10
 });
 const submitFun = async () => {
   let res: any = await addOrUpdateUser(formData.value);
@@ -320,6 +329,20 @@ const submitEquip = async () => {
     ElMessage.error(res?.mssage);
   }
 };
+// 分页
+const total = ref(0);
+const handleSizeChange = (val: any) => {
+  //每页数量
+  // console.log(`${val} items per page`);
+  nodeParams.value.pageNum = 1;
+  nodeParams.value.pageSize = val;
+  // getUserList(params);
+};
+const handleCurrentChange = (val: number) => {
+  // 页码
+  nodeParams.value.pageNum = val;
+  // getUserList(params);
+};
 </script>
 <style scoped lang="scss">
 .layout-container-demo .el-header {
@@ -328,15 +351,11 @@ const submitEquip = async () => {
   justify-content: left !important;
   height: auto !important;
   color: var(--el-text-color-primary);
-
-  /* background-color: var(--el-color-primary-light-7); */
-  background: #ffffff;
+  background-color: var(--el-bg-color);
 }
 .layout-container-demo .el-aside {
   color: var(--el-text-color-primary);
-
-  /* background: var(--el-color-primary-light-8); */
-  background-color: #ffffff;
+  background-color: var(--el-bg-color);
 }
 .layout-container-demo .el-menu {
   border-right: none;

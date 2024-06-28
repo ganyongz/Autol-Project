@@ -1,5 +1,5 @@
 <template>
-  <div>看板</div>
+  <div>看板。</div>
 </template>
 
 <script lang="ts" setup name="board"></script>

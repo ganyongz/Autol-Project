@@ -29,7 +29,7 @@
   </div>
 </template>
 
-<script lang="ts" setup name="anlageuebersicht">
+<script lang="ts" setup name="comprehensiveAnalysis">
 // 综合分析
 import { ref, watch } from "vue";
 import { ElTree } from "element-plus";
