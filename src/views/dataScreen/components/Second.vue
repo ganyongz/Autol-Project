@@ -6,7 +6,7 @@
       <div>
         <div>
           <dv-border-box-8 style="top: 90px; left: 40px; width: 90%; height: 500px; color: #ffffff">
-            <div style="padding: 20px; font-size: 18px; font-weight: 700; color: #ffffff; text-align: center">
+            <div style="padding: 20px; font-size: 18px; font-weight: 700; color: #ffffff; text-align: -webkit-center">
               <diqiu />
             </div>
           </dv-border-box-8>
