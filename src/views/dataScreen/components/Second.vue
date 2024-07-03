@@ -71,12 +71,6 @@
   </div>
 </template>
 
-<style lang="scss" scoped>
-.flex {
-  display: flex;
-}
-</style>
-
 <script setup lang="ts">
 import diqiu from "@/views/dataScreen/components/diqiu.vue";
 // import lineTable from "/@/components/FirstComponent/lineTable.vue";
@@ -85,3 +79,9 @@ import diqiu from "@/views/dataScreen/components/diqiu.vue";
 // import ringChart from "/@/components/FirstComponent/ringChart.vue";
 // import rowTable from "/@/components/FirstComponent/rowTable.vue";
 </script>
+
+<style lang="scss" scoped>
+.flex {
+  display: flex;
+}
+</style>
