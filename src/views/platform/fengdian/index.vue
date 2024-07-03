@@ -49,7 +49,7 @@
           </div>
           <!-- 风机卡片列表 -->
           <div class="box-2">
-            <el-card v-for="it in 15" :key="it['id']" class="box-card" shadow="hover">
+            <el-card v-for="it in 15" :key="it['id']" class="box-card" shadow="hover" @click="ToTargetPage(it)">
               <div class="left">
                 <img :src="it['equipImageUrl']" height="100px" width="100%" alt="暂无图片" />
               </div>
@@ -125,6 +125,13 @@ import alarmInfo from "@/views/platform/fengdian/components/alarmInfo.vue";
 import healthBearing from "@/views/platform/fengdian/components/healthBearing.vue";
 import healthGearCase from "@/views/platform/fengdian/components/healthGearCase.vue";
 import healthDynamo from "@/views/platform/fengdian/components/healthDynamo.vue";
+import { useRouter } from "vue-router";
+const router = useRouter();
+const ToTargetPage = (val: any) => {
+  console.log(val);
+  // D:\Autol-Project\src\views\online\anlageuebersicht\index.vue
+  router.push(`/online/anlageuebersicht/index?id=${val}`);
+};
 </script>
 
 <style scoped lang="scss">
@@ -172,6 +179,9 @@ html {
     flex-wrap: wrap;
     justify-content: space-between;
     overflow-x: auto;
+    .box-card {
+      cursor: pointer;
+    }
     .el-card {
       min-width: 390px;
       height: 170px;

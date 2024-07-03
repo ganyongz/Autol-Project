@@ -43,7 +43,6 @@ const getList = async () => {
 getList();
 // 跳转至详情
 const toDetail = (rowData: Object) => {
-  console.log(rowData, "1234567");
   router.push({
     name: "anlageuebersicht",
     query: {

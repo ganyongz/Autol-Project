@@ -47,8 +47,10 @@
             <dv-border-box-8 style="top: 130px; left: 40px; width: 400px; height: 220px; color: #ffffff">
               <div style="padding: 10px; font-size: 16px; font-weight: 500">
                 <div style="display: grid; grid-template-columns: 1fr 1fr">
-                  <div style="height: 200px; text-align: center; border: 1px solid #33ffff">暂无图片</div>
-                  <div>
+                  <div style="height: 200px; text-align: center">
+                    <img src="@/views/dataScreen/images/kuangShan.jpg" style="width: 100%; height: 100%" alt="矿山" />
+                  </div>
+                  <div class="showData">
                     <p>润滑系统：11</p>
                     <p>状态监测：32</p>
                     <p>油压监测：56</p>
@@ -71,8 +73,10 @@
             <dv-border-box-8 style="top: 140px; left: 40px; width: 400px; height: 220px; color: #ffffff">
               <div style="padding: 10px; font-size: 16px; font-weight: 500">
                 <div style="display: grid; grid-template-columns: 1fr 1fr">
-                  <div style="height: 200px; text-align: center; border: 1px solid #33ffff">暂无图片</div>
-                  <div>
+                  <div style="height: 200px; text-align: center">
+                    <img src="@/views/dataScreen/images/shuiNi.png" style="width: 100%; height: 100%" alt="水泥" />
+                  </div>
+                  <div class="showData">
                     <p>润滑系统：80</p>
                     <p>状态监测：13</p>
                     <p>油压监测：287</p>
@@ -141,5 +145,8 @@ const conf = reactive({
     background: #cc6633;
     border-radius: 100%;
   }
+}
+.showData {
+  margin-left: 10px;
 }
 </style>

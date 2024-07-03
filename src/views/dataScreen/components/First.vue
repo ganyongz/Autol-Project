@@ -43,8 +43,10 @@
             <dv-border-box-8 style="top: 130px; left: 40px; width: 400px; height: 220px; color: #ffffff">
               <div style="padding: 10px; font-size: 16px; font-weight: 500">
                 <div style="display: grid; grid-template-columns: 1fr 1fr">
-                  <div style="height: 200px; text-align: center; border: 1px solid #33ffff">暂无图片</div>
-                  <div>
+                  <div style="height: 200px; text-align: center">
+                    <img src="@/views/dataScreen/images/gangKou.jpg" style="width: 100%; height: 100%" alt="港口" />
+                  </div>
+                  <div class="showData">
                     <p>润滑系统：100</p>
                     <p>状态监测：100</p>
                     <p>油压监测：100</p>
@@ -67,8 +69,10 @@
             <dv-border-box-8 style="top: 140px; left: 40px; width: 400px; height: 220px; color: #ffffff">
               <div style="padding: 10px; font-size: 16px; font-weight: 500">
                 <div style="display: grid; grid-template-columns: 1fr 1fr">
-                  <div style="height: 200px; text-align: center; border: 1px solid #33ffff">暂无图片</div>
-                  <div>
+                  <div style="height: 200px; text-align: center">
+                    <img src="@/views/dataScreen/images/shiPing.jpg" style="width: 100%; height: 100%" alt="食品" />
+                  </div>
+                  <div class="showData">
                     <p>润滑系统：234</p>
                     <p>状态监测：676</p>
                     <p>油压监测：4567</p>
@@ -85,4 +89,8 @@
 </template>
 
 <script lang="ts" setup></script>
-<style scoped lang=""></style>
+<style scoped lang="scss">
+.showData {
+  margin-left: 10px;
+}
+</style>
