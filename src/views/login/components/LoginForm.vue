@@ -74,19 +74,20 @@ const login = (formEl: FormInstance | undefined) => {
       userStore.setUserType(data.userType);
       // 2.添加动态路由
       await initDynamicRouter();
-
       // 3.清空 tabs、keepAlive 数据
-      tabsStore.setTabs([]);
-      keepAliveStore.setKeepAliveName([]);
+      await tabsStore.setTabs([]);
+      await keepAliveStore.setKeepAliveName([]);
 
       // 4.跳转到首页
-      router.push(HOME_URL);
-      ElNotification({
-        title: getTimeState(),
-        message: "欢迎登录 Autol 管理系统",
-        type: "success",
-        duration: 3000
-      });
+      setTimeout(() => {
+        router.push(HOME_URL);
+        ElNotification({
+          title: getTimeState(),
+          message: "欢迎登录 Autol 管理系统",
+          type: "success",
+          duration: 3000
+        });
+      }, 100);
     } finally {
       loading.value = false;
     }

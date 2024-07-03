@@ -31,7 +31,7 @@ export const useAuthStore = defineStore({
       const { data } = await getAuthButtonListApi();
       this.authButtonList = data;
     },
-    // Get AuthMenuList ------> 获取菜单
+    // 获取动态菜单
     async getAuthMenuList() {
       const { data } = await getAuthMenuListApi();
       let data1: any = data;
