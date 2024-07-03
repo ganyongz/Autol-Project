@@ -118,7 +118,7 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup lang="ts" name="fengDian">
 import AlarmPoint from "@/views/platform/fengdian/components/AlarmPoint.vue";
 import CurrentState from "@/views/platform/fengdian/components/CurrentState.vue";
 import alarmInfo from "@/views/platform/fengdian/components/alarmInfo.vue";

@@ -10,11 +10,11 @@
     <!-- 菜单按钮的新增或编辑 -->
     <el-form :model="ruleForm" ref="ruleFormRef" :rules="rules">
       <el-form-item label="名称" prop="title" :label-width="formLabelWidth">
-        <el-input v-model="ruleForm.title" autocomplete="off" />
+        <el-input v-model.trim="ruleForm.title" autocomplete="off" />
       </el-form-item>
 
-      <el-form-item label="别称" prop="name" :label-width="formLabelWidth">
-        <el-input v-model="ruleForm.name" autocomplete="off" />
+      <el-form-item label="英文别称" prop="name" :label-width="formLabelWidth">
+        <el-input v-model.trim="ruleForm.name" autocomplete="off" />
       </el-form-item>
 
       <el-form-item label="类型" :label-width="formLabelWidth">
@@ -25,23 +25,34 @@
       </el-form-item>
 
       <el-form-item label="路由" :label-width="formLabelWidth">
-        <el-input v-model="ruleForm.url" autocomplete="off" />
+        <el-input v-model.trim="ruleForm.url" autocomplete="off" />
       </el-form-item>
 
       <el-form-item label="等级" :label-width="formLabelWidth">
-        <el-input v-model="ruleForm.sort" autocomplete="off" />
+        <el-input v-model.trim="ruleForm.sort" autocomplete="off" />
+      </el-form-item>
+      <!-- isHide -->
+      <el-form-item label="显示/隐藏" :label-width="formLabelWidth">
+        <el-switch
+          v-model="ruleForm.isHide"
+          inline-prompt
+          :active-value="false"
+          :inactive-value="true"
+          active-text="显示"
+          inactive-text="隐藏"
+        />
       </el-form-item>
 
       <el-form-item label="图标" :label-width="formLabelWidth">
-        <el-input v-model="ruleForm.icon" autocomplete="off" />
+        <el-input v-model.trim="ruleForm.icon" autocomplete="off" />
       </el-form-item>
 
       <el-form-item label="父级id" :label-width="formLabelWidth" readonly>
-        <el-input v-model="ruleForm.parentId" autocomplete="off" />
+        <el-input v-model.trim="ruleForm.parentId" autocomplete="off" />
       </el-form-item>
 
       <el-form-item label="描述" :label-width="formLabelWidth">
-        <el-input v-model="ruleForm.description" autocomplete="off" />
+        <el-input v-model.trim="ruleForm.description" autocomplete="off" />
       </el-form-item>
 
       <el-form-item label="状态" :label-width="formLabelWidth">
@@ -107,6 +118,7 @@ let ruleForm = reactive({
   sort: 0,
   icon: "",
   iconType: 0,
+  isHide: false,
   isActive: true,
   description: ""
 });

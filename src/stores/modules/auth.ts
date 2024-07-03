@@ -55,11 +55,12 @@ function mapTree(org: any) {
     name: org.name,
     component: org.url,
     redirect: org.redirect,
+    isHide: org.isHide,
     meta: {
       icon: org.icon,
       title: org?.title,
       isLink: "",
-      isHide: false,
+      isHide: org.isHide,
       isFull: false,
       isAffix: false,
       isKeepAlive: true
