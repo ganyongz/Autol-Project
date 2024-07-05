@@ -1,5 +1,6 @@
 <template>
   <div style="width: 100%">
+    <!-- 测点 -->
     <el-tabs v-model="activeName" class="demo-tabs" @tab-click="handleClick">
       <el-tab-pane label="基本信息" name="first">
         <el-button type="primary" @click="submitEquipment(ruleFormRef)">保存</el-button>
@@ -89,6 +90,7 @@ import {
 } from "@/api/system/functionPosition";
 import bindTmp from "@/views/system/onlineSetup/instrumentMaintain/index.vue";
 import { ElMessage, type ComponentSize, type FormInstance, type FormRules } from "element-plus";
+import mittBus from "@/utils/mittBus";
 // 测点详情
 const props = defineProps({
   nodeData: {
@@ -169,6 +171,7 @@ const saveForm = async () => {
   let res: any = await equipPoint_addOrUpdate(ruleForm.value);
   if (res.code == "200") {
     ElMessage.success("保存成功");
+    mittBus.emit("refreshLocationTree");
   } else {
     ElMessage.error(res?.mssage);
   }
@@ -189,6 +192,7 @@ const getPointDetailFun = async () => {
 // 删除测点
 const deleteFun = async () => {
   await useHandleData(equipPoint_deleteById, { id: nodeData.value?.id }, `删除【${nodeData.value.name}】测点`);
+  mittBus.emit("refreshLocationTree");
 };
 // 解绑数据测点
 const unBind = async () => {

@@ -25,6 +25,9 @@
           </div>
         </el-aside>
         <el-main style="position: relative; overflow: hidden">
+          <div style="position: absolute; top: 30%; right: 0; left: 0; text-align: center">
+            <img src="../images/FengJi.jpg" alt="dianji1" />
+          </div>
           <el-card class="positioned-card" :style="{ top: cardTop + 'px', left: cardLeft + 'px' }">
             <template #header>
               <div>
@@ -45,7 +48,7 @@
             <p style="padding-left: 10px; font-size: 12px">频率：<span style="color: #19be6b">无数据</span></p>
           </el-card>
 
-          <el-card class="positioned-card" :style="{ top: 600 + 'px', left: 1600 + 'px' }">
+          <el-card class="positioned-card" :style="{ top: 600 + 'px', right: '20%' }">
             <template #header>
               <div>
                 <span>工艺通道</span>
@@ -54,10 +57,6 @@
             <p style="padding-left: 10px; font-size: 12px">风机轴承传入：<span style="color: #19be6b">无数据</span></p>
             <p style="padding-left: 10px; font-size: 12px">风机轴承传出：<span style="color: #19be6b">无数据</span></p>
           </el-card>
-
-          <div>
-            <img src="../images/dianji1.gif" alt="dianji1" />
-          </div>
         </el-main>
       </el-container>
     </el-container>

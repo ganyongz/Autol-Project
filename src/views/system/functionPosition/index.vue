@@ -1,5 +1,6 @@
 <template>
   <div>
+    <!-- 功能位置 -->
     <el-container class="layout-container-demo">
       <el-aside width="240px" style="margin-right: 10px; border-radius: 10px">
         <el-tree
@@ -22,7 +23,6 @@
             <el-button type="primary" @click="addLevelDepart">添加下级</el-button>
             <el-button type="primary" @click="submitFun">保存</el-button>
             <el-button type="danger" @click="deleteFun">删除</el-button>
-
             <el-button type="success" @click="addEquipmentFun('添加设备', formData)">添加设备</el-button>
           </div>
           <!-- 添加 -->
@@ -39,9 +39,9 @@
                   <el-form-item label="类型" required>
                     <el-select v-model="formData.type" placeholder="请选择类型">
                       <el-option label="功能位置" :value="1" />
-                      <el-option label="设备" :value="2" />
-                      <el-option label="部件" :value="3" />
-                      <el-option label="检测点" :value="4" />
+                      <!-- <el-option label="设备" :value="2" /> -->
+                      <!-- <el-option label="部件" :value="3" />
+                      <el-option label="检测点" :value="4" /> -->
                     </el-select>
                   </el-form-item>
                 </el-col>
@@ -92,7 +92,8 @@
 </template>
 
 <script lang="ts" setup name="functionPosition">
-import { ref, nextTick } from "vue";
+import mittBus from "@/utils/mittBus";
+import { ref, nextTick, onUnmounted } from "vue";
 import { ElMessage } from "element-plus";
 import { getLocationTree, locationAddOrUpdate, deleteById, equip_addOrUpdate } from "@/api/system/functionPosition";
 import { useHandleData } from "@/hooks/useHandleData";
@@ -177,7 +178,7 @@ const getLocationTreeFun = async () => {
 };
 // 删除
 const deleteFun = async () => {
-  await useHandleData(deleteById, { id: formData.value?.id }, `删除【${formData.value.name}】节点`);
+  await useHandleData(deleteById, { id: formData.value?.id, type: formData.value.type }, `删除【${formData.value.name}】节点`);
   getLocationTreeFun();
 };
 // 新增、编辑（设备）
@@ -196,7 +197,7 @@ const detailParams = ref({
 const addEquipmentFun = (title: string, row: any) => {
   if (row.id) {
     IsShowAdd.value = true;
-    console.log(title, row);
+    // console.log(title, row);
     rowData.value = row;
     myDialog1.value.open();
   } else {
@@ -208,6 +209,7 @@ const submitForm = async () => {
   let res: any = await equip_addOrUpdate(addEditRoleRef.value.ruleForm);
   if (res.code == "200") {
     ElMessage.success("保存成功");
+    getLocationTreeFun();
   } else {
     ElMessage.error(res?.mssage);
   }
@@ -219,7 +221,12 @@ const closeDialog = () => {
   myDialog1.value.close();
   IsShowAdd.value = false;
 };
-
+mittBus.on("refreshLocationTree", () => {
+  getLocationTreeFun();
+});
+onUnmounted(() => {
+  mittBus.all.clear();
+});
 // 调用
 getLocationTreeFun();
 </script>

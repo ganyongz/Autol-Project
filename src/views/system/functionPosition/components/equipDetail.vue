@@ -1,5 +1,6 @@
 <template>
   <div>
+    <!-- 设备 -->
     <el-button type="primary" @click="submitEquipment(ruleFormRef)">保存</el-button>
     <el-button type="danger" @click="deleteFun">删除</el-button>
     <el-button type="success" plain @click="addUnitFun(ruleForm)">添加部件</el-button>
@@ -91,6 +92,7 @@
 
 <script lang="ts" setup name="equipDetail">
 import { reactive, ref, toRefs } from "vue";
+import mittBus from "@/utils/mittBus";
 import { useHandleData } from "@/hooks/useHandleData";
 import { equip_equipInfo, equip_addOrUpdate, equip_deleteById, equipPart_addOrUpdate } from "@/api/system/functionPosition";
 import { ElMessage, type ComponentSize, type FormInstance, type FormRules } from "element-plus";
@@ -158,6 +160,7 @@ const saveForm = async () => {
   let res: any = await equip_addOrUpdate(ruleForm);
   if (res.code == "200") {
     ElMessage.success("保存成功");
+    mittBus.emit("refreshLocationTree");
   } else {
     ElMessage.error(res?.mssage);
   }
@@ -220,6 +223,7 @@ const getEquipDetailFun = async () => {
 // 删除设备
 const deleteFun = async () => {
   await useHandleData(equip_deleteById, { id: nodeData.value?.id }, `删除【${nodeData.value.name}】设备`);
+  mittBus.emit("refreshLocationTree");
 };
 // 添加部件
 const addUnitFun = (row: any) => {
@@ -251,6 +255,7 @@ const submitForm = async () => {
   let res: any = await equipPart_addOrUpdate(addEditRoleRef.value.ruleForm);
   if (res.code == "200") {
     ElMessage.success("保存成功");
+    mittBus.emit("refreshLocationTree");
   } else {
     ElMessage.error(res?.mssage);
   }

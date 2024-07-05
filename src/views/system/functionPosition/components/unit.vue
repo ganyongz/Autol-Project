@@ -1,6 +1,6 @@
 <template>
   <div style="width: 100%">
-    <!-- 部件详情信息 -->
+    <!-- 部件 -->
     <el-card>
       <el-button type="primary" @click="saveUnit">保存</el-button>
       <el-button type="danger" @click="deleteFun">删除</el-button>
@@ -87,6 +87,7 @@ import {
 import { ElMessage } from "element-plus";
 import myDialog from "@/components/dialog/myDialog.vue";
 import addPoint from "@/views/system/functionPosition/components/addPoint.vue";
+import mittBus from "@/utils/mittBus";
 let props = defineProps({
   nodeData: {
     type: Object,
@@ -140,6 +141,7 @@ const saveUnit = async () => {
   let res: any = await equipPart_addOrUpdate(formInline);
   if (res.code == "200") {
     ElMessage.success("保存成功");
+    mittBus.emit("refreshLocationTree");
   } else {
     ElMessage.error(res?.mssage);
   }
@@ -179,6 +181,7 @@ const saveEquipPoint = async () => {
   let res: any = await equipPoint_addOrUpdate(addEditPointRef.value.ruleForm);
   if (res.code == "200") {
     ElMessage.success("保存成功");
+    mittBus.emit("refreshLocationTree");
     closeDialog();
     getEquipPointList();
   } else {
