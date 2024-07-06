@@ -53,34 +53,7 @@ onMounted(() => {
     dataScreenRef.value.style.height = `1080px`;
   }
   window.addEventListener("resize", resize);
-  // setTimeout(() => {
-  //   updateKey.value += 1;
-  // }, 100);
 });
-// let updateKey = ref(1);
-
-// const tableData = [
-//   {
-//     date: "2016-05-03",
-//     name: "Tom",
-//     address: "No. 189, Grove St, Los Angeles"
-//   },
-//   {
-//     date: "2016-05-02",
-//     name: "Tom",
-//     address: "No. 189, Grove St, Los Angeles"
-//   },
-//   {
-//     date: "2016-05-04",
-//     name: "Tom",
-//     address: "No. 189, Grove St, Los Angeles"
-//   },
-//   {
-//     date: "2016-05-01",
-//     name: "Tom",
-//     address: "No. 189, Grove St, Los Angeles"
-//   }
-// ];
 // 设置响应式
 const resize = () => {
   if (dataScreenRef.value) {

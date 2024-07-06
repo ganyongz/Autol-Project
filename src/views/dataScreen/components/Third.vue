@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- 二级标题 -->
-    <dv-border-box-11 title="⭐监测" style="width: 450px; height: 960px">
+    <dv-border-box-11 style="width: 450px; height: 960px">
       <div>
         <!-- 三级标题 -->
         <div>

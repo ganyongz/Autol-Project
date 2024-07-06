@@ -2,7 +2,7 @@
   <!-- 第一个 停电检测 -->
   <div>
     <!-- 二级标题 -->
-    <dv-border-box-11 title="⭐分布" style="height: 930px">
+    <dv-border-box-11 style="height: 930px">
       <div>
         <div>
           <dv-border-box-8 style="top: 90px; left: 40px; width: 90%; height: 500px; color: #ffffff">
