@@ -7,7 +7,7 @@
         </div>
         <div class="header-ct">
           <div class="header-ct-title">
-            <span>智慧润滑大数据展示平台</span>
+            <span>DIMS智慧管理平台</span>
             <!-- <div class="header-ct-warning">平台高峰预警信息（2条）</div> -->
           </div>
         </div>

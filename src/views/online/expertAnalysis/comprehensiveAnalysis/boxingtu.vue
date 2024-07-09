@@ -87,7 +87,10 @@ onMounted(() => {
           name: "振幅",
           type: "line",
           stack: "Total",
-          data: yAxisData
+          data: yAxisData,
+          markLine: {
+            data: [{ xAxis: "Tue" }]
+          }
         }
       ]
     };
