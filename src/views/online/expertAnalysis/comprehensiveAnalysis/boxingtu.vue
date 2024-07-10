@@ -5,6 +5,8 @@
 <script setup lang="ts" name="boxingtu">
 import { ref, onMounted, onUnmounted } from "vue";
 import * as echarts from "echarts";
+import { ElMessage } from "element-plus";
+import { Diagram_trendChart } from "@/api/online/comprehensiveAnalysis";
 
 const chartRef = ref<HTMLDivElement | null>(null);
 let chartInstance: echarts.ECharts | null = null;
@@ -20,7 +22,7 @@ onMounted(() => {
     const yAxisData = [0.88, 132, -101, 134, -90, 230, -210];
 
     // 配置项和数据
-    const option = {
+    const option = ref({
       tooltip: {
         trigger: "axis",
         axisPointer: {
@@ -93,12 +95,20 @@ onMounted(() => {
           }
         }
       ]
-    };
+    });
 
     // 使用配置项和数据显示图表
-    chartInstance.setOption(option);
+    chartInstance.setOption(option.value);
   }
 });
+const getTrendChart = async () => {
+  let res: any = await Diagram_trendChart({});
+  if (res.code == "200") {
+    // treeData.value = res.data as any;
+  } else {
+    ElMessage.error(res?.mssage);
+  }
+};
 
 onUnmounted(() => {
   if (chartInstance) {
@@ -107,6 +117,7 @@ onUnmounted(() => {
     chartInstance = null;
   }
 });
+getTrendChart();
 </script>
 
 <style scoped>

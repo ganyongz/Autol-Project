@@ -8,19 +8,38 @@
       <!-- 树选择器 -->
       <el-aside width="240px">
         <el-input v-model="filterText" style="width: 240px" placeholder="关键字搜索" />
-
         <el-tree
           ref="treeRef"
-          style="max-width: 600px; height: 800px"
-          class="filter-tree"
-          :data="data"
+          :data="treeData"
           :props="defaultProps"
-          default-expand-all
+          highlight-current
           :filter-node-method="filterNode"
-        />
+          @node-click="nodeClick"
+        >
+          <template #default="{ node, data }">
+            <span>
+              <span @click="toggleChild(node)">
+                {{ data.type }}
+                <!-- 没有子级所展示的图标 -->
+                <i v-if="!data.children.length && data.type == 4">
+                  <el-icon><Star /></el-icon>
+                </i>
+                <!-- 展开后的图标 -->
+                <i v-else-if="node.expanded" class="el-icon-minus">
+                  <el-icon><FolderRemove /></el-icon>
+                </i>
+                <!-- 未展开的图标 -->
+                <i v-else class="el-icon-plus">
+                  <el-icon><FolderAdd /></el-icon>
+                </i>
+              </span>
+              <span class="custom-tree-node">{{ node.label }}</span>
+            </span>
+          </template>
+        </el-tree>
       </el-aside>
       <el-main style="position: relative; overflow: hidden">
-        <boxingtu />
+        <boxingtu ref="trendChart" />
         <div style="height: 400px; text-align: center; vertical-align: middle; border: 1px solid #dddddd; border-radius: 15px">
           暂无数据
         </div>
@@ -32,84 +51,51 @@
 <script lang="ts" setup name="comprehensiveAnalysis">
 // 综合分析
 import { ref, watch } from "vue";
-import { ElTree } from "element-plus";
+import { ElMessage } from "element-plus";
 import boxingtu from "@/views/online/expertAnalysis/comprehensiveAnalysis/boxingtu.vue";
+import { getLocationTree } from "@/api/system/functionPosition";
 // tabs 切换
 const activeName = ref("first");
 const handleClick = (tab: any, event: Event) => {
   console.log(tab, event);
 };
+const trendChart = ref();
 // 左侧树
-interface Tree {
-  [key: string]: any;
-}
+const treeData = ref([]);
 const filterText = ref("");
-const treeRef = ref<InstanceType<typeof ElTree>>();
-
-const defaultProps = {
-  children: "children",
-  label: "label"
-};
-
+const treeRef = ref();
 watch(filterText, val => {
   treeRef.value!.filter(val);
 });
 
-const filterNode = (value: string, data: Tree) => {
+const filterNode = (value: string, data: any) => {
   if (!value) return true;
-  return data.label.includes(value);
+  return data.name.includes(value);
+};
+const defaultProps = {
+  children: "children",
+  label: "name",
+  type: "type"
+};
+// 点击节点
+const nodeClick = (treeNode, a, b) => {
+  console.log(treeNode, a, b);
+};
+// 获取左侧菜单树
+const getLocationTreeFun = async () => {
+  let res: any = await getLocationTree({ type: 4, range: 9 });
+  if (res.code == "200") {
+    treeData.value = res.data as any;
+  } else {
+    ElMessage.error(res?.mssage);
+  }
+};
+const toggleChild = node => {
+  node.expanded = !node.expanded;
 };
 
-const data: Tree[] = [
-  {
-    id: 1,
-    label: "Level one 1",
-    children: [
-      {
-        id: 4,
-        label: "Level two 1-1",
-        children: [
-          {
-            id: 9,
-            label: "Level three 1-1-1"
-          },
-          {
-            id: 10,
-            label: "Level three 1-1-2"
-          }
-        ]
-      }
-    ]
-  },
-  {
-    id: 2,
-    label: "Level one 2",
-    children: [
-      {
-        id: 5,
-        label: "Level two 2-1"
-      },
-      {
-        id: 6,
-        label: "Level two 2-2"
-      }
-    ]
-  },
-  {
-    id: 3,
-    label: "Level one 3",
-    children: [
-      {
-        id: 7,
-        label: "Level two 3-1"
-      },
-      {
-        id: 8,
-        label: "Level two 3-2"
-      }
-    ]
-  }
-];
+// 调用
+getLocationTreeFun();
 </script>
 <style scoped lang="scss">
 .contentBox {
@@ -120,5 +106,20 @@ const data: Tree[] = [
   border: 1px solid var(--el-border-color-light);
   border-radius: 6px;
   box-shadow: 0 0 12px rgb(0 0 0 / 5%);
+}
+:deep(.el-tree) {
+  padding-left: 20px;
+}
+:deep(.custom-tree-node) {
+  padding: 0 10px 0 8px;
+}
+
+// 自定义图标中隐藏自带箭头
+:deep(.el-tree-node__content) {
+  position: relative;
+}
+:deep(.el-tree-node__content > .el-tree-node__expand-icon) {
+  position: absolute;
+  opacity: 0;
 }
 </style>

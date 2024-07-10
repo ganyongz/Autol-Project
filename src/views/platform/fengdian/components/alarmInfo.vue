@@ -1,23 +1,23 @@
 <template>
-  <div demo-bg>
-    <dv-scroll-board :config="config" style="width: 100%; height: 300px" @mouseover="mouseoverHandler" @click="clickHandler" />
+  <div class="main-box" style="overflow: auto">
+    <dv-scroll-board :config="config" style="width: 98%; height: 280px" @mouseover="mouseoverHandler" @click="clickHandler" />
   </div>
 </template>
 <script lang="ts" setup>
 import { reactive } from "vue";
 const config = reactive({
-  header: ["设备名称", "测点位置", "报警时间"],
+  header: ["部件名称", "报警等级"],
   data: [
-    ["#1", "行1列2", "2024-07-01 19:54:25"],
-    ["#2", "行2列2", "2024-07-01 19:54:25"],
-    ["#3", "行3列2", "2024-07-01 19:54:25"],
-    ["#4", "行4列2", "2024-07-01 19:54:25"],
-    ["#5", "行5列2", "2024-07-01 19:54:25"],
-    ["#6", "行6列2", "2024-07-01 19:54:25"],
-    ["#7", "行7列2", "2024-07-01 19:54:25"],
-    ["#8", "行8列2", "2024-07-01 19:54:25"],
-    ["#9", "行9列2", "2024-07-01 19:54:25"],
-    ["#10", "行10列2", "2024-07-01 19:54:25"]
+    ["#1", "低报"],
+    ["#2", "低低报"],
+    ["#3", "高报"],
+    ["#4", "高报"],
+    ["#5", "低报"],
+    ["#6", "高高报"],
+    ["#7", "低低报"],
+    ["#8", "高报"],
+    ["#9", "高报"],
+    ["#10", "低报"]
   ],
   index: false,
   // columnWidth: [50],
