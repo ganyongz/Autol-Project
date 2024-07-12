@@ -53,7 +53,7 @@
     </div>
 
     <div class="container">
-      <div class="item" v-for="item in 50" :key="item">
+      <div class="item1" v-for="item in 50" :key="item" @click="ToTargetPage(item)">
         <el-row :gutter="20">
           <el-col :span="10">
             <img style="width: 80%; height: 75px" src="@/views/platform/port/images/fengji2.png" alt="图片" />
@@ -117,6 +117,8 @@
 <script setup lang="ts" name="cockpit">
 import { ref } from "vue";
 import alarmInfo from "@/views/platform/fengdian/components/alarmInfo.vue";
+import { useRouter } from "vue-router";
+const router = useRouter();
 let selectValue = ref("哈巴河风电场");
 let selectData = ref([
   {
@@ -132,12 +134,16 @@ let selectData = ref([
     label: "海口国投洋浦港"
   }
 ]);
+const ToTargetPage = (val: any) => {
+  // console.log(val);
+  router.push(`/online/anlageuebersicht/index?id=${val}`);
+};
 </script>
 
 <style>
 .portContainer {
   width: 100%;
-  height: 100vh;
+  height: calc(100%);
   overflow: hidden;
   background: url("@/views/dataScreen/images/big_bg01.png") no-repeat;
   background-position: center;
@@ -183,7 +189,7 @@ let selectData = ref([
   overflow-x: auto;
   border: 1px solid #009688;
 }
-.item {
+.item1 {
   box-sizing: border-box; /* 防止padding导致宽度超出100% */
   width: calc(25% - 20px); /* 假设间隔为10px */
   height: 100px;
@@ -217,14 +223,14 @@ let selectData = ref([
 /* 适配小屏幕设备 */
 
 @media (width <= 1600px) {
-  .item {
+  .item1 {
     width: calc(50% - 20px);
     margin-bottom: 10px;
   }
 }
 
 @media (width <= 768px) {
-  .item {
+  .item1 {
     width: 100%;
     margin-bottom: 10px;
   }

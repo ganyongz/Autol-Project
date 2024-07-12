@@ -16510,7 +16510,7 @@
           ]
         ]
       },
-      "properties": { "name": "中国", "center": [116.407526, 39.90403] }
+      "properties": { "name": "中国", "center": [113.65, 34.76] }
     },
     {
       "type": "Feature",

@@ -33,7 +33,7 @@
           <!-- 三级标题 -->
         </div>
         <!-- 2222 -->
-        <div>
+        <div style="cursor: pointer" @click="ToTargetPage">
           <!-- 三级标题 -- 港口 -->
           <div>
             <dv-border-box-5 :color="['#225762', '#225762']" style="top: 120px; left: 40px; width: 280px; height: 40px">
@@ -95,7 +95,7 @@ import { useRouter } from "vue-router";
 const router = useRouter();
 const ToTargetPage = () => {
   //路由跳转
-  router.push("/platform/fengdian/index");
+  router.push("/platform/port/index");
 };
 </script>
 <style scoped lang="scss">
