@@ -3,7 +3,7 @@
     <!-- 角色管理 -->
     <el-container>
       <el-aside width="240px">
-        <div class="container">
+        <div class="container1">
           <p class="pLeft">角色管理</p>
           <p class="pRight">
             <el-icon @click="addRole" size="25px" style="cursor: pointer"><CirclePlus /></el-icon>
@@ -263,7 +263,7 @@ getRoleListFun();
 }
 
 /* aside */
-.container {
+.container1 {
   display: flex;
   justify-content: space-between;
   border-bottom: 1px solid #e1e1e1;

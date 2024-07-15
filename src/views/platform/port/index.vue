@@ -76,12 +76,12 @@
       <el-row :gutter="20" style="height: 100%">
         <el-col :span="8">
           <dv-border-box12>
-            <div style="display: flex; align-items: center; height: 100%; font-size: 20px; text-align: center">
-              <div style="width: 30%">
+            <div style="display: flex; align-items: center; height: 100%; padding: 10px; font-size: 20px; text-align: center">
+              <div style="width: 30%; padding: 10px">
                 <p>润滑报警部件数量</p>
                 <p>19</p>
               </div>
-              <div style="flex: 1"><alarmInfo /></div>
+              <div style="flex: 1; padding: 5px"><alarmInfo /></div>
             </div>
           </dv-border-box12>
         </el-col>
@@ -89,11 +89,11 @@
         <el-col :span="8">
           <dv-border-box12>
             <div style="display: flex; align-items: center; height: 100%; font-size: 20px; text-align: center">
-              <div style="width: 30%">
+              <div style="width: 30%; padding: 10px">
                 <p>油液报警部件数量</p>
                 <p>8</p>
               </div>
-              <div style="flex: 1"><alarmInfo /></div>
+              <div style="flex: 1; padding: 10px"><alarmInfo /></div>
             </div>
           </dv-border-box12>
         </el-col>
@@ -101,11 +101,11 @@
         <el-col :span="8">
           <dv-border-box12>
             <div style="display: flex; align-items: center; height: 100%; font-size: 20px; text-align: center">
-              <div style="width: 30%">
+              <div style="width: 30%; padding: 10px">
                 <p>振动报警部件数量</p>
                 <p>12</p>
               </div>
-              <div style="flex: 1"><alarmInfo /></div>
+              <div style="flex: 1; padding: 5px"><alarmInfo /></div>
             </div>
           </dv-border-box12>
         </el-col>
