@@ -11,12 +11,12 @@
         </div>
       </el-header>
       <el-main style="display: flex">
-        <div style="width: 60%; height: calc(100% - 20px); overflow-x: auto; text-align: center">
-          <el-space wrap style="justify-content: flex-start">
-            <el-card v-for="i in 5" :key="i" class="box-card">
+        <div style="width: 60%; height: calc(100% - 20px); overflow-y: auto; text-align: left">
+          <el-space style="flex-wrap: nowrap; justify-content: flex-start">
+            <el-card v-for="i in cardOptions" :key="i" class="box-card">
               <template #header>
                 <div class="card-header" style="display: flex; justify-content: space-between">
-                  <span>轴承输出端</span>
+                  <span>{{ i.title }}</span>
                   <el-popover ref="popover" placement="right" title="位移" :width="200" trigger="hover" content="10vm">
                     <template #reference>
                       <el-icon style="cursor: pointer"><InfoFilled /></el-icon>
@@ -25,12 +25,12 @@
                 </div>
               </template>
               <div style="color: #009688; text-align: left">轴承振动情况：</div>
-              <div v-for="o in 2" :key="o">
+              <div v-for="(item, index) in i.zhendongOptions" :key="index">
                 <el-popover placement="right" :width="300" trigger="hover">
                   <template #reference>
                     <div style="display: flex; justify-content: space-between">
-                      <p style="cursor: pointer">{{ "振动测点 " + o }} :</p>
-                      <p style="color: #19be6b">0.08mm/s</p>
+                      <p style="margin: 5px 0; cursor: pointer">{{ item.name }} :</p>
+                      <p style="margin: 5px 0; color: #19be6b">{{ item.value }}</p>
                     </div>
                   </template>
                   <div>
@@ -44,51 +44,31 @@
               <div style="display: flex; justify-content: space-between">
                 <div style="color: #009688; text-align: left">润滑监控：</div>
                 <div>
-                  <el-button size="small" type="primary" @click="FunSetParameter">参数</el-button>
-                  <el-button size="small" type="primary" @click="FunStatistics">数据统计</el-button>
+                  <el-button type="primary" @click="FunSetParameter">参数</el-button>
+                  <el-button type="primary" @click="FunStatistics">数据统计</el-button>
                 </div>
               </div>
-              <div>
+              <div v-for="(item, index) in i.pump" :key="index">
                 <div style="display: flex; justify-content: space-between">
-                  <p>打油次数:</p>
-                  <p style="color: #19be6b">108</p>
-                </div>
-                <div style="display: flex; justify-content: space-between">
-                  <p>温度:</p>
-                  <p style="color: #19be6b">38℃</p>
-                </div>
-                <div style="display: flex; justify-content: space-between">
-                  <p>打油状态:</p>
-                  <p style="color: #19be6b">正常</p>
-                </div>
-                <div style="display: flex; justify-content: space-between">
-                  <p>润滑时间:</p>
-                  <p style="color: #19be6b">1分10秒</p>
+                  <p style="margin: 5px 0">{{ item.name }}</p>
+                  <p style="margin: 5px 0; color: #19be6b">{{ item.num }}</p>
                 </div>
               </div>
 
               <!-- 分割线 -->
               <el-divider />
               <div style="color: #009688; text-align: left">油液状态：</div>
-              <div>
+              <div v-for="(item, index) in i.oilState" :key="index">
                 <div style="display: flex; justify-content: space-between">
-                  <p>温度:</p>
-                  <p style="color: #19be6b">32℃</p>
-                </div>
-                <div style="display: flex; justify-content: space-between">
-                  <p>水分:</p>
-                  <p style="color: #19be6b">2</p>
-                </div>
-                <div style="display: flex; justify-content: space-between">
-                  <p>FE含量:</p>
-                  <p style="color: #19be6b">60%</p>
+                  <p style="margin: 5px 0">{{ item.name }}:</p>
+                  <p style="margin: 5px 0; color: #19be6b">{{ item.num }}</p>
                 </div>
               </div>
             </el-card>
           </el-space>
         </div>
         <div style="flex: 1; height: calc(100% - 10px)">
-          <img width="100%" height="100%" src="@/views/online/anlageuebersicht/images/FengJi.jpg" alt="图片" />
+          <img style="background-size: contain" src="@/views/online/anlageuebersicht/images/FengJi.jpg" alt="图片" />
         </div>
       </el-main>
     </el-container>
@@ -125,6 +105,118 @@ const router = useRouter();
 const comeBackCompany = () => {
   router.back();
 };
+let cardOptions = [
+  {
+    title: "变桨输出端",
+    zhendongOptions: [
+      { name: "振动测点1", value: "0.008mm/s" },
+      { name: "振动测点2", value: "0.01mm/s" }
+    ],
+    pump: [
+      { name: "打油次数", num: "108" },
+      { name: "温度", num: "38℃" },
+      { name: "打油状态", num: "正常" },
+      { name: "润滑时间", num: "1分10秒" }
+    ],
+    // 油液状态
+    oilState: [
+      { name: "温度", num: "40℃" },
+      { name: "动力粘度", num: "200cp" },
+      { name: "密度", num: "1000kg/m³" },
+      { name: "介电常数", num: "5" },
+      { name: "水活性", num: "1aw" },
+      { name: "含水量", num: "500ppm" }
+    ]
+  },
+  {
+    title: "主轴承输出端",
+    zhendongOptions: [
+      { name: "振动测点1", value: "0.008mm/s" },
+      { name: "振动测点2", value: "0.01mm/s" }
+    ],
+    pump: [
+      { name: "打油次数", num: "108" },
+      { name: "温度", num: "38℃" },
+      { name: "打油状态", num: "正常" },
+      { name: "润滑时间", num: "1分10秒" }
+    ],
+    // 油液状态
+    oilState: [
+      { name: "温度", num: "40℃" },
+      { name: "动力粘度", num: "200cp" },
+      { name: "密度", num: "1000kg/m³" },
+      { name: "介电常数", num: "5" },
+      { name: "水活性", num: "1aw" },
+      { name: "含水量", num: "500ppm" }
+    ]
+  },
+  {
+    title: "偏航输出端",
+    zhendongOptions: [
+      { name: "振动测点1", value: "0.008mm/s" },
+      { name: "振动测点2", value: "0.01mm/s" }
+    ],
+    pump: [
+      { name: "打油次数", num: "108" },
+      { name: "温度", num: "38℃" },
+      { name: "打油状态", num: "正常" },
+      { name: "润滑时间", num: "1分10秒" }
+    ],
+    // 油液状态
+    oilState: [
+      { name: "温度", num: "40℃" },
+      { name: "动力粘度", num: "200cp" },
+      { name: "密度", num: "1000kg/m³" },
+      { name: "介电常数", num: "5" },
+      { name: "水活性", num: "1aw" },
+      { name: "含水量", num: "500ppm" }
+    ]
+  },
+  {
+    title: "齿轮箱输出端",
+    zhendongOptions: [
+      { name: "振动测点1", value: "0.008mm/s" },
+      { name: "振动测点2", value: "0.01mm/s" }
+    ],
+    pump: [
+      { name: "打油次数", num: "108" },
+      { name: "温度", num: "38℃" },
+      { name: "打油状态", num: "正常" },
+      { name: "润滑时间", num: "1分10秒" }
+    ],
+    // 油液状态
+    oilState: [
+      { name: "温度", num: "40℃" },
+      { name: "动力粘度", num: "200cp" },
+      { name: "密度", num: "1000kg/m³" },
+      { name: "介电常数", num: "5" },
+      { name: "水活性", num: "1aw" },
+      { name: "含水量", num: "500ppm" }
+    ]
+  },
+  {
+    title: "发电机输出端",
+    zhendongOptions: [
+      { name: "振动测点1", value: "0.008mm/s" },
+      { name: "振动测点2", value: "0.01mm/s" }
+    ],
+    pump: [
+      { name: "打油次数", num: "108" },
+      { name: "温度", num: "38℃" },
+      { name: "打油状态", num: "正常" },
+      { name: "润滑时间", num: "1分10秒" }
+    ],
+    // 油液状态
+    oilState: [
+      { name: "温度", num: "40℃" },
+      { name: "动力粘度", num: "200cp" },
+      { name: "密度", num: "1000kg/m³" },
+      { name: "介电常数", num: "5" },
+      { name: "水活性", num: "1aw" },
+      { name: "含水量", num: "500ppm" }
+    ]
+  }
+];
 // open ------ 开始
 let rowData = ref();
 const myDialog1 = ref();
@@ -182,11 +274,17 @@ const beforeClose3 = () => {
 }
 :deep(.el-space__item) {
   width: calc(33.333% - 20px);
+  min-width: 350px;
+  height: 100%;
+
+  // width: 464px;
 }
 
 @media (width <= 1680px) {
   :deep(.el-space__item) {
     width: calc(50% - 20px);
+    min-width: 350px;
+    height: 100%;
     margin-bottom: 10px;
   }
 }
@@ -194,6 +292,8 @@ const beforeClose3 = () => {
 @media (width <= 768px) {
   :deep(.el-space__item) {
     width: 100%;
+    min-width: 350px;
+    height: 100%;
     margin-bottom: 10px;
   }
 }
