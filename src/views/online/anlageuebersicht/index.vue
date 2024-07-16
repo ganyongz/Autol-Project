@@ -11,7 +11,7 @@
         </div>
       </el-header>
       <el-main style="display: flex">
-        <div style="width: 60%; height: calc(100% - 20px); overflow-y: auto; text-align: left">
+        <div style="align-items: center; width: 60%; height: calc(100% - 20px); overflow-y: auto">
           <el-space style="flex-wrap: nowrap; justify-content: flex-start">
             <el-card v-for="i in cardOptions" :key="i" class="box-card">
               <template #header>
@@ -67,8 +67,8 @@
             </el-card>
           </el-space>
         </div>
-        <div style="flex: 1; height: calc(100% - 10px)">
-          <img style="background-size: contain" src="@/views/online/anlageuebersicht/images/FengJi.jpg" alt="图片" />
+        <div style="display: flex; flex: 1; align-items: center; justify-content: center; height: calc(100% - 10px)">
+          <img class="equipmentImg" src="@/views/online/anlageuebersicht/images/FengJi.jpg" alt="图片" />
         </div>
       </el-main>
     </el-container>
@@ -279,13 +279,23 @@ const beforeClose3 = () => {
 
   // width: 464px;
 }
+.equipmentImg {
+  background-size: contain;
+}
 
-@media (width <= 1680px) {
+@media (width <= 1440px) {
   :deep(.el-space__item) {
     width: calc(50% - 20px);
     min-width: 350px;
     height: 100%;
     margin-bottom: 10px;
+  }
+  .equipmentImg {
+    width: 100%;
+
+    // height: 90%;
+
+    // background-size: contain;
   }
 }
 
@@ -295,6 +305,12 @@ const beforeClose3 = () => {
     min-width: 350px;
     height: 100%;
     margin-bottom: 10px;
+  }
+  .equipmentImg {
+    // width: 80%;
+    // height: 80%;
+
+    // background-size: contain;
   }
 }
 .box-card {
