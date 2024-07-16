@@ -76,10 +76,10 @@ const submitEvent = () => {
   dialogVisible.value = false;
   search();
 };
-
 const options = [
-  { label: "普通用户", value: 0 },
-  { label: "系统用户", value: 1 }
+  { label: "超级管理员", value: 1 },
+  { label: "租户管理员", value: 2 },
+  { label: "租户下普通用户", value: 3 }
 ];
 // tableData
 let tableData = ref([]);
@@ -87,7 +87,7 @@ onBeforeMount(() => {
   getUserList(params);
 });
 let params = reactive({
-  type: 0,
+  type: 1,
   userName: "",
   realName: "",
   phone: "",

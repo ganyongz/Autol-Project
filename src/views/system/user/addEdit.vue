@@ -14,8 +14,9 @@
 
       <el-form-item label="用户类型" :label-width="formLabelWidth">
         <el-select v-model="ruleForm.type" placeholder="请选择用户类型">
-          <el-option label="普通用户" :value="0" />
-          <el-option label="系统用户" :value="1" />
+          <el-option label="超级管理员" :value="1" />
+          <el-option label="租户管理员" :value="2" />
+          <el-option label="租户下普通用户" :value="3" />
         </el-select>
       </el-form-item>
 
@@ -95,7 +96,7 @@ let ruleForm = reactive({
   userName: "",
   realName: "",
   password: "",
-  type: 0,
+  type: 1,
   isDisabled: 1,
   sex: 0,
   phone: "",
