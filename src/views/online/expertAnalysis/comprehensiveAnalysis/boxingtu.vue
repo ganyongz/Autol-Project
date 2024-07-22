@@ -169,8 +169,6 @@ const getTrendChart = async () => {
     xAxisData.value = res.data?.xData;
     yAxisData.value = res.data?.yData;
     boxingKey.value += 1;
-    console.log(xAxisData.value);
-    console.log(yAxisData.value);
   } else {
     ElMessage.error(res?.mssage);
   }

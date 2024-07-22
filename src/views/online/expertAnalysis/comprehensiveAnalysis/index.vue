@@ -97,7 +97,6 @@ const defaultProps = {
 let stationId = ref("");
 // 点击节点
 const nodeClick = treeNode => {
-  console.log(treeNode, "节点数据");
   if (treeNode.type == 4) {
     stationId.value = treeNode.id;
     tplKey.value += 1;
@@ -126,17 +125,12 @@ const toggleChild = node => {
 const handleNodeExpand = (data: TreeNode, node: any, instance: any) => {
   if (data && data.type === 4) {
     instance.store.nodesMap[node.key].expanded = true;
-    console.log("看看进来几次----111");
   }
 };
 onMounted(async () => {
   await getLocationTreeFun();
-
   const firstType4Node = getFirstType4Node(treeData.value);
-  console.log(firstType4Node, "firstType4Node----3");
   if (firstType4Node && treeRef.value) {
-    console.log(treeRef.value.store.nodesMap[firstType4Node.key].expanded, "6666");
-
     treeRef.value.store.nodesMap[firstType4Node.key].expanded = true;
   }
 });
@@ -145,20 +139,15 @@ let showTRee = ref(true);
 function getFirstType4Node(nodes: TreeNode[]): any {
   showTRee.value = false;
   for (const node of nodes) {
-    console.log(node, "node---111");
     if (node && node.type === 4) {
       stationId.value = node.id;
       nextTick(() => {
         expandData.value.push(node.id);
         showTRee.value = true;
       });
-
-      console.log(expandData.value, "kankan----------------0000000");
-
       tplKey.value += 1;
       return treeRef.value?.store.nodesMap[node.id];
     }
-    console.log(node.children, "node.children-----2");
     if (node.children && node.children.length > 0) {
       const foundNode = getFirstType4Node(node.children);
       if (foundNode) return foundNode;
