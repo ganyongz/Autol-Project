@@ -27,7 +27,9 @@ let yAxisData = ref();
 let boxingKey = ref(1);
 
 onMounted(async () => {
-  await getTrendChart();
+  if (dataObj?.value) {
+    await getTrendChart();
+  }
   if (chartRef.value) {
     chartInstance = echarts.init(chartRef.value);
     // 配置项和数据
@@ -67,7 +69,7 @@ onMounted(async () => {
       ],
       xAxis: {
         type: "category",
-        data: xAxisData.value,
+        data: xAxisData.value ? xAxisData.value : [],
         axisLine: {
           show: true
         }
@@ -113,7 +115,7 @@ onMounted(async () => {
           name: "振幅",
           type: "line",
           stack: "Total",
-          data: yAxisData.value,
+          data: yAxisData.value ? yAxisData.value : [],
           markLine: {
             data: [{ xAxis: "Tue" }]
           }
@@ -156,16 +158,16 @@ onMounted(async () => {
   }
 });
 const getTrendChart = async () => {
-  let aa: any = dataObj?.value;
+  let obj: any = dataObj?.value;
   let params = {
-    id: aa["data"]["id"],
-    tableName: aa["tableName"],
+    id: obj["id"],
+    tableName: obj["tableName"],
     type: 1
   };
   let res: any = await Diagram_professionalAtlas(params);
   if (res.code == "200") {
-    xAxisData.value = res.data.xData;
-    yAxisData.value = res.data.yData;
+    xAxisData.value = res.data?.xData;
+    yAxisData.value = res.data?.yData;
     boxingKey.value += 1;
     console.log(xAxisData.value);
     console.log(yAxisData.value);
@@ -180,7 +182,6 @@ onUnmounted(() => {
     chartInstance = null;
   }
 });
-// console.log(dataObj?.value.data, "这是兄弟组件");
 </script>
 
 <style scoped>

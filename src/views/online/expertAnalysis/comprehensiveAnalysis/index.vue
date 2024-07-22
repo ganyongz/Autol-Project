@@ -9,16 +9,17 @@
       <el-aside width="240px">
         <el-input v-model="filterText" style="width: 240px" placeholder="关键字搜索" />
         <el-tree
+          v-if="showTRee"
           ref="treeRef"
           :data="treeData"
           :props="defaultProps"
           highlight-current
           :filter-node-method="filterNode"
           @node-click="nodeClick"
+          @node-expand="handleNodeExpand"
           :check-strictly="true"
-          show-checkbox
           node-key="id"
-          :default-expanded-keys="[2, 3]"
+          :default-expanded-keys="expandData"
           :default-checked-keys="[5]"
         >
           <template #default="{ node, data }">
@@ -49,7 +50,7 @@
         </div>
 
         <div style="height: 400px; text-align: center; vertical-align: middle; border: 1px solid #dddddd; border-radius: 15px">
-          <tendencyChart @searchResult="searchResult" :key="tplKey" :station-id="stationId" />
+          <tendencyChart @search-result="searchResult" :key="tplKey" :station-id="stationId" />
         </div>
       </el-main>
     </el-container>
@@ -58,12 +59,12 @@
 
 <script lang="ts" setup name="comprehensiveAnalysis">
 // 综合分析
-import { ref, watch } from "vue";
+import { ref, watch, onMounted, nextTick } from "vue";
 import { ElMessage } from "element-plus";
 import boxingtu from "@/views/online/expertAnalysis/comprehensiveAnalysis/boxingtu.vue";
 import tendencyChart from "@/views/online/expertAnalysis/comprehensiveAnalysis/tendencyChart.vue";
 import { getLocationTree } from "@/api/system/functionPosition";
-let tplKey = ref(1);
+let tplKey = ref(0);
 let boxingKey = ref(1);
 // tabs 切换
 const activeName = ref("first");
@@ -78,7 +79,12 @@ const treeRef = ref();
 watch(filterText, val => {
   treeRef.value!.filter(val);
 });
-
+interface TreeNode {
+  id: string;
+  label: string;
+  type: number;
+  children?: TreeNode[];
+}
 const filterNode = (value: string, data: any) => {
   if (!value) return true;
   return data.name.includes(value);
@@ -117,8 +123,49 @@ const toggleChild = node => {
   node.expanded = !node.expanded;
 };
 
-// 调用
-getLocationTreeFun();
+const handleNodeExpand = (data: TreeNode, node: any, instance: any) => {
+  if (data && data.type === 4) {
+    instance.store.nodesMap[node.key].expanded = true;
+    console.log("看看进来几次----111");
+  }
+};
+onMounted(async () => {
+  await getLocationTreeFun();
+
+  const firstType4Node = getFirstType4Node(treeData.value);
+  console.log(firstType4Node, "firstType4Node----3");
+  if (firstType4Node && treeRef.value) {
+    console.log(treeRef.value.store.nodesMap[firstType4Node.key].expanded, "6666");
+
+    treeRef.value.store.nodesMap[firstType4Node.key].expanded = true;
+  }
+});
+let expandData: any = ref([]);
+let showTRee = ref(true);
+function getFirstType4Node(nodes: TreeNode[]): any {
+  showTRee.value = false;
+  for (const node of nodes) {
+    console.log(node, "node---111");
+    if (node && node.type === 4) {
+      stationId.value = node.id;
+      nextTick(() => {
+        expandData.value.push(node.id);
+        showTRee.value = true;
+      });
+
+      console.log(expandData.value, "kankan----------------0000000");
+
+      tplKey.value += 1;
+      return treeRef.value?.store.nodesMap[node.id];
+    }
+    console.log(node.children, "node.children-----2");
+    if (node.children && node.children.length > 0) {
+      const foundNode = getFirstType4Node(node.children);
+      if (foundNode) return foundNode;
+    }
+  }
+  return null;
+}
 </script>
 <style scoped lang="scss">
 .contentBox {
