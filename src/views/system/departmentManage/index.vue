@@ -3,7 +3,7 @@
   <div class="main-box">
     <el-container class="layout-container-demo">
       <!-- 部门管理 -->
-      <el-aside width="240px" style="margin-right: 10px; border-radius: 10px" class="table-main">
+      <el-aside width="240px" style="margin-right: 10px; border-radius: 10px">
         <el-input v-model="filterText" style="width: 216px; margin: 8px" placeholder="部门搜索" :suffix-icon="Search" />
         <el-scrollbar>
           <el-tree

@@ -15,6 +15,11 @@
           highlight-current
           :filter-node-method="filterNode"
           @node-click="nodeClick"
+          :check-strictly="true"
+          show-checkbox
+          node-key="id"
+          :default-expanded-keys="[2, 3]"
+          :default-checked-keys="[5]"
         >
           <template #default="{ node, data }">
             <span>
@@ -39,9 +44,12 @@
         </el-tree>
       </el-aside>
       <el-main style="position: relative; overflow: hidden">
-        <boxingtu ref="trendChart" />
         <div style="height: 400px; text-align: center; vertical-align: middle; border: 1px solid #dddddd; border-radius: 15px">
-          暂无数据
+          <boxingtu :key="boxingKey" ref="trendChart" :station-id="stationId" :data-obj="dataObj" />
+        </div>
+
+        <div style="height: 400px; text-align: center; vertical-align: middle; border: 1px solid #dddddd; border-radius: 15px">
+          <tendencyChart @searchResult="searchResult" :key="tplKey" :station-id="stationId" />
         </div>
       </el-main>
     </el-container>
@@ -53,7 +61,10 @@
 import { ref, watch } from "vue";
 import { ElMessage } from "element-plus";
 import boxingtu from "@/views/online/expertAnalysis/comprehensiveAnalysis/boxingtu.vue";
+import tendencyChart from "@/views/online/expertAnalysis/comprehensiveAnalysis/tendencyChart.vue";
 import { getLocationTree } from "@/api/system/functionPosition";
+let tplKey = ref(1);
+let boxingKey = ref(1);
 // tabs 切换
 const activeName = ref("first");
 const handleClick = (tab: any, event: Event) => {
@@ -77,13 +88,25 @@ const defaultProps = {
   label: "name",
   type: "type"
 };
+let stationId = ref("");
 // 点击节点
-const nodeClick = (treeNode, a, b) => {
-  console.log(treeNode, a, b);
+const nodeClick = treeNode => {
+  console.log(treeNode, "节点数据");
+  if (treeNode.type == 4) {
+    stationId.value = treeNode.id;
+    tplKey.value += 1;
+  }
 };
+// 获取子组件的传值
+let dataObj = ref();
+const searchResult = val => {
+  dataObj.value = val;
+  boxingKey.value += 1;
+};
+
 // 获取左侧菜单树
 const getLocationTreeFun = async () => {
-  let res: any = await getLocationTree({ type: 4, range: 9 });
+  let res: any = await getLocationTree({ type: 4, range: 9, isFiltration: false });
   if (res.code == "200") {
     treeData.value = res.data as any;
   } else {
@@ -103,6 +126,7 @@ getLocationTreeFun();
   width: 100%;
   padding: 20px;
   overflow-x: hidden;
+  background-color: var(--el-bg-color);
   border: 1px solid var(--el-border-color-light);
   border-radius: 6px;
   box-shadow: 0 0 12px rgb(0 0 0 / 5%);

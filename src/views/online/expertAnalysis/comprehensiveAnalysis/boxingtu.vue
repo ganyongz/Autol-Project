@@ -1,26 +1,35 @@
 <template>
-  <div ref="chartRef" style="width: 100%; height: 400px"></div>
+  <div>
+    <div v-if="xAxisData" ref="chartRef" style="width: 100%; height: 400px"></div>
+    <el-empty v-else description="暂无分析数据" />
+  </div>
 </template>
 
 <script setup lang="ts" name="boxingtu">
-import { ref, onMounted, onUnmounted } from "vue";
+import { ref, onMounted, onUnmounted, toRefs } from "vue";
 import * as echarts from "echarts";
 import { ElMessage } from "element-plus";
-import { Diagram_trendChart } from "@/api/online/comprehensiveAnalysis";
-
+import { Diagram_professionalAtlas } from "@/api/online/comprehensiveAnalysis";
+const props = defineProps({
+  stationId: {
+    type: String,
+    default: ""
+  },
+  dataObj: {
+    type: Object
+  }
+});
+const { dataObj } = toRefs(props);
 const chartRef = ref<HTMLDivElement | null>(null);
 let chartInstance: echarts.ECharts | null = null;
-chartInstance;
-chartInstance;
+let xAxisData = ref();
+let yAxisData = ref();
+let boxingKey = ref(1);
 
-onMounted(() => {
+onMounted(async () => {
+  await getTrendChart();
   if (chartRef.value) {
     chartInstance = echarts.init(chartRef.value);
-
-    // mock 数据
-    const xAxisData = [0, 9.897, -100, 90, 80, 100, 110, 140];
-    const yAxisData = [0.88, 132, -101, 134, -90, 230, -210];
-
     // 配置项和数据
     const option = ref({
       tooltip: {
@@ -36,10 +45,10 @@ onMounted(() => {
       // },
       grid: {
         //距离各个地方的边距 1
-        left: "10%",
-        right: "5%",
-        bottom: "10%",
-        containLabel: true
+        // left: "10%",
+        // right: "5%",
+        // bottom: "10%",
+        // containLabel: true
       },
       // grid: {
       //   //另外一种方式控制 2
@@ -58,25 +67,40 @@ onMounted(() => {
       ],
       xAxis: {
         type: "category",
-        data: xAxisData,
+        data: xAxisData.value,
         axisLine: {
           show: true
-        },
-        // 隐藏y轴刻度线
-        axisTick: {
-          show: true
         }
+        // 隐藏y轴刻度线
+        // axisTick: {
+        //   show: true
+        // },
+        // graphic: [
+        //   {
+        //     type: "text",
+        //     left: "top", // 文本水平位置，根据需求调整
+        //     top: "top", // 文本垂直位置，设置为 'bottom' 以使其位于图表底部
+        //     offset: [5, 3], // 根据需要调整文本与 y 轴的距离
+        //     style: {
+        //       text: "kg3", // 文本内容
+        //       textAlign: "center", // 文本水平对齐方式
+        //       fill: "#333", // 文本颜色
+        //       fontSize: 12 // 文本大小
+        //     },
+        //     z: 100 // 设置层级，确保文本在图表上方
+        //   }
+        // ]
       },
       yAxis: {
         type: "value",
         // 隐藏y轴
-        axisLine: {
-          show: true
-        },
+        // axisLine: {
+        //   show: true
+        // },
         // 隐藏y轴刻度线
-        axisTick: {
-          show: true
-        },
+        // axisTick: {
+        //   show: true
+        // },
         // y轴网格线设置
         splitLine: {
           type: "dashed",
@@ -89,10 +113,40 @@ onMounted(() => {
           name: "振幅",
           type: "line",
           stack: "Total",
-          data: yAxisData,
+          data: yAxisData.value,
           markLine: {
             data: [{ xAxis: "Tue" }]
           }
+        }
+      ],
+      graphic: [
+        {
+          type: "text",
+          left: "center", // 文本水平位置
+          top: "bottom", // 文本垂直位置，设置为 'bottom' 以使其位于图表底部
+          style: {
+            text: "ms", // 文本内容
+            textAlign: "center", // 文本水平对齐方式
+            fill: "#333", // 文本颜色
+            fontSize: 12 // 文本大小
+          },
+          z: 100 // 设置层级，确保文本在图表上方
+        },
+        {
+          writingMode: "sideways-lr",
+          type: "text",
+          left: "left", // 文本水平位置，根据需求调整
+          marginRight: "0",
+          top: "center",
+          offset: [200, 200], // 根据需要调整文本与 y 轴的距离
+          style: {
+            text: "mm/s",
+            textAlign: "right",
+            writingMode: "sideways-lr",
+            transform: "rotate(180deg)",
+            fontSize: 12
+          },
+          z: 100
         }
       ]
     });
@@ -102,14 +156,23 @@ onMounted(() => {
   }
 });
 const getTrendChart = async () => {
-  let res: any = await Diagram_trendChart({});
+  let aa: any = dataObj?.value;
+  let params = {
+    id: aa["data"]["id"],
+    tableName: aa["tableName"],
+    type: 1
+  };
+  let res: any = await Diagram_professionalAtlas(params);
   if (res.code == "200") {
-    // treeData.value = res.data as any;
+    xAxisData.value = res.data.xData;
+    yAxisData.value = res.data.yData;
+    boxingKey.value += 1;
+    console.log(xAxisData.value);
+    console.log(yAxisData.value);
   } else {
     ElMessage.error(res?.mssage);
   }
 };
-
 onUnmounted(() => {
   if (chartInstance) {
     // 组件卸载时清理 ECharts 实例
@@ -117,7 +180,7 @@ onUnmounted(() => {
     chartInstance = null;
   }
 });
-getTrendChart();
+// console.log(dataObj?.value.data, "这是兄弟组件");
 </script>
 
 <style scoped>
