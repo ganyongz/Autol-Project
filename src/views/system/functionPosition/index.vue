@@ -105,7 +105,6 @@ import detailPoint from "@/views/system/functionPosition/components/detailPoint.
 const setParentId = ref();
 const nodeData = ref();
 const handleNodeClick = (val: any) => {
-  console.log(val, "菜单数据");
   nodeData.value = val;
   formData.value.id = val.id;
   formData.value.sort = val?.displayOrder;

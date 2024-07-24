@@ -39,26 +39,10 @@
           style="width: 240px"
         />
       </el-form-item>
-
-      <el-form-item label="振动系统" prop="useVib">
-        <el-radio-group v-model="ruleForm.useVib" class="ml-4">
-          <el-radio :value="0" size="large">不使用</el-radio>
-          <el-radio :value="1" size="large">使用</el-radio>
-        </el-radio-group>
-      </el-form-item>
-
-      <el-form-item label="润滑系统" prop="useLub">
-        <el-radio-group v-model="ruleForm.useLub" class="ml-4">
-          <el-radio :value="0" size="large">不使用</el-radio>
-          <el-radio :value="1" size="large">使用</el-radio>
-        </el-radio-group>
-      </el-form-item>
-
-      <el-form-item label="油液系统" prop="useOil">
-        <el-radio-group v-model="ruleForm.useOil" class="ml-4">
-          <el-radio :value="0" size="large">不使用</el-radio>
-          <el-radio :value="1" size="large">使用</el-radio>
-        </el-radio-group>
+      <el-form-item label="设备分类">
+        <el-select v-model="ruleForm.classify" class="m-2" placeholder="请选择">
+          <el-option v-for="item in classifyOptions" :key="item.value" :label="item.label" :value="item.value" />
+        </el-select>
       </el-form-item>
 
       <el-form-item label="设备图片" prop="equipImageUrl">
@@ -108,7 +92,7 @@ const props = defineProps({
   }
 });
 const { nodeData } = toRefs(props);
-console.log(nodeData.value, "父级传来的数据");
+// console.log(nodeData.value, "父级传来的数据设备---000");
 interface RuleForm {
   id: string;
   installLocationId: string;
@@ -117,10 +101,8 @@ interface RuleForm {
   remark: string;
   code: string;
   deptId: string;
-  sort: number | undefined;
-  useVib: number;
-  useLub: number;
-  useOil: number;
+  sort: number | null;
+  classify: number | undefined;
 }
 
 const formSize = ref<ComponentSize>("default");
@@ -133,12 +115,17 @@ let ruleForm = reactive<RuleForm>({
   remark: "",
   code: "",
   deptId: "",
-  sort: undefined,
-  useVib: 0,
-  useLub: 0,
-  useOil: 0
+  sort: null,
+  classify: undefined
 });
-
+const classifyOptions = [
+  { value: 1, label: "风电设备" },
+  { value: 2, label: "港口设备" },
+  { value: 3, label: "食品设备" },
+  { value: 4, label: "工程机械" },
+  { value: 5, label: "矿山" },
+  { value: 6, label: "水泥" }
+];
 const rules = reactive<FormRules<RuleForm>>({
   name: [{ required: true, message: "请输入名称", trigger: "blur" }]
 });
@@ -213,9 +200,7 @@ const getEquipDetailFun = async () => {
     ruleForm.code = data.code;
     ruleForm.deptId = data.deptId;
     ruleForm.sort = data.sort;
-    ruleForm.useVib = data.useVib;
-    ruleForm.useLub = data.useLub;
-    ruleForm.useOil = data.useOil;
+    ruleForm.classify = data.classify;
   } else {
     ElMessage.error(res?.mssage);
   }

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <!-- 新增部件 -->
+    <!-- 新增部件  -->
     <el-form
       ref="ruleFormRef"
       style="max-width: 600px"
@@ -25,6 +25,51 @@
         <el-input v-model.number="ruleForm.description" />
       </el-form-item>
 
+      <el-form-item label="振动系统" prop="useVib">
+        <el-radio-group v-model="ruleForm.useVib">
+          <el-radio :value="0" size="large">不使用</el-radio>
+          <el-radio :value="1" size="large">使用</el-radio>
+        </el-radio-group>
+      </el-form-item>
+
+      <el-form-item label="润滑系统" prop="useLub">
+        <el-radio-group v-model="ruleForm.useLub">
+          <el-radio :value="0" size="large">不使用</el-radio>
+          <el-radio :value="1" size="large">使用</el-radio>
+        </el-radio-group>
+      </el-form-item>
+
+      <el-form-item label="油液系统" prop="useOil">
+        <el-radio-group v-model="ruleForm.useOil">
+          <el-radio :value="0" size="large">不使用</el-radio>
+          <el-radio :value="1" size="large">使用</el-radio>
+        </el-radio-group>
+      </el-form-item>
+
+      <el-form-item label="通讯方式" prop="messageType" :required="TXRequired">
+        <el-select v-model="ruleForm.messageType" class="m-2" placeholder="请选择">
+          <el-option v-for="item in messageTypeOptions" :key="item.value" :label="item.label" :value="item.value" />
+        </el-select>
+      </el-form-item>
+
+      <el-form-item label="润滑泵类型" prop="pumpStationType" :required="TXRequired">
+        <el-select v-model="ruleForm.pumpStationType" class="m-2" placeholder="请选择">
+          <el-option v-for="item in pumpStationTypeOptions" :key="item.value" :label="item.label" :value="item.value" />
+        </el-select>
+      </el-form-item>
+
+      <el-form-item label="舍弗勒的设备字符" prop="schaefflerDeviceId" :required="SFLRequired">
+        <el-input v-model="ruleForm.schaefflerDeviceId" placeholder="舍弗勒的设备字符" clearable />
+      </el-form-item>
+
+      <el-form-item label="网关sn号" :required="snPlcRequired">
+        <el-input v-model="ruleForm.gatewaySn" placeholder="网关sn号" clearable />
+      </el-form-item>
+
+      <el-form-item label="plc地址" :required="snPlcRequired">
+        <el-input v-model="ruleForm.plcAddress" placeholder="plc地址" clearable />
+      </el-form-item>
+
       <div style="text-align: center">
         <el-button type="primary" @click="submitForm(ruleFormRef)"> 保存 </el-button>
         <el-button @click="resetForm(ruleFormRef)">关闭</el-button>
@@ -34,7 +79,7 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive, ref, toRefs, onBeforeMount } from "vue";
+import { reactive, ref, toRefs, onBeforeMount, watchEffect } from "vue";
 import { type ComponentSize, type FormInstance, type FormRules } from "element-plus";
 const props = defineProps({
   rowData: {
@@ -47,6 +92,16 @@ const props = defineProps({
   }
 });
 const { rowData, title } = toRefs(props);
+const pumpStationTypeOptions = [
+  { value: 1, label: "为递进单线" },
+  { value: 2, label: "为递进双线" },
+  { value: 3, label: "ATL3000" }
+];
+const messageTypeOptions = [
+  { value: 1, label: "MQTT" },
+  { value: 2, label: "TCP" },
+  { value: 3, label: "舍弗勒接口 " }
+];
 interface RuleForm {
   equipId: string; //所属设备id
   name: string;
@@ -54,6 +109,14 @@ interface RuleForm {
   remark: string;
   code: string;
   sort: number | undefined;
+  useVib: number | null;
+  useLub: number | null;
+  useOil: number | null;
+  messageType: number | null;
+  pumpStationType: number | null;
+  schaefflerDeviceId: string;
+  gatewaySn: string;
+  plcAddress: string;
 }
 
 const formSize = ref<ComponentSize>("default");
@@ -64,13 +127,42 @@ let ruleForm = reactive<RuleForm>({
   description: "",
   remark: "",
   code: "",
-  sort: undefined
+  sort: undefined,
+  useVib: null,
+  useLub: null,
+  useOil: null,
+  messageType: null,
+  pumpStationType: null,
+  schaefflerDeviceId: "",
+  gatewaySn: "",
+  plcAddress: ""
 });
 
 const rules = reactive<FormRules<RuleForm>>({
   name: [{ required: true, message: "请输入名称", trigger: "blur" }]
 });
 // 方法区
+// 数据监听
+let TXRequired = ref(false);
+let SFLRequired = ref(false);
+let snPlcRequired = ref(false); //网关sn号，plc地址 必填
+watchEffect(() => {
+  if (ruleForm.useLub == 1) {
+    TXRequired.value = true;
+  } else {
+    TXRequired.value = false;
+  }
+  if (ruleForm.messageType == 3) {
+    SFLRequired.value = true;
+  } else {
+    SFLRequired.value = false;
+  }
+  if (ruleForm.messageType == 2) {
+    snPlcRequired.value = true;
+  } else {
+    snPlcRequired.value = false;
+  }
+});
 const emit = defineEmits(["closeDialog", "submitForm"]);
 const submitForm = async (formEl: FormInstance | undefined) => {
   if (!formEl) return;

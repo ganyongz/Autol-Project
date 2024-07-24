@@ -31,29 +31,14 @@
           check-strictly
           :render-after-expand="false"
           :props="defaultProps"
-          style="width: 240px"
+          style="width: 100%"
         />
       </el-form-item>
 
-      <el-form-item label="振动系统" prop="useVib">
-        <el-radio-group v-model="ruleForm.useVib" class="ml-4">
-          <el-radio :value="0" size="large">不使用</el-radio>
-          <el-radio :value="1" size="large">使用</el-radio>
-        </el-radio-group>
-      </el-form-item>
-
-      <el-form-item label="润滑系统" prop="useLub">
-        <el-radio-group v-model="ruleForm.useLub" class="ml-4">
-          <el-radio :value="0" size="large">不使用</el-radio>
-          <el-radio :value="1" size="large">使用</el-radio>
-        </el-radio-group>
-      </el-form-item>
-
-      <el-form-item label="油液系统" prop="useOil">
-        <el-radio-group v-model="ruleForm.useOil" class="ml-4">
-          <el-radio :value="0" size="large">不使用</el-radio>
-          <el-radio :value="1" size="large">使用</el-radio>
-        </el-radio-group>
+      <el-form-item label="设备分类">
+        <el-select v-model="ruleForm.classify" class="m-2" placeholder="请选择">
+          <el-option v-for="item in classifyOptions" :key="item.value" :label="item.label" :value="item.value" />
+        </el-select>
       </el-form-item>
 
       <el-form-item label="设备图片" prop="equipImageUrl">
@@ -93,6 +78,14 @@ const props = defineProps({
   }
 });
 const { rowData, title } = toRefs(props);
+const classifyOptions = [
+  { value: 1, label: "风电设备" },
+  { value: 2, label: "港口设备" },
+  { value: 3, label: "食品设备" },
+  { value: 4, label: "工程机械" },
+  { value: 5, label: "矿山" },
+  { value: 6, label: "水泥" }
+];
 interface RuleForm {
   installLocationId: string;
   name: string;
@@ -101,9 +94,7 @@ interface RuleForm {
   code: string;
   deptId: string;
   sort: number | undefined;
-  useVib: number;
-  useLub: number;
-  useOil: number;
+  classify: number | undefined;
 }
 
 const formSize = ref<ComponentSize>("default");
@@ -116,9 +107,7 @@ let ruleForm = reactive<RuleForm>({
   code: "",
   deptId: "",
   sort: undefined,
-  useVib: 0,
-  useLub: 0,
-  useOil: 0
+  classify: undefined
 });
 
 const rules = reactive<FormRules<RuleForm>>({
@@ -181,7 +170,6 @@ onBeforeMount(() => {
   departTreeFun();
   ruleForm.installLocationId = rowData.value.id;
   if (rowData?.value && title.value == "编辑") {
-    console.log(rowData?.value, "数据呢----");
     ruleForm = rowData.value as any;
   } else {
   }
