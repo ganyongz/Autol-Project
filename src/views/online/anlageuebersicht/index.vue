@@ -46,6 +46,17 @@
                 <div>
                   <el-button type="primary" @click="FunSetParameter">参数</el-button>
                   <el-button type="primary" @click="FunStatistics">数据统计</el-button>
+                  <el-popover placement="right" :width="320" trigger="click">
+                    <template #reference>
+                      <el-button style="margin-right: 16px">操作</el-button>
+                    </template>
+                    <div>
+                      <el-button>开泵</el-button>
+                      <el-button>关泵</el-button>
+                      <el-button>冻结</el-button>
+                      <el-button>解冻</el-button>
+                    </div>
+                  </el-popover>
                 </div>
               </div>
               <div v-for="(item, index) in i.pump" :key="index">
@@ -274,7 +285,7 @@ const beforeClose3 = () => {
 }
 :deep(.el-space__item) {
   width: calc(33.333% - 20px);
-  min-width: 350px;
+  min-width: 400px;
   height: 100%;
 
   // width: 464px;
@@ -286,7 +297,7 @@ const beforeClose3 = () => {
 @media (width <= 1440px) {
   :deep(.el-space__item) {
     width: calc(50% - 20px);
-    min-width: 350px;
+    min-width: 400px;
     height: 100%;
     margin-bottom: 10px;
   }
@@ -302,7 +313,7 @@ const beforeClose3 = () => {
 @media (width <= 768px) {
   :deep(.el-space__item) {
     width: 100%;
-    min-width: 350px;
+    min-width: 400px;
     height: 100%;
     margin-bottom: 10px;
   }
