@@ -118,8 +118,13 @@ const getLocationTreeFun = async () => {
     ElMessage.error(res?.mssage);
   }
 };
-const toggleChild = node => {
-  node.expanded = !node.expanded;
+const toggleChild = (node: any) => {
+  console.log(node.expanded, "前面");
+  nextTick(() => {
+    node.expanded = !node.expanded;
+  });
+
+  console.log(node.expanded, "node.--------1111");
 };
 
 const handleNodeExpand = (data: TreeNode, node: any, instance: any) => {

@@ -35,7 +35,7 @@
                   </template>
                   <div>
                     <el-button @click="openDialog('基本分析')">基本分析</el-button>
-                    <el-button @click="openDialog('趋势分析')">趋势分析</el-button>
+                    <!-- <el-button @click="openDialog('趋势分析')">趋势分析</el-button> -->
                   </div>
                 </el-popover>
               </div>
@@ -51,10 +51,10 @@
                       <el-button style="margin-right: 16px">操作</el-button>
                     </template>
                     <div>
-                      <el-button>开泵</el-button>
-                      <el-button>关泵</el-button>
-                      <el-button>冻结</el-button>
-                      <el-button>解冻</el-button>
+                      <el-button @click="kaibeng">开泵</el-button>
+                      <el-button @click="guanbeng">关泵</el-button>
+                      <el-button @click="dongjie">冻结</el-button>
+                      <el-button @click="jiedong">解冻</el-button>
                     </div>
                   </el-popover>
                 </div>
@@ -105,6 +105,7 @@
 
 <script lang="ts" setup name="anlageuebersicht">
 import { ref } from "vue";
+import { useHandleData2 } from "@/hooks/useHandleData";
 // import { ElMessage } from "element-plus";
 // import { equip_card, equip_equipInfo } from "@/api/online/anlageuebersicht";
 import myDialog from "@/components/dialog/myDialog.vue";
@@ -240,10 +241,14 @@ const detailParams = ref({
   title: "新增"
 });
 const openDialog = (title: string) => {
-  detailParams.value.title = title;
-  IsShowAdd.value = true;
-  rowData.value = {};
-  myDialog1.value.open();
+  console.log(title);
+
+  // detailParams.value.title = title;
+  // IsShowAdd.value = true;
+  // rowData.value = {};
+  // myDialog1.value.open();
+  //路由跳转
+  router.push("/online/expertAnalysis/comprehensiveAnalysis/index");
 };
 // close------ 关闭
 // 参数设置
@@ -261,12 +266,27 @@ const beforeClose2 = () => {
 const myDialog3 = ref();
 const IsShowDataTpl = ref(false);
 const FunStatistics = () => {
-  IsShowDataTpl.value = true;
-  myDialog3.value.open();
+  // IsShowDataTpl.value = true;
+  // myDialog3.value.open();
+  //路由跳转
+  router.push("/online/dataStatistics/LubricationStatistics/LubricationStatistics");
 };
 const beforeClose3 = () => {
   IsShowDataTpl.value = false;
   myDialog3.value.close();
+};
+const aa: any = ref();
+const kaibeng = async () => {
+  await useHandleData2(aa, {}, `确认开启该泵`);
+};
+const guanbeng = async () => {
+  await useHandleData2(aa, {}, `确认关闭该泵`);
+};
+const dongjie = async () => {
+  await useHandleData2(aa, {}, `确认冻结该泵`);
+};
+const jiedong = async () => {
+  await useHandleData2(aa, {}, `确认解冻该泵`);
 };
 </script>
 <style scoped lang="scss">

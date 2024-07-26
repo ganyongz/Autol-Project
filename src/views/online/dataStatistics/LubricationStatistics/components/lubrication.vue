@@ -95,7 +95,7 @@
     </div>
     <!-- 3 -->
     <div>
-      <el-table :data="tableData" height="500px">
+      <el-table :data="tableData" height="500px" empty-text="暂无数据">
         <el-table-column type="index" label="#" width="55" />
         <el-table-column prop="name" label="开泵时间" />
         <el-table-column prop="state" label="关泵时间" />
@@ -104,6 +104,7 @@
         <el-table-column prop="time" label="润滑油量(ml)" />
         <el-table-column prop="time" label="润滑状态" />
       </el-table>
+      <!-- <el-empty v-if="tableData.length === 0" description="暂无数据"></el-empty> -->
       <el-pagination
         v-model:current-page="currentPage"
         v-model:page-size="pageSize"

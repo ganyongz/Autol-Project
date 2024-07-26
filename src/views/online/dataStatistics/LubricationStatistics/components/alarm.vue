@@ -29,6 +29,7 @@
       <el-table-column prop="time" label="润滑油量(ml)" />
       <el-table-column prop="time" label="润滑状态" />
     </el-table>
+    <!-- <el-empty v-if="tableData.length == 0" description="暂无数据" /> -->
     <el-pagination
       v-model:current-page="currentPage"
       v-model:page-size="pageSize"
