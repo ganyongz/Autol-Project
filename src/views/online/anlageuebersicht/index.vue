@@ -3,7 +3,19 @@
     <!-- 设备预览（单个设备） -->
     <el-container>
       <el-header style="display: flex; align-items: center; justify-content: space-between">
-        <el-icon @click="comeBackCompany" style="margin-left: 10px; cursor: pointer"><ArrowLeftBold /></el-icon>
+        <div>
+          <el-icon @click="comeBackCompany" style="margin-left: 10px; cursor: pointer"><ArrowLeftBold /></el-icon>
+          <el-tree-select
+            v-model="selectVal"
+            :data="selectDatas"
+            :render-after-expand="false"
+            node-key="id"
+            :props="defaultProps"
+            style="width: 240px"
+            clearable
+            @change="changeVal"
+          />
+        </div>
         <div>xxxx设备</div>
         <div style="display: flex">
           <p style="margin-right: 20px">综合分析：<span style="color: aqua">良好</span></p>
@@ -16,6 +28,7 @@
             <el-card v-for="i in cardOptions" :key="i" class="box-card">
               <template #header>
                 <div class="card-header" style="display: flex; justify-content: space-between">
+                  <!-- 设备名称 -->
                   <span>{{ i.title }}</span>
                   <el-popover ref="popover" placement="right" title="位移" :width="200" trigger="hover" content="10vm">
                     <template #reference>
@@ -24,6 +37,7 @@
                   </el-popover>
                 </div>
               </template>
+              <!-- 1.振动 -->
               <div style="color: #009688; text-align: left">轴承振动情况：</div>
               <div v-for="(item, index) in i.zhendongOptions" :key="index">
                 <el-popover placement="right" :width="300" trigger="hover">
@@ -39,35 +53,42 @@
                   </div>
                 </el-popover>
               </div>
-              <!-- 润滑监控 -->
+              <!-- 2.润滑监控 -->
               <el-divider />
-              <div style="display: flex; justify-content: space-between">
-                <div style="color: #009688; text-align: left">润滑监控：</div>
-                <div>
-                  <el-button type="primary" @click="FunSetParameter">参数</el-button>
-                  <el-button type="primary" @click="FunStatistics">数据统计</el-button>
-                  <el-popover placement="right" :width="320" trigger="click">
-                    <template #reference>
-                      <el-button style="margin-right: 16px">操作</el-button>
-                    </template>
-                    <div>
-                      <el-button @click="kaibeng">开泵</el-button>
-                      <el-button @click="guanbeng">关泵</el-button>
-                      <el-button @click="dongjie">冻结</el-button>
-                      <el-button @click="jiedong">解冻</el-button>
-                    </div>
-                  </el-popover>
-                </div>
-              </div>
-              <div v-for="(item, index) in i.pump" :key="index">
+              <div class="lubClass" v-if="cards?.length && cards[0]?.LubRealData.length > 0">
+                <!-- 1 -->
                 <div style="display: flex; justify-content: space-between">
-                  <p style="margin: 5px 0">{{ item.name }}</p>
-                  <p style="margin: 5px 0; color: #19be6b">{{ item.num }}</p>
+                  <div style="color: #009688; text-align: left">润滑监控：</div>
+                  <div>
+                    <el-button type="primary" @click="FunSetParameter(cards[0])">参数</el-button>
+                    <el-button type="primary" @click="FunStatistics">数据统计</el-button>
+                    <el-popover placement="right" :width="320" trigger="click">
+                      <template #reference>
+                        <el-button style="margin-right: 16px">操作</el-button>
+                      </template>
+                      <div>
+                        <el-button @click="kaibeng(cards[0])">开泵</el-button>
+                        <el-button @click="guanbeng(cards[0])">关泵</el-button>
+                        <el-button @click="dongjie(cards[0])">冻结</el-button>
+                        <el-button @click="jiedong(cards[0])">解冻</el-button>
+                      </div>
+                    </el-popover>
+                  </div>
+                </div>
+                <!-- 2 -->
+                <div style="max-height: 200px; overflow-y: auto">
+                  <div v-for="(item, index) in cards[0]?.LubRealData" :key="index">
+                    <div style="display: flex; justify-content: space-between">
+                      <p style="margin: 5px 0">{{ item.name }}</p>
+                      <p style="margin: 5px 0; color: #19be6b">{{ item.value }}</p>
+                    </div>
+                  </div>
                 </div>
               </div>
 
               <!-- 分割线 -->
               <el-divider />
+              <!-- 3.油液 -->
               <div style="color: #009688; text-align: left">油液状态：</div>
               <div v-for="(item, index) in i.oilState" :key="index">
                 <div style="display: flex; justify-content: space-between">
@@ -91,7 +112,13 @@
     <!-- 参数设置 -->
     <myDialog title="参数设置" ref="myDialog2" draggable width="30%" :before-close="beforeClose2">
       <template #content>
-        <setParameter v-if="IsShowSetTpl" ref="setParameterRef" @close-dialog="beforeClose2" title="参数设置" />
+        <setParameter
+          v-if="IsShowSetTpl"
+          ref="setParameterRef"
+          :set-parameters="setParameters"
+          @close-dialog="beforeClose2"
+          title="参数设置"
+        />
       </template>
     </myDialog>
     <!-- 数据统计 -->
@@ -105,9 +132,10 @@
 
 <script lang="ts" setup name="anlageuebersicht">
 import { ref } from "vue";
+import { ElMessage } from "element-plus";
 import { useHandleData2 } from "@/hooks/useHandleData";
-// import { ElMessage } from "element-plus";
-// import { equip_card, equip_equipInfo } from "@/api/online/anlageuebersicht";
+import { getLocationTree } from "@/api/system/functionPosition";
+import { equip_card, pump_OperatePump } from "@/api/online/anlageuebersicht";
 import myDialog from "@/components/dialog/myDialog.vue";
 import analyses from "@/views/online/anlageuebersicht/components/analyses.vue";
 import setParameter from "@/views/online/anlageuebersicht/components/setParameter.vue";
@@ -117,6 +145,28 @@ const router = useRouter();
 const comeBackCompany = () => {
   router.back();
 };
+const defaultProps = {
+  children: "children",
+  label: "name",
+  id: "id"
+};
+let selectVal = ref();
+let selectDatas: any = ref([]);
+// 切换设备
+const changeVal = (val: any) => {
+  equip_id.value = val;
+  getCardContent();
+};
+// 获取菜单列表
+const getEquipListFun = async () => {
+  let res: any = await getLocationTree({ type: 2, range: 9 });
+  if (res.code == "200") {
+    selectDatas.value = res.data as any;
+  } else {
+    ElMessage.error(res?.mssage);
+  }
+};
+getEquipListFun();
 let cardOptions = [
   {
     title: "变桨输出端",
@@ -254,7 +304,10 @@ const openDialog = (title: string) => {
 // 参数设置
 const myDialog2 = ref();
 const IsShowSetTpl = ref(false);
-const FunSetParameter = () => {
+let setParameters = ref();
+const FunSetParameter = (val: any) => {
+  setParameters.value = val;
+  // console.log(val, "设置参数------");
   IsShowSetTpl.value = true;
   myDialog2.value.open();
 };
@@ -275,19 +328,47 @@ const beforeClose3 = () => {
   IsShowDataTpl.value = false;
   myDialog3.value.close();
 };
-const aa: any = ref();
-const kaibeng = async () => {
-  await useHandleData2(aa, {}, `确认开启该泵`);
+const kaibeng = async val => {
+  await useHandleData2(
+    pump_OperatePump,
+    { gatewaySn: val.GatewaySn, pumpStationType: val.PumpStationType, plcAddress: val.PlcAddress, type: 1 },
+    `确认开启该泵`
+  );
 };
-const guanbeng = async () => {
-  await useHandleData2(aa, {}, `确认关闭该泵`);
+const guanbeng = async val => {
+  await useHandleData2(
+    pump_OperatePump,
+    { gatewaySn: val.GatewaySn, pumpStationType: val.PumpStationType, plcAddress: val.PlcAddress, type: 2 },
+    `确认关闭该泵`
+  );
 };
-const dongjie = async () => {
-  await useHandleData2(aa, {}, `确认冻结该泵`);
+const dongjie = async val => {
+  await useHandleData2(
+    pump_OperatePump,
+    { gatewaySn: val.GatewaySn, pumpStationType: val.PumpStationType, plcAddress: val.PlcAddress, type: 3 },
+    `确认冻结该泵`
+  );
 };
-const jiedong = async () => {
-  await useHandleData2(aa, {}, `确认解冻该泵`);
+const jiedong = async val => {
+  await useHandleData2(
+    pump_OperatePump,
+    { gatewaySn: val.GatewaySn, pumpStationType: val.PumpStationType, plcAddress: val.PlcAddress, type: 4 },
+    `确认解冻该泵`
+  );
 };
+//获取页面卡片
+let cards = ref();
+let equip_id = ref("834ff0707e2b4133ae982f4e7b6d2232");
+const getCardContent = async () => {
+  const res: any = await equip_card({ equipId: equip_id.value });
+  if (res.code == "200") {
+    cards.value = res.data;
+    // console.log(cards.value, "卡片");
+  } else {
+    ElMessage.error(res?.mssage);
+  }
+};
+getCardContent();
 </script>
 <style scoped lang="scss">
 .contentBox {
@@ -346,5 +427,8 @@ const jiedong = async () => {
 }
 .box-card {
   margin: 10px;
+}
+.lubClass > ::-webkit-scrollbar {
+  display: none;
 }
 </style>
