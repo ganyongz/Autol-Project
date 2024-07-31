@@ -3,22 +3,24 @@
     <!-- 1 -->
     <div class="mb-5" style="margin-bottom: 10px">
       <el-date-picker
-        v-model="timeSearch"
+        v-model="dateRange"
         type="daterange"
+        unlink-panels
         range-separator="至"
-        start-placeholder="Start date"
-        end-placeholder="End date"
-      />
-      <el-button type="primary">查询</el-button>
+        start-placeholder="开始日期"
+        end-placeholder="结束日期"
+      ></el-date-picker>
+      <el-button type="primary" @click="searchFun">查询</el-button>
     </div>
     <!-- 2 -->
     <div class="d-flex">
       <div class="flex-1 mr-3">
         <div class="gird-box">
+          <!-- 日 -->
           <div class="grid-cell">
             <div class="d-flex align-items-center">
               <div class="date-card data-card-blue mr-1">日</div>
-              0
+              {{ day.lubCount }}
             </div>
             <div class="mt-2 content-text">今日润滑次数(次)</div>
           </div>
@@ -26,23 +28,23 @@
           <div class="grid-cell">
             <div class="d-flex align-items-center">
               <div class="date-card data-card-blue mr-1">日</div>
-              0
+              {{ day.runS }}
             </div>
-            <div class="mt-2 content-text">今日润滑次数(次)</div>
+            <div class="mt-2 content-text">今日润滑时长(秒)</div>
           </div>
 
           <div class="grid-cell">
             <div class="d-flex align-items-center">
               <div class="date-card data-card-blue mr-1">日</div>
-              0
+              {{ day.flowCount }}
             </div>
-            <div class="mt-2 content-text">今日润滑次数(次)</div>
+            <div class="mt-2 content-text">今日润滑油量(ml)</div>
           </div>
-
+          <!-- 周 -->
           <div class="grid-cell">
             <div class="d-flex align-items-center">
               <div class="date-card data-card-blue mr-1">周</div>
-              0
+              {{ week.lubCount }}
             </div>
             <div class="mt-2 content-text">本周润滑次数(次)</div>
           </div>
@@ -50,23 +52,23 @@
           <div class="grid-cell">
             <div class="d-flex align-items-center">
               <div class="date-card data-card-blue mr-1">周</div>
-              0
+              {{ week.runS }}
             </div>
-            <div class="mt-2 content-text">本周润滑次数(次)</div>
+            <div class="mt-2 content-text">本周润滑时长(秒)</div>
           </div>
 
           <div class="grid-cell">
             <div class="d-flex align-items-center">
               <div class="date-card data-card-blue mr-1">周</div>
-              0
+              {{ week.flowCount }}
             </div>
-            <div class="mt-2 content-text">本周润滑次数(次)</div>
+            <div class="mt-2 content-text">本周润滑油量(ml)</div>
           </div>
-
+          <!-- 月 -->
           <div class="grid-cell">
             <div class="d-flex align-items-center">
               <div class="date-card data-card-yellow mr-1">月</div>
-              0
+              {{ month.lubCount }}
             </div>
             <div class="mt-2 content-text">本月润滑次数(次)</div>
           </div>
@@ -74,7 +76,7 @@
           <div class="grid-cell">
             <div class="d-flex align-items-center">
               <div class="date-card data-card-yellow mr-1">月</div>
-              0
+              {{ month.runS }}
             </div>
             <div class="mt-2 content-text">本月润滑次数(次)</div>
           </div>
@@ -82,7 +84,7 @@
           <div class="grid-cell">
             <div class="d-flex align-items-center">
               <div class="date-card data-card-yellow mr-1">月</div>
-              0
+              {{ month.flowCount }}
             </div>
             <div class="mt-2 content-text">本月润滑次数(次)</div>
           </div>
@@ -95,18 +97,29 @@
     </div>
     <!-- 3 -->
     <div>
-      <el-table :data="tableData" height="500px" empty-text="暂无数据">
+      <el-table
+        :data="tableData"
+        height="500px"
+        :header-cell-style="{ 'text-align': 'center' }"
+        :cell-style="{ 'text-align': 'center' }"
+        empty-text="暂无数据"
+      >
         <el-table-column type="index" label="#" width="55" />
-        <el-table-column prop="name" label="开泵时间" />
-        <el-table-column prop="state" label="关泵时间" />
-        <el-table-column prop="time" label="润滑点" />
-        <el-table-column prop="time" label="润滑时常(s)" />
-        <el-table-column prop="time" label="润滑油量(ml)" />
-        <el-table-column prop="time" label="润滑状态" />
+        <el-table-column prop="startTime" label="开泵时间" />
+        <el-table-column prop="endTime" label="关泵时间" />
+        <el-table-column prop="lubCount" label="润滑次数" />
+        <el-table-column prop="runTime" label="润滑时长" />
+        <el-table-column prop="lubFlow" label="润滑油量(ml)" />
+        <el-table-column prop="status" label="润滑状态">
+          <template #default="scope">
+            <el-tag v-if="scope.row.status == 1" type="danger" disable-transitions>故障</el-tag>
+            <el-tag v-else type="success" disable-transitions>故障</el-tag>
+          </template>
+        </el-table-column>
       </el-table>
       <!-- <el-empty v-if="tableData.length === 0" description="暂无数据"></el-empty> -->
       <el-pagination
-        v-model:current-page="currentPage"
+        v-model:current-page="pageNum"
         v-model:page-size="pageSize"
         :page-sizes="[10, 20, 30, 50]"
         layout="total, sizes, prev, pager, next, jumper"
@@ -121,10 +134,105 @@
 <script setup lang="ts" name="lubrication">
 // 润滑记录
 import * as echarts from "echarts";
-import { onMounted, ref } from "vue";
-const timeSearch = ref("");
+import { onMounted, ref, toRefs } from "vue";
+import { lub_LubRecordByPage, lub_lubStatistics, lub_lubTrend } from "@/api/online/anlageuebersicht";
+import { ElMessage } from "element-plus";
+import dayjs from "dayjs";
+const props = defineProps({
+  partId: {
+    type: String
+  }
+});
+const { partId } = toRefs(props);
+// console.log(partId);
+// 润滑统计
+let week = ref({
+  lubCount: 0,
+  flowCount: 0,
+  runS: 0
+});
+let month = ref({
+  lubCount: 0,
+  flowCount: 0,
+  runS: 0
+});
+let day = ref({
+  lubCount: 0,
+  flowCount: 0,
+  runS: 0
+});
+// 数据统计
+const getlubStatistics = async () => {
+  let params = {
+    partId: partId?.value
+    // partId: 130
+  };
+  const res: any = await lub_lubStatistics(params);
+  if (res.code == "200") {
+    day.value = res.data.day;
+    month.value = res.data.month;
+    week.value = res.data.week;
+  } else {
+    ElMessage.error(res?.mssage);
+  }
+};
+getlubStatistics();
+
+// 获取润滑记录
+const getLubRecord = async () => {
+  let params = {
+    startTime: dateRange.value[0],
+    endTime: dateRange.value[1],
+    partId: partId?.value,
+    // partId: 130,
+    pageNum: pageNum.value,
+    pageSize: pageSize.value
+  };
+  const res: any = await lub_LubRecordByPage(params);
+  if (res.code == "200") {
+    tableData.value = res.data.data;
+    total.value = res.data.count;
+  } else {
+    ElMessage.error(res?.mssage);
+  }
+};
+
+// 使用 Day.js 获取本周的起始和结束日期
+const startOfWeek = dayjs().startOf("day").subtract(7, "day").format("YYYY-MM-DD");
+const endOfWeek = dayjs().format("YYYY-MM-DD");
+
+// 使用 ref 创建响应式数据，用于绑定到 el-date-picker
+const dateRange = ref([startOfWeek, endOfWeek]);
+const searchFun = () => {
+  getLubRecord();
+};
+// 趋势图数据
+let data1 = ref();
+let data2 = ref();
+let data3 = ref();
+const getlubTrend = async () => {
+  let params = {
+    // partId: 130,
+    partId: partId?.value,
+    startTime: dateRange.value[0],
+    endTime: dateRange.value[1]
+  };
+  const res: any = await lub_lubTrend(params);
+  if (res.code == "200") {
+    let data = res.data;
+    if (data.length > 0) {
+      data1.value = data.map(item => item.lubFlow);
+      data2.value = data.map(item => item.status);
+      data3.value = data.map(item => item.time);
+    }
+  } else {
+    ElMessage.error(res?.mssage);
+  }
+};
+getlubTrend();
 // 基于准备好的dom，初始化echarts实例
-onMounted(() => {
+onMounted(async () => {
+  await getlubTrend();
   let option = {
     tooltip: {
       trigger: "axis",
@@ -137,7 +245,8 @@ onMounted(() => {
     },
     xAxis: {
       type: "category",
-      data: ["08:15:48", "10:15:48", "12:15:48", "14:15:48"]
+      data: data3.value
+      // data: ["08:15:48", "10:15:48", "12:15:48", "14:15:48"]
     },
     yAxis: [
       {
@@ -170,13 +279,15 @@ onMounted(() => {
         name: "状态",
         type: "bar",
         yAxisIndex: 0,
-        data: [1, 1, 0, 1] // 这里的数据代表状态，0代表停止，1代表启用
+        date: data2.value
+        //data: [1, 1, 0, 1] // 这里的数据代表状态，0代表停止，1代表启用
       },
       {
         name: "剩余油量",
         type: "bar",
         yAxisIndex: 1,
-        data: [80, 70, 60, 50] // 这里的数据代表剩余油量，单位根据实际情况设置
+        data: data1.value
+        //data: [80, 70, 60, 50] // 这里的数据代表剩余油量，单位根据实际情况设置
       }
     ]
   };
@@ -186,16 +297,20 @@ onMounted(() => {
 // table 列表
 let tableData = ref([]);
 // 分页
-const currentPage = ref(1);
+const pageNum = ref(1);
 const pageSize = ref(10);
 const total = ref(0);
 
 const handleSizeChange = (val: number) => {
-  console.log(`${val} items per page`);
+  pageSize.value = val;
+  getLubRecord();
 };
 const handleCurrentChange = (val: number) => {
-  console.log(`current page: ${val}`);
+  pageNum.value = val;
+  getLubRecord();
 };
+// 调用
+getLubRecord();
 </script>
 
 <style lang="scss" scoped>

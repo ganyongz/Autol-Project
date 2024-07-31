@@ -61,7 +61,7 @@
                   <div style="color: #009688; text-align: left">润滑监控：</div>
                   <div>
                     <el-button type="primary" @click="FunSetParameter(cards[0])">参数</el-button>
-                    <el-button type="primary" @click="FunStatistics">数据统计</el-button>
+                    <el-button type="primary" @click="FunStatistics(cards[0])">数据统计</el-button>
                     <el-popover placement="right" :width="320" trigger="click">
                       <template #reference>
                         <el-button style="margin-right: 16px">操作</el-button>
@@ -122,11 +122,16 @@
       </template>
     </myDialog>
     <!-- 数据统计 -->
-    <myDialog title="数据统计" ref="myDialog3" draggable width="90%" :before-close="beforeClose3">
+    <!-- <myDialog title="数据统计" ref="myDialog3" draggable width="90%" :before-close="beforeClose3">
       <template #content>
-        <dataStatistics v-if="IsShowDataTpl" ref="setParameterRef" @close-dialog="beforeClose3" title="数据统计" />
+        <dataStatistics
+          v-if="IsShowDataTpl"
+          ref="setParameterRef"
+          @close-dialog="beforeClose3"
+          title="数据统计"
+        />
       </template>
-    </myDialog>
+    </myDialog> -->
   </div>
 </template>
 
@@ -139,7 +144,7 @@ import { equip_card, pump_OperatePump } from "@/api/online/anlageuebersicht";
 import myDialog from "@/components/dialog/myDialog.vue";
 import analyses from "@/views/online/anlageuebersicht/components/analyses.vue";
 import setParameter from "@/views/online/anlageuebersicht/components/setParameter.vue";
-import dataStatistics from "@/views/online/anlageuebersicht/components/dataStatistics.vue";
+// import dataStatistics from "@/views/online/anlageuebersicht/components/dataStatistics.vue";
 import { useRouter } from "vue-router";
 const router = useRouter();
 const comeBackCompany = () => {
@@ -316,18 +321,24 @@ const beforeClose2 = () => {
   myDialog2.value.close();
 };
 // 数据统计
-const myDialog3 = ref();
-const IsShowDataTpl = ref(false);
-const FunStatistics = () => {
+// const myDialog3 = ref();
+// const IsShowDataTpl = ref(false);
+const FunStatistics = (val: any) => {
+  // console.log(val.partId, "润滑记录-----");
   // IsShowDataTpl.value = true;
   // myDialog3.value.open();
   //路由跳转
-  router.push("/online/dataStatistics/LubricationStatistics/LubricationStatistics");
+  router.push({
+    path: "/online/dataStatistics/LubricationStatistics/LubricationStatistics",
+    query: {
+      partId: val.partId
+    }
+  });
 };
-const beforeClose3 = () => {
-  IsShowDataTpl.value = false;
-  myDialog3.value.close();
-};
+// const beforeClose3 = () => {
+//   IsShowDataTpl.value = false;
+//   myDialog3.value.close();
+// };
 const kaibeng = async val => {
   await useHandleData2(
     pump_OperatePump,

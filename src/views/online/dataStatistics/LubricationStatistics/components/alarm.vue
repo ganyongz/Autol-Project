@@ -8,30 +8,28 @@
         <el-option v-for="item in conditionOptions" :key="item.value" :label="item.label" :value="item.value" />
       </el-select>
       <el-date-picker
-        v-model="timeSearch"
+        v-model="dateRange"
         type="daterange"
+        unlink-panels
         range-separator="至"
-        start-placeholder="Start date"
-        end-placeholder="End date"
-        clearable
-      />
-      <el-button type="primary">查询</el-button>
+        start-placeholder="开始日期"
+        end-placeholder="结束日期"
+      ></el-date-picker>
+      <el-button type="primary" @click="searchFun">查询</el-button>
       <el-button type="success">导出表格</el-button>
       <el-button type="danger">删除</el-button>
     </div>
     <!-- 表格 -->
     <el-table :data="tableData" height="500px">
       <el-table-column type="selection" width="55" />
-      <el-table-column prop="name" label="开泵时间" />
-      <el-table-column prop="state" label="关泵时间" />
-      <el-table-column prop="time" label="润滑点" />
-      <el-table-column prop="time" label="润滑时常(s)" />
-      <el-table-column prop="time" label="润滑油量(ml)" />
-      <el-table-column prop="time" label="润滑状态" />
+      <el-table-column prop="partName" label="部件名称" />
+      <el-table-column prop="alarmMsg" label="报警信息" />
+      <el-table-column prop="alarmStartTime" label="报警开始时间" />
+      <el-table-column prop="alarmEndTime" label="报警结束时间" />
     </el-table>
     <!-- <el-empty v-if="tableData.length == 0" description="暂无数据" /> -->
     <el-pagination
-      v-model:current-page="currentPage"
+      v-model:current-page="pageNum"
       v-model:page-size="pageSize"
       :page-sizes="[10, 20, 30, 50]"
       layout="total, sizes, prev, pager, next, jumper"
@@ -45,7 +43,35 @@
 <script setup lang="ts" name="alarm">
 // 报警记录
 import * as echarts from "echarts";
-import { onMounted, ref } from "vue";
+import { onMounted, ref, toRefs } from "vue";
+import { ElMessage } from "element-plus";
+import { lub_HisAlarmEventByPage } from "@/api/online/anlageuebersicht";
+import dayjs from "dayjs";
+const props = defineProps({
+  partId: {
+    type: String
+  }
+});
+const { partId } = toRefs(props);
+console.log(partId);
+// 获取报警记录
+const getHisAlarm = async () => {
+  let params = {
+    // partId: partId?.value,
+    pageNum: pageNum.value,
+    pageSize: pageSize.value,
+    startTime: dateRange.value[0],
+    endTime: dateRange.value[1]
+  };
+  const res: any = await lub_HisAlarmEventByPage(params);
+  if (res.code == "200") {
+    tableData.value = res.data.data;
+    total.value = res.data.count;
+  } else {
+    ElMessage.error(res?.mssage);
+  }
+};
+
 const chartContainer = ref();
 // 表格条件搜索
 const conditionVal = ref();
@@ -53,7 +79,15 @@ const conditionOptions = [
   { value: 1, label: "恢复" },
   { value: 2, label: "报警" }
 ];
-const timeSearch = ref("");
+// 使用 Day.js 获取本周的起始和结束日期
+const startOfWeek = dayjs().startOf("day").subtract(7, "day").format("YYYY-MM-DD");
+const endOfWeek = dayjs().format("YYYY-MM-DD");
+
+// 使用 ref 创建响应式数据，用于绑定到 el-date-picker
+const dateRange = ref([startOfWeek, endOfWeek]);
+const searchFun = () => {
+  getHisAlarm();
+};
 
 onMounted(() => {
   let chartContainer = echarts.init(document.getElementById("main2"));
@@ -103,16 +137,21 @@ let option = {
 // table 列表
 let tableData = ref([]);
 // 分页
-const currentPage = ref(1);
+const pageNum = ref(1);
 const pageSize = ref(10);
 const total = ref(0);
 
 const handleSizeChange = (val: number) => {
-  console.log(`${val} items per page`);
+  pageSize.value = val;
+  getHisAlarm();
 };
 const handleCurrentChange = (val: number) => {
-  console.log(`current page: ${val}`);
+  pageNum.value = val;
+  getHisAlarm();
 };
+
+// 调用
+getHisAlarm();
 </script>
 
 <style lang="scss" scoped>

@@ -24,3 +24,21 @@ export const pump_setPumpParams = (params: any) => {
 export const pump_getPumpParams = (params: any) => {
   return http.get(`Lub/LubPumpController/getPumpParams`, {}, { params });
 };
+
+// 润滑泵润滑记录 分页查询
+export const lub_LubRecordByPage = (params: any) => {
+  return http.get(`Lub/LubRecord/page`, {}, { params });
+};
+// 润滑统计
+export const lub_lubStatistics = (params: any) => {
+  return http.get(`Lub/LubRecord/lubStatistics`, {}, { params });
+};
+// 润滑（图谱）
+export const lub_lubTrend = (params: any) => {
+  return http.get(`Lub/LubRecord/lubTrend`, {}, { params });
+};
+
+// 润滑泵报警记录 分页查询
+export const lub_HisAlarmEventByPage = (params: any) => {
+  return http.post(`Lub/HisAlarmEvent/page`, {}, { params });
+};
