@@ -3,14 +3,6 @@
     <el-tabs v-model="activeName" class="demo-tabs" @tab-click="handleClick">
       <el-tab-pane label="波形图" name="first"></el-tab-pane>
       <el-tab-pane label="频谱图" name="second"></el-tab-pane>
-      <el-tab-pane label="包络谱" name="third"></el-tab-pane>
-      <el-tab-pane label="倒频谱" name="fourth"></el-tab-pane>
-      <el-tab-pane label="细化谱" name="fifth"></el-tab-pane>
-      <el-tab-pane label="自相关分析" name="sixth"></el-tab-pane>
-      <el-tab-pane label="短时FFT分析" name="seventh"></el-tab-pane>
-      <el-tab-pane label="功率谱" name="eighth"></el-tab-pane>
-      <el-tab-pane label="阶次分析" name="ninth"></el-tab-pane>
-      <!-- 1波形 2频谱 3包络图 4倒频谱 5细化谱 6自相关 7短时FFT分析 8功率谱 9阶次分析 -->
     </el-tabs>
     <el-container>
       <!-- 树选择器 -->
@@ -23,48 +15,37 @@
           :props="defaultProps"
           :highlight-current="true"
           :filter-node-method="filterNode"
-          :default-checked-keys="[stationId]"
-          @check="checkClick"
-          @node-click="handleNodeClick"
+          @node-click="nodeClick"
           @node-expand="handleNodeExpand"
           :check-strictly="true"
           node-key="id"
-          show-checkbox
           :default-expanded-keys="expandData"
         >
+          <template #default="{ node, data }">
+            <span>
+              <span @click="toggleChild(node)">
+                {{ data.type }}
+                <!-- 没有子级所展示的图标 -->
+                <i v-if="!data.children.length && data.type == 4">
+                  <el-icon><Star /></el-icon>
+                </i>
+                <!-- 展开后的图标 -->
+                <i v-else-if="node.expanded" class="el-icon-minus">
+                  <el-icon><FolderRemove /></el-icon>
+                </i>
+                <!-- 未展开的图标 -->
+                <i v-else class="el-icon-plus">
+                  <el-icon><FolderAdd /></el-icon>
+                </i>
+              </span>
+              <span class="custom-tree-node">{{ node.label }}</span>
+            </span>
+          </template>
         </el-tree>
       </el-aside>
       <el-main style="position: relative; overflow: hidden">
         <div style="height: 400px; text-align: center; vertical-align: middle; border: 1px solid #dddddd; border-radius: 15px">
-          <boxingtu v-if="activeName === 'first'" :key="boxingKey" ref="trendChart" :station-id="stationId" :data-obj="dataObj" />
-          <spectrogram
-            v-if="activeName === 'second'"
-            :key="boxingKey"
-            ref="trendChart"
-            :station-id="stationId"
-            :data-obj="dataObj"
-          />
-          <envelopeSpectrum
-            v-if="activeName === 'third'"
-            :key="boxingKey"
-            ref="trendChart"
-            :station-id="stationId"
-            :data-obj="dataObj"
-          />
-          <cepstrum
-            v-if="activeName === 'fourth'"
-            :key="boxingKey"
-            ref="trendChart"
-            :station-id="stationId"
-            :data-obj="dataObj"
-          />
-          <xihuaSpectrum
-            v-if="activeName === 'fifth'"
-            :key="boxingKey"
-            ref="trendChart"
-            :station-id="stationId"
-            :data-obj="dataObj"
-          />
+          <boxingtu :key="boxingKey" ref="trendChart" :station-id="stationId" :data-obj="dataObj" />
         </div>
 
         <div style="height: 400px; text-align: center; vertical-align: middle; border: 1px solid #dddddd; border-radius: 15px">
@@ -79,12 +60,8 @@
 // 综合分析
 import { ref, watch, onMounted, nextTick } from "vue";
 import { ElMessage } from "element-plus";
-import tendencyChart from "@/views/online/expertAnalysis/comprehensiveAnalysis/tendencyChart.vue";
 import boxingtu from "@/views/online/expertAnalysis/comprehensiveAnalysis/boxingtu.vue";
-import spectrogram from "@/views/online/expertAnalysis/comprehensiveAnalysis/components/spectrogram.vue";
-import envelopeSpectrum from "@/views/online/expertAnalysis/comprehensiveAnalysis/components/envelopeSpectrum.vue";
-import cepstrum from "@/views/online/expertAnalysis/comprehensiveAnalysis/components/cepstrum.vue";
-import xihuaSpectrum from "@/views/online/expertAnalysis/comprehensiveAnalysis/components/xihuaSpectrum.vue";
+import tendencyChart from "@/views/online/expertAnalysis/comprehensiveAnalysis/tendencyChart.vue";
 import { getLocationTree } from "@/api/system/functionPosition";
 let tplKey = ref(0);
 let boxingKey = ref(1);
@@ -92,7 +69,6 @@ let boxingKey = ref(1);
 const activeName = ref("first");
 const handleClick = (tab: any, event: Event) => {
   console.log(tab, event);
-  activeName.value = tab.props.name;
 };
 const trendChart = ref();
 // 左侧树
@@ -118,60 +94,13 @@ const defaultProps = {
   type: "type"
 };
 let stationId = ref("");
-let checkedId = ref("");
-// 处理数据
-const setDisabled = data => {
-  data.forEach(item => {
-    if (item && item.type !== 4) {
-      item.disabled = true;
-    } else {
-      item.disabled = false;
-    }
-    if (item.children && item.children.length) {
-      setDisabled(item.children);
-    }
-  });
-};
-// 点击选框
-const checkClick = checkedNode => {
-  const checkedKeys = treeRef.value.getCheckedKeys(); // 获取所有已选中的节点
-  if (checkedKeys.length > 0 && checkedId.value !== checkedNode.id) {
-    treeRef.value.setCheckedKeys([checkedNode.id]); //设置选中
-    checkedId.value = checkedNode.id;
-    // 取消之前选中节点的勾选状态
-    const otherCheckedKeys = checkedKeys.filter(key => key !== checkedNode.id);
-    otherCheckedKeys.forEach(key => {
-      treeRef.value.setChecked(key, false);
-    });
-    // 把当前节点的id的checked属性设置为true,如果不设置，会在勾选第二个选项时点击两次。
-    treeRef.value.setChecked(checkedNode.id, true);
-  } else {
-    //反选
-    treeRef.value.setCheckedKeys([]);
-    checkedId.value = "";
-    treeRef.value.setChecked(checkedNode.id, false);
-  }
-  stationId.value = checkedId.value;
-  tplKey.value += 1;
-};
 // 点击节点
-const handleNodeClick = item => {
-  // type==4 测点
-  if (item && item.type == 4 && checkedId.value !== item.id) {
-    checkedId.value = item.id;
-    stationId.value = item.id;
-    treeRef.value.setCheckedKeys([item.id]);
-    tplKey.value += 1;
-  } else if (item && item.type == 4 && checkedId.value === item.id) {
-    //反勾选
-    console.log("反勾选");
-    checkedId.value = "";
-    stationId.value = "";
-    treeRef.value.setCheckedKeys([]);
+const nodeClick = treeNode => {
+  if (treeNode.type == 4) {
+    stationId.value = treeNode.id;
     tplKey.value += 1;
   }
 };
-
 // 获取子组件的传值
 let dataObj = ref();
 const searchResult = val => {
@@ -184,10 +113,17 @@ const getLocationTreeFun = async () => {
   let res: any = await getLocationTree({ type: 4, range: 9, isFiltration: false });
   if (res.code == "200") {
     treeData.value = res.data as any;
-    setDisabled(treeData.value); //处理数据
   } else {
     ElMessage.error(res?.mssage);
   }
+};
+const toggleChild = (node: any) => {
+  console.log(node.expanded, "前面");
+  nextTick(() => {
+    node.expanded = !node.expanded;
+  });
+
+  console.log(node.expanded, "node.--------1111");
 };
 
 const handleNodeExpand = (data: TreeNode, node: any, instance: any) => {
@@ -209,14 +145,10 @@ function getFirstType4Node(nodes: TreeNode[]): any {
   for (const node of nodes) {
     if (node && node.type === 4) {
       stationId.value = node.id;
-
-      checkedId.value = node.id;
       nextTick(() => {
         expandData.value.push(node.id);
-
         showTRee.value = true;
       });
-      treeRef.value.setCheckedKeys([node.id]);
       tplKey.value += 1;
       return treeRef.value?.store.nodesMap[node.id];
     }
@@ -238,14 +170,20 @@ function getFirstType4Node(nodes: TreeNode[]): any {
   border: 1px solid var(--el-border-color-light);
   border-radius: 6px;
   box-shadow: 0 0 12px rgb(0 0 0 / 5%);
-  :deep(.el-tree-node__content .is-disabled) {
-    display: none;
-  }
 }
 :deep(.el-tree) {
   padding-left: 20px;
 }
 :deep(.custom-tree-node) {
   padding: 0 10px 0 8px;
+}
+
+// 自定义图标中隐藏自带箭头
+:deep(.el-tree-node__content) {
+  position: relative;
+}
+:deep(.el-tree-node__content > .el-tree-node__expand-icon) {
+  position: absolute;
+  opacity: 0;
 }
 </style>
