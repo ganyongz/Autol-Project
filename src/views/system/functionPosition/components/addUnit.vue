@@ -93,8 +93,8 @@ const props = defineProps({
 });
 const { rowData, title } = toRefs(props);
 const pumpStationTypeOptions = [
-  { value: 1, label: "为递进单线" },
-  { value: 2, label: "为递进双线" },
+  { value: 1, label: "递进单线" },
+  { value: 2, label: "递进双线" },
   { value: 3, label: "ATL3000" }
 ];
 const messageTypeOptions = [

@@ -93,3 +93,20 @@ export const equipPoint_deleteThresholdTactics = (params: any) => {
 export const equipPoint_updateThresholdTactics = (params: any) => {
   return http.post(`Lub/equipPoint/updateThresholdTactics`, params);
 };
+// 三、ATL300泵相关
+// ATL3000配置接口
+export const atl_addAtl3000BoxConfig = (params: any) => {
+  return http.post(`Lub/equipPart/addAtl3000BoxConfig`, params);
+};
+// ATL3000终端点号列表
+export const atl_Atl3000BoxConfigList = (params: any) => {
+  return http.post(`Lub/equipPart/Atl3000BoxConfigList`, {}, { params });
+};
+// ATL3000删除
+export const atl_deleteAtl3000BoxConfig = (params: any) => {
+  return http.get(`Lub/equipPart/deleteAtl3000BoxConfig`, {}, { params });
+};
+// ATL3000详情
+export const atl_atl3000Detail = (params: any) => {
+  return http.get(`Lub/equipPart/atl3000Detail`, {}, { params });
+};

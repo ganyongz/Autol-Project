@@ -49,6 +49,13 @@
           <el-select v-model="formInline.pumpStationType" class="m-2" placeholder="请选择">
             <el-option v-for="item in pumpStationTypeOptions" :key="item.value" :label="item.label" :value="item.value" />
           </el-select>
+          <div v-if="formInline.pumpStationType == 3">
+            <el-button type="primary" @click="configur">配置</el-button>
+            <el-tooltip placement="bottom">
+              <template #content>泵类型为ATL3000时，<br />请配置相关项</template>
+              <el-badge class="item" value="?" :offset="[10, 5]"> </el-badge>
+            </el-tooltip>
+          </div>
         </el-form-item>
 
         <el-form-item label="舍弗勒的设备字符" :required="SFLRequired">
@@ -114,6 +121,19 @@
         />
       </template>
     </myDialog>
+    <!-- ATL3000 配置 -->
+    <myDialog title="ATL3000配置" ref="ATLDialog" draggable width="65%" :before-close="closeDialog2">
+      <template #content>
+        <ATL3k
+          v-if="IsShowATL3k"
+          ref="ATL3kRef"
+          :part-id="formInline.id"
+          title="ATL3000配置"
+          @close-dialog="closeDialog2"
+          @submit-form="saveEquipPoint"
+        />
+      </template>
+    </myDialog>
   </div>
 </template>
 
@@ -131,6 +151,7 @@ import {
 import { ElMessage } from "element-plus";
 import myDialog from "@/components/dialog/myDialog.vue";
 import addPoint from "@/views/system/functionPosition/components/addPoint.vue";
+import ATL3k from "@/views/system/functionPosition/components/ATL3k.vue";
 import mittBus from "@/utils/mittBus";
 let props = defineProps({
   nodeData: {
@@ -141,8 +162,8 @@ let props = defineProps({
 });
 const { nodeData } = toRefs(props);
 const pumpStationTypeOptions = [
-  { value: 1, label: "为递进单线" },
-  { value: 2, label: "为递进双线" },
+  { value: 1, label: "递进单线" },
+  { value: 2, label: "递进双线" },
   { value: 3, label: "ATL3000" }
 ];
 const messageTypeOptions = [
@@ -168,7 +189,7 @@ const formInline = reactive({
   remark: "",
   code: "",
   sort: null,
-  id: "",
+  id: undefined,
   useVib: null,
   useLub: null,
   useOil: null,
@@ -291,6 +312,19 @@ const rules = reactive<any>({
     }
   ]
 });
+
+//  ATL3000配置
+const ATLDialog = ref();
+const IsShowATL3k = ref(false);
+// 配置
+const configur = () => {
+  IsShowATL3k.value = true;
+  ATLDialog.value.open();
+};
+const closeDialog2 = () => {
+  ATLDialog.value.close();
+  IsShowATL3k.value = false;
+};
 
 getEquipPartDetailFun();
 </script>
