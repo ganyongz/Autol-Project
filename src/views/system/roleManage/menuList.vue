@@ -25,12 +25,33 @@ const defaultProps = {
 let menuTree = ref([]);
 const treeRef = ref();
 const currentIds = ref();
+function mergeButtonsToChildren(items) {
+  items.forEach(item => {
+    if (item.buttons && item.buttons.length) {
+      // 如果存在buttons数组，则将其合并到children数组
+      if (!item.children) {
+        item.children = []; // 确保children属性存在
+      }
+      // 将buttons数组中的元素添加到children数组
+      item.children.push(...item.buttons);
+      delete item.buttons; // 删除buttons属性
+    }
+
+    // 如果当前对象有children属性，则递归合并其子对象的buttons到children
+    if (item.children && item.children.length) {
+      mergeButtonsToChildren(item.children);
+    }
+  });
+  return items;
+}
 
 // 获取菜单列表
 const getMenuListFun = async () => {
   let res: any = await getMenuList();
   if (res.code == "200") {
-    menuTree.value = res.data as any;
+    let datasArray = res.data;
+    let datas = mergeButtonsToChildren(datasArray);
+    menuTree.value = datas as any;
   } else {
     ElMessage.error(res?.mssage);
   }
