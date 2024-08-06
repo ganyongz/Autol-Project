@@ -29,7 +29,7 @@ export interface GlobalState {
 export interface UserState {
   token: string;
   userType: number;
-  userInfo: { name: string };
+  userInfo: { realName: string };
 }
 
 /* tabsMenuProps */

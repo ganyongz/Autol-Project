@@ -72,6 +72,7 @@ const login = (formEl: FormInstance | undefined) => {
       const { data }: { [key: string]: any } = await loginApi1({ ...loginForm });
       userStore.setToken(data.token);
       userStore.setUserType(data.userType);
+      userStore.setUserInfo(data.userInfo);
       // 2.添加动态路由
       await initDynamicRouter();
       // 3.清空 tabs、keepAlive 数据
