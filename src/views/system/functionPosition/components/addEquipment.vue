@@ -43,16 +43,19 @@
 
       <el-form-item label="设备图片" prop="equipImageUrl">
         <!-- <el-input v-model="ruleForm.equipImageUrl" /> -->
-        <el-upload
+        <!-- <el-upload
           class="avatar-uploader"
-          action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15"
+          :action="upload_uploadImage"
           :show-file-list="false"
           :on-success="handleAvatarSuccess"
           :before-upload="beforeAvatarUpload"
         >
           <img v-if="imageUrl" :src="imageUrl" class="avatar" />
           <el-icon v-else class="avatar-uploader-icon"><Plus /></el-icon>
-        </el-upload>
+        </el-upload> -->
+        <UploadImg v-model:image-id="ruleForm.equipImageUrl" :file-size="5">
+          <template #tip> 上传图片最大为 5M </template>
+        </UploadImg>
       </el-form-item>
 
       <div style="text-align: center">
@@ -66,7 +69,11 @@
 <script lang="ts" setup>
 import { reactive, ref, toRefs, onBeforeMount } from "vue";
 import { ElMessage, type ComponentSize, type FormInstance, type FormRules } from "element-plus";
-import type { UploadProps } from "element-plus";
+// import type { UploadProps } from "element-plus";
+import { upload_uploadImage } from "@/api/upload";
+console.log(upload_uploadImage, "上传接口");
+// let url = "192.168.1.139:8901/File/uploadImage";
+import UploadImg from "@/components/Upload/Img.vue";
 const props = defineProps({
   rowData: {
     type: Object,
@@ -133,19 +140,21 @@ const resetForm = (formEl: FormInstance | undefined) => {
   emit("closeDialog");
 };
 // 上传
-const imageUrl = ref("");
+// const imageUrl = ref("");
 
-const handleAvatarSuccess: UploadProps["onSuccess"] = (response, uploadFile) => {
-  imageUrl.value = URL.createObjectURL(uploadFile.raw!);
-};
+// const handleAvatarSuccess: UploadProps["onSuccess"] = (response, uploadFile) => {
+//   imageUrl.value = URL.createObjectURL(uploadFile.raw!);
+// };
 
-const beforeAvatarUpload: UploadProps["beforeUpload"] = rawFile => {
-  if (rawFile.size / 1024 / 1024 > 2) {
-    ElMessage.error("Avatar picture size can not exceed 2MB!");
-    return false;
-  }
-  return true;
-};
+// const beforeAvatarUpload: UploadProps["beforeUpload"] = rawFile => {
+//   console.log(rawFile);
+
+// if (rawFile.size / 1024 / 1024 > 2) {
+//   ElMessage.error("Avatar picture size can not exceed 2MB!");
+//   return false;
+// }
+// return true;
+// };
 
 // 获取部门
 import { getDepartTree } from "@/api/system/departmentManage";

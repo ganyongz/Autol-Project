@@ -13,5 +13,5 @@ export const deleteUserByIds = (params: any) => {
 };
 // 新增&更新
 export const addOrUpdateUser = (params: any) => {
-  return http.post(`/Lub/UserController/addOrUpdateUser`, params);
+  return http.post(`Lub/UserController/addOrUpdateUser`, params);
 };

@@ -47,7 +47,7 @@
 
       <el-form-item label="设备图片" prop="equipImageUrl">
         <!-- <el-input v-model="ruleForm.equipImageUrl" /> -->
-        <el-upload
+        <!-- <el-upload
           class="avatar-uploader"
           action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15"
           :show-file-list="false"
@@ -56,7 +56,10 @@
         >
           <img v-if="imageUrl" :src="imageUrl" class="avatar" />
           <el-icon v-else class="avatar-uploader-icon"><Plus /></el-icon>
-        </el-upload>
+        </el-upload> -->
+        <UploadImg :key="uploadImgKey" v-model:image-id="ruleForm.equipImageUrl" :file-size="5">
+          <template #tip> 上传图片最大为 5M </template>
+        </UploadImg>
       </el-form-item>
     </el-form>
     <myDialog :title="title" ref="myDialog1" draggable width="700px" :before-close="beforeClose1">
@@ -80,9 +83,9 @@ import mittBus from "@/utils/mittBus";
 import { useHandleData } from "@/hooks/useHandleData";
 import { equip_equipInfo, equip_addOrUpdate, equip_deleteById, equipPart_addOrUpdate } from "@/api/system/functionPosition";
 import { ElMessage, type ComponentSize, type FormInstance, type FormRules } from "element-plus";
-import type { UploadProps } from "element-plus";
 import myDialog from "@/components/dialog/myDialog.vue";
 import addUnit from "@/views/system/functionPosition/components/addUnit.vue";
+import UploadImg from "@/components/Upload/Img.vue";
 // 设备详情
 const props = defineProps({
   nodeData: {
@@ -153,19 +156,19 @@ const saveForm = async () => {
   }
 };
 // 上传
-const imageUrl = ref("");
+// const imageUrl = ref("");
 
-const handleAvatarSuccess: UploadProps["onSuccess"] = (response, uploadFile) => {
-  imageUrl.value = URL.createObjectURL(uploadFile.raw!);
-};
+// const handleAvatarSuccess: UploadProps["onSuccess"] = (response, uploadFile) => {
+//   imageUrl.value = URL.createObjectURL(uploadFile.raw!);
+// };
 
-const beforeAvatarUpload: UploadProps["beforeUpload"] = rawFile => {
-  if (rawFile.size / 1024 / 1024 > 2) {
-    ElMessage.error("Avatar picture size can not exceed 2MB!");
-    return false;
-  }
-  return true;
-};
+// const beforeAvatarUpload: UploadProps["beforeUpload"] = rawFile => {
+//   if (rawFile.size / 1024 / 1024 > 2) {
+//     ElMessage.error("Avatar picture size can not exceed 2MB!");
+//     return false;
+//   }
+//   return true;
+// };
 
 // 获取部门
 import { getDepartTree } from "@/api/system/departmentManage";
@@ -188,6 +191,7 @@ const departTreeFun = async () => {
   }
 };
 // 获取详情
+let uploadImgKey = ref<number>(1);
 const getEquipDetailFun = async () => {
   let res: any = await equip_equipInfo({ id: nodeData.value["id"] });
   if (res.code == "200") {
@@ -201,6 +205,7 @@ const getEquipDetailFun = async () => {
     ruleForm.deptId = data.deptId;
     ruleForm.sort = data.sort;
     ruleForm.classify = data.classify;
+    uploadImgKey.value += 1;
   } else {
     ElMessage.error(res?.mssage);
   }
