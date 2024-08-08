@@ -6,7 +6,7 @@ import http from "@/api";
 export const getThresholdList = (params: any) => {
   return http.post(`Lub/Threshold/page`, params);
 };
-// 跟新，添加
+// 更新，添加
 export const Threshold_addOrUpdate = (params: any) => {
   return http.post(`Lub/Threshold/addOrUpdate`, params);
 };
