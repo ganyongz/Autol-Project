@@ -146,6 +146,7 @@ const columns: any = reactive([
   //   fieldNames: { label: "label", value: "value" }
   // },
   { prop: "name", label: "租户名" },
+  { prop: "platformName", label: "平台名称" },
   { prop: "expirationTime", label: "租户授权过期时间" },
   { prop: "cockpitMenuUrl", label: "驾驶舱菜单路径" },
   { prop: "logoUrl", label: "Logo图片路径" },

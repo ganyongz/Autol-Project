@@ -13,6 +13,10 @@
       <el-input v-model="ruleForm.name" />
     </el-form-item>
 
+    <el-form-item label="平台名称" prop="platformName">
+      <el-input v-model="ruleForm.platformName" />
+    </el-form-item>
+
     <el-form-item label="租户授权过期时间" prop="expirationTime">
       <el-date-picker
         v-model="ruleForm.expirationTime"
@@ -20,6 +24,7 @@
         placeholder="请选择时间"
         format="YYYY-MM-DD HH:mm:ss"
         value-format="YYYY-MM-DD HH:mm:ss"
+        style="width: 100%"
       />
     </el-form-item>
 
@@ -60,6 +65,7 @@ let uploadImgKey = ref<number>(1);
 interface RuleForm {
   id: string;
   name: string;
+  platformName: string;
   type: number;
   expirationTime: string;
   cockpitMenuUrl: string;
@@ -71,6 +77,7 @@ const ruleFormRef = ref<FormInstance>();
 let ruleForm = reactive<RuleForm>({
   id: "",
   name: "",
+  platformName: "",
   type: 1,
   expirationTime: "",
   cockpitMenuUrl: "",
@@ -79,8 +86,11 @@ let ruleForm = reactive<RuleForm>({
 
 const rules = reactive<FormRules<RuleForm>>({
   name: [{ required: true, message: "请输入名称", trigger: "blur" }],
-  expirationTime: [{ required: true, message: "请设定租户授权过期时间", trigger: "change" }]
-  // cockpitMenuUrl: [{ required: true, message: "请输入驾驶舱菜单路径", trigger: "blur" }]
+  expirationTime: [{ required: true, message: "请设定租户授权过期时间", trigger: "change" }],
+  platformName: [
+    { required: true, message: "请输入平台名称", trigger: "blur" },
+    { min: 3, max: 5, message: "长度1 ~ 15", trigger: "blur" }
+  ]
 });
 // 方法区
 onBeforeMount(() => {

@@ -21,7 +21,7 @@
           <el-input v-model.number="ruleForm.pointNum" />
         </el-form-item>
 
-        <el-form-item label="箱体点位别名" prop="name">
+        <el-form-item label="部位名称" prop="name">
           <el-input v-model="ruleForm.name" />
         </el-form-item>
 
@@ -44,7 +44,7 @@
       :header-cell-style="{ 'text-align': 'center' }"
     >
       <el-table-column type="index" label="" width="50" />
-      <el-table-column prop="name" label="箱体点位别名" width="240" />
+      <el-table-column prop="name" label="部位名称" width="240" />
       <el-table-column prop="boxNum" label="箱体编号" />
       <el-table-column prop="pointNum" label="点位编号" />
       <el-table-column prop="cumulativeOil" label="累计油量(ml)" />
@@ -99,7 +99,7 @@ let ruleForm = reactive<RuleForm>({
 });
 
 const rules = reactive<FormRules<RuleForm>>({
-  name: [{ required: true, message: "请输入箱体点位别名", trigger: "blur" }],
+  name: [{ required: true, message: "请输入部位名称", trigger: "blur" }],
   partId: [{ required: true, message: "部件id不能为空", trigger: "blur" }],
   boxNum: [{ required: true, message: "请输入箱体编号", trigger: "blur" }],
   pointNum: [{ required: true, message: "请输入点位编号", trigger: "blur" }],

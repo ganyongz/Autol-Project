@@ -8,7 +8,7 @@
       :header-cell-style="{ 'text-align': 'center' }"
     >
       <el-table-column type="index" label="序号" width="55" />
-      <el-table-column prop="name" label="箱体点位别名" width="240" />
+      <el-table-column prop="name" label="部位名称" width="240" />
       <el-table-column prop="boxNum" label="箱体编号" />
       <el-table-column prop="pointNum" label="点位编号" />
       <el-table-column prop="cumulativeOil" label="累计油量(ml)" />
