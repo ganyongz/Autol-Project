@@ -32,6 +32,12 @@
         <el-input v-model="ruleForm.realName" autocomplete="off" />
       </el-form-item>
 
+      <el-form-item label="绑定租户" :label-width="formLabelWidth">
+        <el-select :disabled="ruleForm.type !== 1" v-model="value" filterable placeholder="请选择" clearable style="width: 100%">
+          <el-option v-for="item in options" :key="item?.id" :label="item?.name" :value="item?.id" />
+        </el-select>
+      </el-form-item>
+
       <!-- <el-form-item label="邮箱" :label-width="formLabelWidth">
         <el-input v-model="form.name" autocomplete="off" />
       </el-form-item> -->
@@ -59,6 +65,7 @@
 <script lang="ts" setup>
 import { reactive, ref, defineProps, defineEmits, toRefs, onBeforeMount } from "vue";
 import { addOrUpdateUser } from "@/api/system/user";
+import { Tenant_List } from "@/api/system/TenantManagement"; //租户管理list
 import { ElMessage } from "element-plus";
 import type { FormInstance, FormRules } from "element-plus";
 const ruleFormRef = ref<FormInstance>();
@@ -78,7 +85,6 @@ const props = defineProps({
   }
 });
 let { visible, dynamicTitle, rowData } = toRefs(props);
-console.log("数据111111子页面-------", rowData.value);
 
 interface RuleForm {
   id: string;
@@ -106,6 +112,7 @@ const rules = reactive<FormRules<RuleForm>>({
   userName: [{ required: true, message: "请输入用户名", trigger: "blur" }]
 });
 onBeforeMount(() => {
+  getUserList({ pageNum: 1, pageSize: 1000 });
   if (dynamicTitle.value == "编辑") {
     ruleForm = rowData.value as any;
     console.log("数据来了", rowData.value);
@@ -115,7 +122,6 @@ onBeforeMount(() => {
 // 关闭
 const emit = defineEmits(["closeDialog", "submitForm"]);
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-
 const closeDialog1 = (formEl: FormInstance | undefined) => {
   console.log("取消了");
 
@@ -142,6 +148,18 @@ const submit = async (formEl: FormInstance | undefined) => {
       console.log("error submit!", fields);
     }
   });
+};
+// 绑定租户
+const value = ref("");
+const options = ref();
+const getUserList = async (params: any) => {
+  const res: any = await Tenant_List(params);
+  if (res.code == "200") {
+    // console.log(res);
+    options.value = res.data.records;
+  } else {
+    ElMessage.error(res?.mssage);
+  }
 };
 </script>
 <style scoped lang=""></style>
