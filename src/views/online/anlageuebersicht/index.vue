@@ -30,21 +30,22 @@
                 <div class="card-header" style="display: flex; justify-content: space-between">
                   <!-- 设备名称(顶部标题) -->
                   <span>{{ outItem.partName }}</span>
-                  <el-popover ref="popover" placement="right" title="位移" :width="200" trigger="hover" content="10vm">
+                  <!-- 暂时注释(勿删) -->
+                  <!-- <el-popover ref="popover" placement="right" title="位移" :width="200" trigger="hover" content="10vm">
                     <template #reference>
                       <el-icon style="cursor: pointer"><InfoFilled /></el-icon>
                     </template>
-                  </el-popover>
+                  </el-popover> -->
                 </div>
               </template>
               <!-- 1.振动 -->
-              <div v-if="outItem.zhendongOptions && outItem.zhendongOptions.length > 0">
+              <div v-if="outItem.VibRealData && outItem.VibRealData.length > 0">
                 <div style="color: #009688; text-align: left">轴承振动情况：</div>
-                <div v-for="(item, index) in outItem.zhendongOptions" :key="index">
+                <div v-for="(item, index) in outItem.VibRealData" :key="index">
                   <el-popover placement="right" :width="300" trigger="hover">
                     <template #reference>
                       <div style="display: flex; justify-content: space-between">
-                        <p style="margin: 5px 0; cursor: pointer">{{ item.name }} :</p>
+                        <p style="margin: 5px 0; cursor: pointer">{{ item.pointName }} :</p>
                         <p style="margin: 5px 0; color: #19be6b">{{ item.value }}</p>
                       </div>
                     </template>
@@ -54,8 +55,12 @@
                     </div>
                   </el-popover>
                 </div>
-                <el-divider />
               </div>
+              <el-divider
+                v-if="
+                  outItem.VibRealData && outItem.VibRealData.length > 0 && outItem?.LubRealData && outItem?.LubRealData.length > 0
+                "
+              />
               <!-- 2.润滑监控 -->
               <div class="lubClass" v-if="outItem?.LubRealData && outItem?.LubRealData.length > 0">
                 <!-- 1 -->
@@ -88,14 +93,18 @@
                   </div>
                 </div>
               </div>
+              <el-divider
+                v-if="
+                  outItem?.LubRealData && outItem?.LubRealData.length > 0 && outItem.OilRealData && outItem.OilRealData.length > 0
+                "
+              />
               <!-- 3.油液 -->
-              <div v-if="outItem.oilState && outItem.oilState.length > 0">
-                <el-divider />
+              <div v-if="outItem.OilRealData && outItem.OilRealData.length > 0">
                 <div style="color: #009688; text-align: left">油液状态：</div>
-                <div v-for="(item, index) in outItem.oilState" :key="index">
+                <div v-for="(item, index) in outItem.OilRealData" :key="index">
                   <div style="display: flex; justify-content: space-between">
                     <p style="margin: 5px 0">{{ item.name }}:</p>
-                    <p style="margin: 5px 0; color: #19be6b">{{ item.num }}</p>
+                    <p style="margin: 5px 0; color: #19be6b">{{ item.value }}</p>
                   </div>
                 </div>
               </div>
@@ -172,120 +181,7 @@ const getEquipListFun = async () => {
   }
 };
 getEquipListFun();
-// let cardOptions = [
-//   {
-//     title: "变桨输出端",
-//     //振动数据
-//     zhendongOptions: [
-//       { name: "振动测点1", value: "0.008mm/s" },
-//       { name: "振动测点2", value: "0.01mm/s" }
-//     ],
-//     // 润滑
-//     pump: [
-//       { name: "打油次数", num: "108" },
-//       { name: "温度", num: "38℃" },
-//       { name: "打油状态", num: "正常" },
-//       { name: "润滑时间", num: "1分10秒" }
-//     ],
-//     // 油液状态
-//     oilState: [
-//       { name: "温度", num: "40℃" },
-//       { name: "动力粘度", num: "200cp" },
-//       { name: "密度", num: "1000kg/m³" },
-//       { name: "介电常数", num: "5" },
-//       { name: "水活性", num: "1aw" },
-//       { name: "含水量", num: "500ppm" }
-//     ]
-//   },
-//   {
-//     title: "主轴承输出端",
-//     zhendongOptions: [
-//       { name: "振动测点1", value: "0.008mm/s" },
-//       { name: "振动测点2", value: "0.01mm/s" }
-//     ],
-//     pump: [
-//       { name: "打油次数", num: "108" },
-//       { name: "温度", num: "38℃" },
-//       { name: "打油状态", num: "正常" },
-//       { name: "润滑时间", num: "1分10秒" }
-//     ],
-//     // 油液状态
-//     oilState: [
-//       { name: "温度", num: "40℃" },
-//       { name: "动力粘度", num: "200cp" },
-//       { name: "密度", num: "1000kg/m³" },
-//       { name: "介电常数", num: "5" },
-//       { name: "水活性", num: "1aw" },
-//       { name: "含水量", num: "500ppm" }
-//     ]
-//   },
-//   {
-//     title: "偏航输出端",
-//     zhendongOptions: [
-//       { name: "振动测点1", value: "0.008mm/s" },
-//       { name: "振动测点2", value: "0.01mm/s" }
-//     ],
-//     pump: [
-//       { name: "打油次数", num: "108" },
-//       { name: "温度", num: "38℃" },
-//       { name: "打油状态", num: "正常" },
-//       { name: "润滑时间", num: "1分10秒" }
-//     ],
-//     // 油液状态
-//     oilState: [
-//       { name: "温度", num: "40℃" },
-//       { name: "动力粘度", num: "200cp" },
-//       { name: "密度", num: "1000kg/m³" },
-//       { name: "介电常数", num: "5" },
-//       { name: "水活性", num: "1aw" },
-//       { name: "含水量", num: "500ppm" }
-//     ]
-//   },
-//   {
-//     title: "齿轮箱输出端",
-//     zhendongOptions: [
-//       { name: "振动测点1", value: "0.008mm/s" },
-//       { name: "振动测点2", value: "0.01mm/s" }
-//     ],
-//     pump: [
-//       { name: "打油次数", num: "108" },
-//       { name: "温度", num: "38℃" },
-//       { name: "打油状态", num: "正常" },
-//       { name: "润滑时间", num: "1分10秒" }
-//     ],
-//     // 油液状态
-//     oilState: [
-//       { name: "温度", num: "40℃" },
-//       { name: "动力粘度", num: "200cp" },
-//       { name: "密度", num: "1000kg/m³" },
-//       { name: "介电常数", num: "5" },
-//       { name: "水活性", num: "1aw" },
-//       { name: "含水量", num: "500ppm" }
-//     ]
-//   },
-//   {
-//     title: "发电机输出端",
-//     zhendongOptions: [
-//       { name: "振动测点1", value: "0.008mm/s" },
-//       { name: "振动测点2", value: "0.01mm/s" }
-//     ],
-//     pump: [
-//       { name: "打油次数", num: "108" },
-//       { name: "温度", num: "38℃" },
-//       { name: "打油状态", num: "正常" },
-//       { name: "润滑时间", num: "1分10秒" }
-//     ],
-//     // 油液状态
-//     oilState: [
-//       { name: "温度", num: "40℃" },
-//       { name: "动力粘度", num: "200cp" },
-//       { name: "密度", num: "1000kg/m³" },
-//       { name: "介电常数", num: "5" },
-//       { name: "水活性", num: "1aw" },
-//       { name: "含水量", num: "500ppm" }
-//     ]
-//   }
-// ];
+
 // open - 开始
 let rowData = ref();
 const myDialog1 = ref();
