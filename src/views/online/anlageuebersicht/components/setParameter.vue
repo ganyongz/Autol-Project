@@ -73,12 +73,15 @@
   </div>
 </template>
 
-<script lang="ts" setup>
+<script lang="ts" setup name="setParameter">
+// 参数设置(普通泵)
 import { ref, toRefs } from "vue";
 import { pump_OperatePump, pump_getPumpParams, pump_setPumpParams } from "@/api/online/anlageuebersicht";
 import { ElMessage } from "element-plus";
 const props = defineProps({
-  setParameters: {}
+  setParameters: {
+    type: Object
+  }
 });
 const { setParameters }: any = toRefs(props);
 // console.log(setParameters, "--setParameters==");
@@ -88,27 +91,7 @@ const handleClick = tab => {
   getPumpParams();
   // console.log(activeName.value);
 };
-// const emit = defineEmits(["closeDialog", "submitForm"]);
-// const form = reactive({
-//   name: "",
-//   region: "",
-//   date1: "",
-//   date2: ""
-// });
 
-// const onSubmit = () => {
-//   emit("closeDialog");
-// };
-// 参数
-// interface typeParameterOfApparatus {
-//   cycH: string;
-//   cycM: string;
-//   runM: string;
-//   runS: string;
-//   temperature: string | undefined;
-//   signal: string;
-//   DataTime?: string;
-// }
 let parameterOfApparatus: any = ref({
   cycH: "", // 休止时
   cycM: "", // 休止分

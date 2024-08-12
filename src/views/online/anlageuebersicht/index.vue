@@ -67,8 +67,8 @@
                 <div style="display: flex; justify-content: space-between">
                   <div style="color: #009688; text-align: left">润滑监控：</div>
                   <div>
-                    <el-button type="primary" @click="FunSetParameter(cards[0])">参数</el-button>
-                    <el-button type="primary" @click="FunStatistics(cards[0])">数据统计</el-button>
+                    <el-button type="primary" @click="FunSetParameter(outItem)">参数</el-button>
+                    <el-button type="primary" @click="FunStatistics(outItem)">数据统计</el-button>
                     <el-popover placement="right" :width="320" trigger="click">
                       <template #reference>
                         <el-button>操作</el-button>
@@ -122,7 +122,7 @@
         <analyses v-if="IsShowAdd" ref="addEditRoleRef" :row-data="rowData" :title="detailParams.title" />
       </template>
     </myDialog>
-    <!-- 参数设置 -->
+    <!-- 参数设置(普通泵) -->
     <myDialog title="参数设置" ref="myDialog2" draggable width="30%" :before-close="beforeClose2">
       <template #content>
         <setParameter
@@ -131,6 +131,18 @@
           :set-parameters="setParameters"
           @close-dialog="beforeClose2"
           title="参数设置"
+        />
+      </template>
+    </myDialog>
+    <!-- 参数设置(ATL3000) -->
+    <myDialog title="参数设置" ref="myDialog3" draggable width="30%" :before-close="beforeClose3">
+      <template #content>
+        <setAtl3k
+          v-if="ShowSetAtl3k"
+          ref="setParameterRef"
+          :set-parameters="setParameters"
+          @close-dialog="beforeClose3"
+          title="参数设置(ATL3000)"
         />
       </template>
     </myDialog>
@@ -152,6 +164,7 @@ import { equip_card, pump_OperatePump } from "@/api/online/anlageuebersicht";
 import myDialog from "@/components/dialog/myDialog.vue";
 import analyses from "@/views/online/anlageuebersicht/components/analyses.vue";
 import setParameter from "@/views/online/anlageuebersicht/components/setParameter.vue";
+import setAtl3k from "@/views/online/anlageuebersicht/components/setAtl3k.vue";
 import ATL3kDetail from "@/views/online/anlageuebersicht/components/ATL3kDetail.vue";
 // import dataStatistics from "@/views/online/anlageuebersicht/components/dataStatistics.vue";
 import { useRouter } from "vue-router";
@@ -199,18 +212,34 @@ const openDialog = (title: string) => {
   router.push("/online/expertAnalysis/comprehensiveAnalysis/index");
 };
 // close - 关闭
-// 参数设置
+// 参数设置(普通泵)
 const myDialog2 = ref();
 const IsShowSetTpl = ref(false);
 let setParameters = ref();
+// 公用方法
 const FunSetParameter = (val: any) => {
+  console.log(val, "9999");
   setParameters.value = val;
-  IsShowSetTpl.value = true;
-  myDialog2.value.open();
+  if (val?.PumpStationType == 3) {
+    // ATL3000
+    ShowSetAtl3k.value = true;
+    myDialog3.value.open();
+  } else {
+    // 其他
+    IsShowSetTpl.value = true;
+    myDialog2.value.open();
+  }
 };
 const beforeClose2 = () => {
   IsShowSetTpl.value = false;
   myDialog2.value.close();
+};
+// 参数设置(ATL3000)
+const myDialog3 = ref();
+const ShowSetAtl3k = ref(false);
+const beforeClose3 = () => {
+  ShowSetAtl3k.value = false;
+  myDialog3.value.close();
 };
 // 数据统计
 const FunStatistics = (val: any) => {
