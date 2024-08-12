@@ -73,11 +73,20 @@
                       <template #reference>
                         <el-button>操作</el-button>
                       </template>
-                      <div>
+                      <!-- 非ATL3000 -->
+                      <div v-if="outItem.PumpStationType != 3">
+                        handle
                         <el-button @click="kaibeng(outItem)">开泵</el-button>
                         <el-button @click="guanbeng(outItem)">关泵</el-button>
                         <el-button @click="dongjie(outItem)">冻结</el-button>
                         <el-button @click="jiedong(outItem)">解冻</el-button>
+                      </div>
+                      <!-- ATL3000操作 -->
+                      <div v-if="outItem.PumpStationType == 3">
+                        <el-button @click="pump_handle('ziDong', outItem)">自动</el-button>
+                        <el-button @click="pump_handle('shouDong', outItem)">手动</el-button>
+                        <el-button @click="pump_handle('fuWei', outItem)">复位</el-button>
+                        <el-button @click="pump_handle('tingZhi', outItem)">停止</el-button>
                       </div>
                     </el-popover>
                     <el-button type="primary" @click="viewDetails(outItem)">详情</el-button>
@@ -152,12 +161,35 @@
         <ATL3kDetail v-if="IsShowATL3k" ref="ATL3kRef" :part-id="partId" title="ATL3000配置" @close-dialog="closeDialog2" />
       </template>
     </myDialog>
+    <!-- ATL3000 手动操作参数设置 -->
+    <el-dialog v-model="dialogVisible" title="润滑站点区间" width="500" :before-close="handleClose">
+      <el-form
+        ref="ruleFormRef"
+        style="max-width: 600px"
+        :model="ruleForm"
+        :rules="rules"
+        label-width="auto"
+        class="demo-ruleForm"
+        status-icon
+      >
+        <el-form-item label="起点：" prop="startPoint">
+          <el-input v-model="ruleForm.startPoint" />
+        </el-form-item>
+
+        <el-form-item label="终点：" prop="endPoint">
+          <el-input v-model="ruleForm.endPoint" />
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="ToSet(ruleFormRef)"> 启动 </el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
   </div>
 </template>
 
 <script lang="ts" setup name="anlageuebersicht">
-import { ref, onMounted } from "vue";
-import { ElMessage } from "element-plus";
+import { ref, onMounted, reactive } from "vue";
+import { ElMessage, type FormRules, type FormInstance } from "element-plus";
 import { useHandleData2 } from "@/hooks/useHandleData";
 import { getLocationTree } from "@/api/system/functionPosition";
 import { equip_card, pump_OperatePump } from "@/api/online/anlageuebersicht";
@@ -305,7 +337,80 @@ const closeDialog2 = () => {
   ATLDialog.value.close();
   IsShowATL3k.value = false;
 };
+// 泵操作 (ATL3000)
+const pump_handle = async (type, val) => {
+  if (type === "ziDong") {
+    await useHandleData2(
+      pump_OperatePump,
+      { gatewaySn: val.GatewaySn, pumpStationType: val.PumpStationType, plcAddress: val.PlcAddress, type: 8 },
+      `确认此操作`
+    );
+  } else if (type === "fuWei") {
+    await useHandleData2(
+      pump_OperatePump,
+      { gatewaySn: val.GatewaySn, pumpStationType: val.PumpStationType, plcAddress: val.PlcAddress, type: 10 },
+      `确认此操作`
+    );
+  } else if (type === "tingZhi") {
+    await useHandleData2(
+      pump_OperatePump,
+      { gatewaySn: val.GatewaySn, pumpStationType: val.PumpStationType, plcAddress: val.PlcAddress, type: 11 },
+      `确认此操作`
+    );
+  } else if (type === "shouDong") {
+    //手动
+    // ToSet();
+    paramsDatas.value = val;
+    dialogVisible.value = true;
+  }
+};
+const dialogVisible = ref(false);
+let ruleFormRef = ref();
+interface RuleForm {
+  startPoint: string;
+  endPoint: string;
+}
+const ruleForm = reactive<RuleForm>({
+  startPoint: "",
+  endPoint: ""
+});
+// 必填校验
+const rules = reactive<FormRules<RuleForm>>({
+  startPoint: [{ required: true, message: "请输入起点", trigger: "blur" }],
+  endPoint: [{ required: true, message: "请输入终点", trigger: "blur" }]
+});
+// 启动 ATL3000
+let paramsDatas = ref();
+const ToSet = async (formEl: FormInstance) => {
+  if (!formEl) return;
+  await formEl.validate((valid, fields) => {
+    if (valid) {
+      useHandleData2(
+        pump_OperatePump,
+        {
+          startPoint: ruleForm.startPoint,
+          endPoint: ruleForm.endPoint,
+          gatewaySn: paramsDatas.value.GatewaySn,
+          pumpStationType: paramsDatas.value.PumpStationType,
+          plcAddress: paramsDatas.value.PlcAddress,
+          type: 9
+        },
+        `确认此操作`
+      );
+      dialogVisible.value = false;
+      paramsDatas.value = {};
+      (ruleForm.startPoint = ""), (ruleForm.endPoint = "");
+    } else {
+      console.log("error submit!", fields);
+    }
+  });
+};
 
+const handleClose = () => {
+  dialogVisible.value = false;
+  paramsDatas.value = {};
+  (ruleForm.startPoint = ""), (ruleForm.endPoint = "");
+};
 let bodyHeight = ref(500);
 onMounted(() => {
   // 获取body的窗口高度
