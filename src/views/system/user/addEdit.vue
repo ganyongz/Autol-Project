@@ -14,8 +14,8 @@
 
       <el-form-item label="用户类型" :label-width="formLabelWidth">
         <el-select v-model="ruleForm.type" placeholder="请选择用户类型">
-          <el-option label="超级管理员" :value="1" />
-          <el-option label="租户管理员" :value="2" />
+          <el-option label="超级管理员" :value="1" :disabled="userStore.userInfo?.type == 2 || userStore.userInfo?.type == 3" />
+          <el-option label="租户管理员" :value="2" :disabled="userStore.userInfo?.type == 3" />
           <el-option label="租户下普通用户" :value="3" />
         </el-select>
       </el-form-item>
@@ -32,15 +32,8 @@
         <el-input v-model="ruleForm.realName" autocomplete="off" />
       </el-form-item>
 
-      <el-form-item label="绑定租户" :label-width="formLabelWidth">
-        <el-select
-          :disabled="ruleForm.type !== 1"
-          v-model="ruleForm.tenantId"
-          filterable
-          placeholder="请选择"
-          clearable
-          style="width: 100%"
-        >
+      <el-form-item label="绑定租户" :label-width="formLabelWidth" v-if="userStore.userInfo?.type == 1">
+        <el-select v-model="ruleForm.tenantId" filterable placeholder="请选择" clearable style="width: 100%">
           <el-option v-for="item in options" :key="item?.id" :label="item?.name" :value="item?.id" />
         </el-select>
       </el-form-item>
@@ -75,6 +68,9 @@ import { addOrUpdateUser } from "@/api/system/user";
 import { Tenant_List } from "@/api/system/TenantManagement"; //租户管理list
 import { ElMessage } from "element-plus";
 import type { FormInstance, FormRules } from "element-plus";
+import { useUserStore } from "@/stores/modules/user";
+const userStore = useUserStore();
+// console.log(userStore.userInfo?.type, "用户信息");
 const ruleFormRef = ref<FormInstance>();
 const formLabelWidth = "140px";
 const props = defineProps({
