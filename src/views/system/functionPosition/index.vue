@@ -16,7 +16,7 @@
         <el-main
           class="departHeader"
           style="margin-bottom: 10px; font-size: 12px; border-radius: 10px"
-          v-if="formData.type == '1'"
+          v-if="formData.type == '1' || formData.type === undefined"
         >
           <div style="margin: 10px">
             <el-button type="primary" @click="addRootDepart">添加顶级</el-button>
