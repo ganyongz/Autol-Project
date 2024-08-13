@@ -33,7 +33,14 @@
       </el-form-item>
 
       <el-form-item label="绑定租户" :label-width="formLabelWidth">
-        <el-select :disabled="ruleForm.type !== 1" v-model="value" filterable placeholder="请选择" clearable style="width: 100%">
+        <el-select
+          :disabled="ruleForm.type !== 1"
+          v-model="ruleForm.tenantId"
+          filterable
+          placeholder="请选择"
+          clearable
+          style="width: 100%"
+        >
           <el-option v-for="item in options" :key="item?.id" :label="item?.name" :value="item?.id" />
         </el-select>
       </el-form-item>
@@ -96,6 +103,7 @@ interface RuleForm {
   sex: number;
   phone: string;
   isDelete: number;
+  tenantId: string;
 }
 let ruleForm = reactive({
   id: "",
@@ -106,7 +114,8 @@ let ruleForm = reactive({
   isDisabled: 1,
   sex: 0,
   phone: "",
-  isDelete: 0
+  isDelete: 0,
+  tenantId: ""
 });
 const rules = reactive<FormRules<RuleForm>>({
   userName: [{ required: true, message: "请输入用户名", trigger: "blur" }]
@@ -150,7 +159,6 @@ const submit = async (formEl: FormInstance | undefined) => {
   });
 };
 // 绑定租户
-const value = ref("");
 const options = ref();
 const getUserList = async (params: any) => {
   const res: any = await Tenant_List(params);

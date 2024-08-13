@@ -2,7 +2,13 @@
   <div class="main-box">
     <div class="card table-main">
       <div class="screenAdd">
-        <el-select v-model="params.type" placeholder="请选择用户类型" style="width: 240px; margin-left: 20px" class="mRight">
+        <el-select
+          v-model="params.type"
+          clearable
+          placeholder="请选择用户类型"
+          style="width: 240px; margin-left: 20px"
+          class="mRight"
+        >
           <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
         <el-input v-model="params.userName" style="width: 240px" class="mRight" placeholder="请输入用户名" />
@@ -87,7 +93,7 @@ onBeforeMount(() => {
   getUserList(params);
 });
 let params = reactive({
-  type: 1,
+  type: undefined,
   userName: "",
   realName: "",
   phone: "",
