@@ -399,7 +399,8 @@ const ToSet = async (formEl: FormInstance) => {
       );
       dialogVisible.value = false;
       paramsDatas.value = {};
-      (ruleForm.startPoint = ""), (ruleForm.endPoint = "");
+      ruleForm.startPoint = "";
+      ruleForm.endPoint = "";
     } else {
       console.log("error submit!", fields);
     }
@@ -409,7 +410,8 @@ const ToSet = async (formEl: FormInstance) => {
 const handleClose = () => {
   dialogVisible.value = false;
   paramsDatas.value = {};
-  (ruleForm.startPoint = ""), (ruleForm.endPoint = "");
+  ruleForm.startPoint = "";
+  ruleForm.endPoint = "";
 };
 let bodyHeight = ref(500);
 onMounted(() => {

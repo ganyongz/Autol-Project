@@ -67,8 +67,11 @@
           />
         </div>
 
-        <div style="height: 400px; text-align: center; vertical-align: middle; border: 1px solid #dddddd; border-radius: 15px">
-          <tendencyChart @search-result="searchResult" :key="tplKey" :station-id="stationId" />
+        <div
+          :key="tplKey"
+          style="height: 400px; text-align: center; vertical-align: middle; border: 1px solid #dddddd; border-radius: 15px"
+        >
+          <tendencyChart @search-result="searchResult" :station-id="stationId" />
         </div>
       </el-main>
     </el-container>
@@ -175,8 +178,10 @@ const handleNodeClick = item => {
 // 获取子组件的传值
 let dataObj = ref();
 const searchResult = val => {
+  // debugger;
   dataObj.value = val;
   boxingKey.value += 1;
+  // tplKey.value += 1;
 };
 
 // 获取左侧菜单树

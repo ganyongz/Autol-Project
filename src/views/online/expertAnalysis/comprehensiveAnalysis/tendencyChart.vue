@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="screenBox" style="margin: 10px; text-align: left">
-      <el-select v-model="timeSelect" class="m-2" placeholder="时间筛选" style="width: 200px">
+      <el-select v-model="timeSelect" class="m-2" placeholder="时间筛选" style="width: 200px" @change="handleSelect">
         <el-option v-for="item in timeOPtions" :key="item.value" :label="item.label" :value="item.value" />
       </el-select>
       <el-date-picker
@@ -9,14 +9,15 @@
         v-model="customValue"
         type="datetimerange"
         range-separator="To"
-        start-placeholder="Start date"
-        end-placeholder="End date"
+        start-placeholder="开始时间"
+        end-placeholder="结束时间"
         style="width: 300px"
       />
+      <!-- <el-button type="primary">查询</el-button> -->
     </div>
 
     <div style="margin: 10px 25px; text-align: left">[趋势图]</div>
-    <div v-if="chartData.length" ref="chartRef" style="width: 100%; height: 400px"></div>
+    <div v-if="chartData.length > 0" ref="chartRef" style="width: 100%; height: 400px"></div>
     <el-empty v-else description="暂无分析数据" />
   </div>
 </template>
@@ -27,10 +28,11 @@ import * as echarts from "echarts";
 import { ElMessage } from "element-plus";
 import { Diagram_trendChart } from "@/api/online/comprehensiveAnalysis";
 import dayjs from "dayjs";
+import { nextTick } from "vue";
 const props = defineProps({
   stationId: {
     type: String,
-    default: ""
+    default: "a407247f0f6e4c588c665ad13abb3fe0"
   }
 });
 const { stationId } = toRefs(props);
@@ -54,9 +56,139 @@ const timeOPtions = [
 ];
 // 自定义时间
 let customValue = ref();
+const handleSelect = (val: any) => {
+  switch (val) {
+    case "1": //实时数据（最近一小时）
+      timeScreen.value[0] = dayjs().subtract(1, "hour").format("YYYY-MM-DD HH:mm:ss");
+      timeScreen.value[1] = dayjs().format("YYYY-MM-DD HH:mm:ss");
+      getTrendChart();
+      break;
+    case "2": //最近一天
+      timeScreen.value[0] = dayjs().startOf("day").format("YYYY-MM-DD HH:mm:ss");
+      timeScreen.value[1] = dayjs().endOf("day").format("YYYY-MM-DD HH:mm:ss");
+      getTrendChart();
+      break;
+    case "3": //最近一周
+      timeScreen.value[0] = dayjs().startOf("week").format("YYYY-MM-DD HH:mm:ss");
+      timeScreen.value[1] = dayjs().endOf("week").format("YYYY-MM-DD HH:mm:ss");
+      getTrendChart();
+      break;
+    case "4": //最近一月
+      timeScreen.value[0] = dayjs().startOf("month").format("YYYY-MM-DD HH:mm:ss");
+      timeScreen.value[1] = dayjs().endOf("month").format("YYYY-MM-DD HH:mm:ss");
+      getTrendChart();
+      break;
+    case "5": //最近三月
+      timeScreen.value[0] = dayjs().subtract(90, "day").format("YYYY-MM-DD HH:mm:ss");
+      timeScreen.value[1] = dayjs().format("YYYY-MM-DD HH:mm:ss");
+      getTrendChart();
+      break;
+    case "6": // 最近半年
+      timeScreen.value[0] = dayjs().subtract(180, "day").format("YYYY-MM-DD HH:mm:ss");
+      timeScreen.value[1] = dayjs().format("YYYY-MM-DD HH:mm:ss");
+      getTrendChart();
+      break;
 
+    default:
+      break;
+  }
+};
+const setBarChart2 = () => {
+  if (chartRef.value) {
+    chartInstance = echarts.init(chartRef.value);
+    // 配置项和数据
+    const option = ref({
+      tooltip: {
+        trigger: "axis",
+        axisPointer: {
+          // 坐标轴指示器，坐标轴触发有效
+          type: "line" // 默认为直线，可选为：'line' | 'shadow'
+        }
+      },
+
+      grid: {
+        //距离各个地方的边距 1
+        // left: "10%",
+        // right: "5%",
+        // bottom: "10%",
+        containLabel: true
+      },
+      // grid: {
+      //   //另外一种方式控制 2
+      //   x: "12%", //x 偏移量
+      //   y: "7%", // y 偏移量
+      //   width: "87%", // 宽度
+      //   height: "79%" // 高度
+      // },
+      dataZoom: [
+        {
+          // 这部分是dataZoom的配置
+          type: "inside", // 表示有一个滑动条形的缩放组件
+          start: 0, // 滑动条的起始位置，表示数据窗口包含数据系列的前0%
+          end: 100 // 滑动条的结束位置，表示数据窗口包含数据系列的后100%
+        }
+      ],
+      xAxis: {
+        type: "category",
+        data: chartData.value.map(item => item["xAxis"]),
+        axisLine: {
+          show: true
+        },
+        // 隐藏y轴刻度线
+        axisTick: {
+          show: true
+        }
+      },
+      yAxis: {
+        type: "value",
+        // 隐藏y轴
+        axisLine: {
+          show: true
+        },
+        // 隐藏y轴刻度线
+        axisTick: {
+          show: true
+        },
+        // y轴网格线设置
+        splitLine: {
+          type: "dashed",
+          color: "#eeeeee"
+        },
+        splitNumber: 5
+      },
+      series: [
+        {
+          name: "振幅",
+          type: "line",
+          stack: "Total",
+          data: chartData.value.map(item => {
+            return {
+              value: item["value"],
+              id: item["id"]
+            };
+          }),
+          smooth: true,
+          markLine: {
+            data: [{ xAxis: "Tue" }]
+          }
+        }
+      ]
+    });
+    // 点击事件
+    chartInstance.on("click", (params: any) => {
+      let parameter = {
+        tableName: tableName.value,
+        id: params?.data["id"]
+      };
+      emit("searchResult", parameter);
+    });
+    // 使用配置项和数据显示图表
+    chartInstance.setOption(option.value);
+  }
+};
 onMounted(async () => {
-  timeScreen.value[0] = "2024-01-01 12:12:00";
+  // debugger;
+  timeScreen.value[0] = dayjs().subtract(1, "hour").format("YYYY-MM-DD HH:mm:ss");
   timeScreen.value[1] = dayjs().format("YYYY-MM-DD HH:mm:ss");
   if (stationId.value) {
     await getTrendChart();
@@ -151,7 +283,6 @@ onMounted(async () => {
       // 使用配置项和数据显示图表
       chartInstance.setOption(option.value);
     }
-  } else {
   }
 });
 // 获取数据
@@ -165,9 +296,13 @@ const getTrendChart = async () => {
   if (res.code == "200") {
     chartData.value = res.data.realData;
     tableName.value = res.data.tableName;
+    nextTick(() => {
+      setBarChart2();
+    });
+
     let parameter = {
       tableName: res.data.tableName,
-      id: chartData.value.length > 0 ? chartData.value[10]["id"] : ""
+      id: chartData.value.length > 0 ? chartData.value[0]["id"] : ""
     };
     emit("searchResult", parameter);
   } else {
