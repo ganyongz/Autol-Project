@@ -7,8 +7,9 @@
           ref="treeRef"
           style="max-width: 600px"
           class="filter-tree"
-          :data="treeData"
+          :data="data"
           :props="defaultProps"
+          default-expand-all
           :filter-node-method="filterNode"
         />
       </el-aside>
@@ -20,13 +21,12 @@
         </div>
         <!-- 报警及危险总数 -->
         <div class="outDiv">
-          <alarmPie />
-          <!-- <div class="first">
+          <div class="first">
             <alarmPie />
           </div>
           <div class="second">
             <dangerPie />
-          </div> -->
+          </div>
         </div>
         <!-- 报警列表 -->
         <div>
@@ -43,11 +43,10 @@
 <script lang="ts" setup name="alarmStatistics">
 // 历史报警统计
 import alarmPie from "@/views/online/dataStatistics/alarmStatistics/components/alarmPie.vue";
-// import dangerPie from "@/views/online/dataStatistics/alarmStatistics/components/dangerPie.vue";
+import dangerPie from "@/views/online/dataStatistics/alarmStatistics/components/dangerPie.vue";
 import tableList from "@/views/online/dataStatistics/alarmStatistics/components/tableList.vue";
-import { getLocationTree } from "@/api/system/functionPosition";
 import { ref, watch } from "vue";
-import { ElTree, ElMessage } from "element-plus";
+import { ElTree } from "element-plus";
 
 interface Tree {
   [key: string]: any;
@@ -58,8 +57,7 @@ const treeRef = ref<InstanceType<typeof ElTree>>();
 
 const defaultProps = {
   children: "children",
-  label: "name",
-  id: "id"
+  label: "label"
 };
 
 watch(filterText, val => {
@@ -70,35 +68,74 @@ const filterNode = (value: string, data: Tree) => {
   if (!value) return true;
   return data.label.includes(value);
 };
-// 左侧树
-let treeData = ref();
-const getTreeList = async () => {
-  let res: any = await getLocationTree({ type: 3, range: 9, isFiltration: false });
-  if (res.code == "200") {
-    treeData.value = res.data as any;
-  } else {
-    ElMessage.error(res?.mssage);
+
+const data: Tree[] = [
+  {
+    id: 1,
+    label: "Level one 1",
+    children: [
+      {
+        id: 4,
+        label: "Level two 1-1",
+        children: [
+          {
+            id: 9,
+            label: "Level three 1-1-1"
+          },
+          {
+            id: 10,
+            label: "Level three 1-1-2"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    id: 2,
+    label: "Level one 2",
+    children: [
+      {
+        id: 5,
+        label: "Level two 2-1"
+      },
+      {
+        id: 6,
+        label: "Level two 2-2"
+      }
+    ]
+  },
+  {
+    id: 3,
+    label: "Level one 3",
+    children: [
+      {
+        id: 7,
+        label: "Level two 3-1"
+      },
+      {
+        id: 8,
+        label: "Level two 3-2"
+      }
+    ]
   }
-};
+];
 // main 时间查询
 const startTime = ref("");
 const endTime = ref("");
 // 报警列表
 const activeName = ref("1");
 const tabs = [
-  { label: "阈值报警", name: "1" }
-  // { label: "窄带报警", name: "2" },
-  // { label: "频段报警", name: "3" },
-  // { label: "包络值报警", name: "4" },
-  // { label: "无量纲报警", name: "5" },
-  // { label: "统计量报警", name: "6" },
-  // { label: "变化率报警", name: "7" }
+  { label: "阈值报警", name: "1" },
+  { label: "窄带报警", name: "2" },
+  { label: "频段报警", name: "3" },
+  { label: "包络值报警", name: "4" },
+  { label: "无量纲报警", name: "5" },
+  { label: "统计量报警", name: "6" },
+  { label: "变化率报警", name: "7" }
 ];
 const handleClick = () => {
   console.log("12345");
 };
-// 调用
-getTreeList();
 </script>
 <style scoped lang="scss">
 .outDiv {
