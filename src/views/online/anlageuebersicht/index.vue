@@ -23,7 +23,7 @@
         </div>
       </el-header>
       <el-main style="display: flex">
-        <div style="align-items: center; width: 60%; height: calc(100% - 20px); overflow-y: auto">
+        <div style="align-items: center; width: 100%; height: calc(100% - 20px); overflow-y: auto">
           <el-space style="flex-wrap: nowrap; justify-content: flex-start">
             <el-card v-for="outItem in cards" :key="outItem" class="box-card" :style="{ height: bodyHeight - 350 + 'px' }">
               <template #header>
@@ -121,9 +121,9 @@
           </el-space>
         </div>
         <!-- 右侧图 -->
-        <div style="display: flex; flex: 1; align-items: center; justify-content: center; height: calc(100% - 10px)">
+        <!-- <div style="display: flex; flex: 1; align-items: center; justify-content: center; height: calc(100% - 10px)">
           <img class="equipmentImg" src="@/views/online/anlageuebersicht/images/FengJi.jpg" alt="图片" />
-        </div>
+        </div> -->
       </el-main>
     </el-container>
     <myDialog :title="detailParams.title" ref="myDialog1" draggable width="50%" :before-close="beforeClose1">
