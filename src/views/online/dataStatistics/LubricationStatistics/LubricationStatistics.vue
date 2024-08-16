@@ -10,7 +10,7 @@
           :props="defaultProps"
           node-key="id"
           :default-expanded-keys="defaultCheckedKeys"
-          :current-node-key="partId.value"
+          :current-node-key="partId"
           :highlight-current="true"
           @node-click="handleNodeClick"
         />
@@ -38,8 +38,8 @@ import { useRoute } from "vue-router";
 const route = useRoute();
 let partId = ref();
 let defaultCheckedKeys = ref();
-partId.value = route.query.partId;
-defaultCheckedKeys.value = [partId.value];
+partId.value = route.query?.partId;
+defaultCheckedKeys.value = partId?.value ? [partId?.value] : [];
 let treeRef = ref();
 onMounted(() => {
   treeRef.value.setCurrentKey = partId.value;
