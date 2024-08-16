@@ -3,15 +3,25 @@
     <!-- 润滑、报警记录 -->
     <el-container>
       <el-aside width="200px">
-        <el-tree style="max-width: 600px" :data="treeData" :props="defaultProps" @node-click="handleNodeClick" />
+        <el-tree
+          ref="treeRef"
+          style="max-width: 600px"
+          :data="treeData"
+          :props="defaultProps"
+          node-key="id"
+          :default-expanded-keys="defaultCheckedKeys"
+          :current-node-key="partId.value"
+          :highlight-current="true"
+          @node-click="handleNodeClick"
+        />
       </el-aside>
       <el-main>
         <el-tabs v-model="activeName" class="demo-tabs" @tab-click="handleClick">
           <el-tab-pane label="润滑记录" name="first">
-            <lubrication :part-id="partId" />
+            <lubrication :key="publicKey" :part-id="partId" />
           </el-tab-pane>
           <el-tab-pane label="报警记录" name="second">
-            <alarm v-if="activeName == 'second'" :part-id="partId" />
+            <alarm :key="publicKey" v-if="activeName == 'second'" :part-id="partId" />
           </el-tab-pane>
         </el-tabs>
       </el-main>
@@ -26,25 +36,34 @@ import alarm from "@/views/online/dataStatistics/LubricationStatistics/component
 import { getLocationTree } from "@/api/system/functionPosition";
 import { useRoute } from "vue-router";
 const route = useRoute();
-console.log(route.query.partId);
 let partId = ref();
+let defaultCheckedKeys = ref();
+partId.value = route.query.partId;
+defaultCheckedKeys.value = [partId.value];
+let treeRef = ref();
 onMounted(() => {
-  partId.value = route.query.partId;
+  treeRef.value.setCurrentKey = partId.value;
 });
-
 const activeName = ref("first");
-
+let publicKey = ref(1);
 const handleClick = (tab: TabsPaneContext, event: Event) => {
   console.log(tab, event);
 };
 // 树结构
 interface Tree {
   label: string;
+  type: Number;
+  id: String;
   children?: Tree[];
 }
 
 const handleNodeClick = (data: Tree) => {
-  console.log(data);
+  console.log(data, "节点数据");
+  // 只有当type为3时才查询
+  if (data?.type == 3) {
+    partId.value = data.id;
+    publicKey.value += 1;
+  }
 };
 const defaultProps = {
   children: "children",
@@ -54,7 +73,7 @@ const defaultProps = {
 let treeData = ref();
 // 获取菜单列表
 const getEquipTreeList = async () => {
-  let res: any = await getLocationTree({ type: 2, range: 9 });
+  let res: any = await getLocationTree({ type: 3, range: 9, isFiltration: false });
   if (res.code == "200") {
     treeData.value = res.data as any;
   } else {
@@ -72,5 +91,14 @@ getEquipTreeList();
   font-size: 32px;
   font-weight: 600;
   color: #6b778c;
+}
+:deep(.el-tree-node .el-tree-node__content:hover) {
+  color: #409eff;
+  background-color: #f0f7ff !important;
+}
+
+/*  颜色高亮 */
+:deep(.el-tree--highlight-current .el-tree-node.is-current > .el-tree-node__content) {
+  color: #409eff;
 }
 </style>

@@ -4,11 +4,12 @@
     <div class="mb-5" style="margin-bottom: 10px">
       <el-date-picker
         v-model="dateRange"
-        type="daterange"
+        type="datetimerange"
         unlink-panels
         range-separator="至"
         start-placeholder="开始日期"
         end-placeholder="结束日期"
+        value-format="YYYY-MM-DD HH:mm:ss"
       ></el-date-picker>
       <el-button type="primary" @click="searchFun">查询</el-button>
     </div>
@@ -112,8 +113,8 @@
         <el-table-column prop="lubFlow" label="润滑油量(ml)" />
         <el-table-column prop="status" label="润滑状态">
           <template #default="scope">
-            <el-tag v-if="scope.row.status == 1" type="danger" disable-transitions>故障</el-tag>
-            <el-tag v-else type="success" disable-transitions>故障</el-tag>
+            <el-tag v-if="scope.row.status == 0" type="success" disable-transitions>正常</el-tag>
+            <el-tag v-else type="danger" disable-transitions>故障</el-tag>
           </template>
         </el-table-column>
       </el-table>
@@ -144,7 +145,6 @@ const props = defineProps({
   }
 });
 const { partId } = toRefs(props);
-// console.log(partId);
 // 润滑统计
 let week = ref({
   lubCount: 0,
@@ -165,7 +165,6 @@ let day = ref({
 const getlubStatistics = async () => {
   let params = {
     partId: partId?.value
-    // partId: 130
   };
   const res: any = await lub_lubStatistics(params);
   if (res.code == "200") {
@@ -176,15 +175,12 @@ const getlubStatistics = async () => {
     ElMessage.error(res?.mssage);
   }
 };
-getlubStatistics();
-
 // 获取润滑记录
 const getLubRecord = async () => {
   let params = {
     startTime: dateRange.value[0],
     endTime: dateRange.value[1],
     partId: partId?.value,
-    // partId: 130,
     pageNum: pageNum.value,
     pageSize: pageSize.value
   };
@@ -197,14 +193,13 @@ const getLubRecord = async () => {
   }
 };
 
-// 使用 Day.js 获取本周的起始和结束日期
-const startOfWeek = dayjs().startOf("day").subtract(7, "day").format("YYYY-MM-DD");
-const endOfWeek = dayjs().format("YYYY-MM-DD");
-
+let startOfWeek = ref();
+let endOfWeek = ref();
 // 使用 ref 创建响应式数据，用于绑定到 el-date-picker
-const dateRange = ref([startOfWeek, endOfWeek]);
+let dateRange: any = ref([]);
 const searchFun = () => {
   getLubRecord();
+  getlubStatistics();
 };
 // 趋势图数据
 let data1 = ref();
@@ -218,20 +213,32 @@ const getlubTrend = async () => {
     endTime: dateRange.value[1]
   };
   const res: any = await lub_lubTrend(params);
-  if (res.code == "200") {
+  if (res.code === 200) {
     let data = res.data;
     if (data.length > 0) {
-      data1.value = data.map(item => item.lubFlow);
-      data2.value = data.map(item => item.status);
-      data3.value = data.map(item => item.time);
+      data1.value = data.map((item: any) => item.lubFlow);
+      data2.value = data.map((item: any) => item.status);
+      data3.value = data.map((item: any) => item.time);
+    } else {
+      data1.value = [];
+      data2.value = [];
+      data3.value = [];
     }
   } else {
     ElMessage.error(res?.mssage);
   }
 };
-getlubTrend();
 // 基于准备好的dom，初始化echarts实例
 onMounted(async () => {
+  startOfWeek.value = dayjs().format("YYYY-MM-DD 00:00:00");
+  endOfWeek.value = dayjs().format("YYYY-MM-DD HH:MM:ss");
+  dateRange.value[0] = startOfWeek.value;
+  dateRange.value[1] = endOfWeek.value;
+  if (partId?.value) {
+    // 调用
+    getlubStatistics();
+    getLubRecord();
+  }
   await getlubTrend();
   let option = {
     tooltip: {
@@ -309,8 +316,6 @@ const handleCurrentChange = (val: number) => {
   pageNum.value = val;
   getLubRecord();
 };
-// 调用
-getLubRecord();
 </script>
 
 <style lang="scss" scoped>

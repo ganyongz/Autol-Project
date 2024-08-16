@@ -57,7 +57,7 @@ console.log(partId);
 // 获取报警记录
 const getHisAlarm = async () => {
   let params = {
-    // partId: partId?.value,
+    partId: partId?.value,
     pageNum: pageNum.value,
     pageSize: pageSize.value,
     startTime: dateRange.value[0],

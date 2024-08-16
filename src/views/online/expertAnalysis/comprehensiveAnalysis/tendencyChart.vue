@@ -32,7 +32,7 @@ import { nextTick } from "vue";
 const props = defineProps({
   stationId: {
     type: String,
-    default: "a407247f0f6e4c588c665ad13abb3fe0"
+    default: ""
   }
 });
 const { stationId } = toRefs(props);
