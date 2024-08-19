@@ -17,8 +17,9 @@
       <el-table-column prop="ip" label="ip地址" sortable />
       <el-table-column prop="ip" label="采集器ip" sortable />
       <el-table-column prop="prot" label="端口" sortable />
-      <el-table-column prop="source" label="数据来源" sortable />
-      <el-table-column prop="remark" label="数据来源" sortable />
+      <el-table-column prop="clientId" label="客户端id" sortable />
+      <!-- <el-table-column prop="source" label="数据来源" sortable /> -->
+      <el-table-column prop="remark" label="备注" sortable />
       <el-table-column fixed="right" label="操作">
         <template #default="scope">
           <el-button link type="primary" @click="addCollectorFun('编辑MQTT', scope.row)"> 编辑 </el-button>
@@ -39,10 +40,17 @@
       >
         <el-table-column type="selection" width="55" />
         <el-table-column prop="name" label="名称" sortable />
-        <el-table-column prop="topic" label="订阅主题" sortable />
-        <el-table-column prop="mqttServerId" label="mqtt服务id" sortable />
-        <el-table-column prop="topicType" label="主题类型" sortable />
-        <el-table-column prop="qos" label="QoS等级" sortable />
+        <el-table-column prop="topic" label="主题" sortable />
+        <!-- <el-table-column prop="mqttServerId" label="mqtt服务id" sortable /> -->
+        <!-- 主题类型，1特征值 2波形 3 特征值+波形 -->
+        <el-table-column prop="topicType" label="主题类型" sortable>
+          <template #default="scope">
+            <span v-if="scope.row.topicType == 1">特征值</span>
+            <span v-if="scope.row.topicType == 2">波形</span>
+            <span v-if="scope.row.topicType == 3">特征值+波形</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="featureType" label="特征值类型" sortable />
         <el-table-column prop="remark" label="备注" sortable />
         <el-table-column fixed="right" label="操作">
           <template #default="scope">

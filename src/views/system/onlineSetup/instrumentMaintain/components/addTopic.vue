@@ -15,20 +15,30 @@
         <el-input v-model="ruleForm.name" />
       </el-form-item>
 
-      <el-form-item label="订阅主题" prop="topic">
+      <el-form-item label="主题" prop="topic">
         <el-input v-model="ruleForm.topic" />
       </el-form-item>
 
-      <el-form-item label="mqtt服务id" prop="mqttServerId">
+      <!-- <el-form-item label="mqtt服务id" prop="mqttServerId">
         <el-input v-model="ruleForm.mqttServerId" />
-      </el-form-item>
+      </el-form-item> -->
 
       <el-form-item label="主题类型" prop="topicType">
-        <el-input v-model="ruleForm.topicType" />
+        <el-select v-model="ruleForm.topicType" placeholder="请选择主题类型">
+          <el-option v-for="item in topicTypeOptions" :key="item.value" :label="item.label" :value="item.value" />
+        </el-select>
+      </el-form-item>
+
+      <el-form-item label="特征值类型" prop="featureType">
+        <el-select v-model="ruleForm.featureType" placeholder="请选择特征值类型">
+          <el-option v-for="item in featureTypeOptions" :key="item.value" :label="item.label" :value="item.value" />
+        </el-select>
       </el-form-item>
 
       <el-form-item label="QoS等级" prop="qos">
-        <el-input v-model="ruleForm.qos" />
+        <el-select v-model="ruleForm.qos" placeholder="请选择QoS等级">
+          <el-option v-for="item in QoSOptions" :key="item.value" :label="item.label" :value="item.value" />
+        </el-select>
       </el-form-item>
 
       <el-form-item label="备注" prop="remark">
@@ -46,6 +56,7 @@
 <script lang="ts" setup>
 import { reactive, ref, toRefs, onBeforeMount } from "vue";
 import { type ComponentSize, type FormInstance, type FormRules } from "element-plus";
+import { topicTypeOptions, QoSOptions, featureTypeOptions } from "./mqttOptions";
 const props = defineProps({
   rowData: {
     type: Object,
@@ -62,6 +73,7 @@ interface RuleForm {
   id: string;
   name: string;
   mqttServerId: string;
+  featureType: Number | null;
   topic: string;
   topicType: string;
   qos: number | null;
@@ -74,6 +86,7 @@ let ruleForm = ref<RuleForm>({
   id: "",
   name: "",
   mqttServerId: "",
+  featureType: null,
   topic: "",
   topicType: "",
   qos: null,
@@ -81,10 +94,9 @@ let ruleForm = ref<RuleForm>({
 });
 
 const rules = reactive<FormRules<RuleForm>>({
-  topic: [{ required: true, message: "请输入订阅主题", trigger: "blur" }]
+  topic: [{ required: true, message: "请输入主题", trigger: "blur" }]
 });
 // 方法区
-
 const emit = defineEmits(["closeDialog", "submitForm"]);
 const submitForm = async (formEl: FormInstance | undefined) => {
   if (!formEl) return;

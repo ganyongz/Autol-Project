@@ -73,7 +73,7 @@ const filterNode = (value: string, data: Tree) => {
 // 左侧树
 let treeData = ref();
 const getTreeList = async () => {
-  let res: any = await getLocationTree({ type: 3, range: 9, isFiltration: false });
+  let res: any = await getLocationTree({ type: 4, range: 9, isFiltration: false });
   if (res.code == "200") {
     treeData.value = res.data as any;
   } else {
