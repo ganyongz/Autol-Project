@@ -1,8 +1,8 @@
 <template>
-  <div class="contentBox">
+  <div class="contentBox" v-cloak>
     <!-- 设备预览（单个设备） -->
     <el-container>
-      <el-header style="display: flex; align-items: center; justify-content: space-between">
+      <el-header style="display: flex; align-items: center; justify-content: space-between" v-cloak>
         <div>
           <el-icon @click="comeBackCompany" style="margin-left: 10px; cursor: pointer"><ArrowLeftBold /></el-icon>
           <el-tree-select
@@ -22,8 +22,8 @@
           <p>智能诊断：<span style="color: aqua">正常</span></p>
         </div>
       </el-header>
-      <el-main style="display: flex">
-        <div style="align-items: center; width: 100%; height: calc(100% - 20px); overflow-y: auto">
+      <el-main style="display: flex" v-cloak>
+        <div style="align-items: center; width: 100%; height: calc(100% - 20px); overflow-y: auto" v-cloak>
           <el-space style="flex-wrap: nowrap; justify-content: flex-start">
             <el-card v-for="outItem in cards" :key="outItem" class="box-card" :style="{ height: bodyHeight - 350 + 'px' }">
               <template #header>
@@ -93,7 +93,7 @@
                   </div>
                 </div>
                 <!-- 2 -->
-                <div style="max-height: 200px; overflow-y: auto">
+                <div style="overflow-y: auto">
                   <div v-for="(item, index) in outItem?.LubRealData" :key="index">
                     <div style="display: flex; justify-content: space-between">
                       <p style="margin: 5px 0">{{ item.name }}</p>
@@ -189,7 +189,7 @@
 
 <script lang="ts" setup name="anlageuebersicht">
 // 设备总览
-import { ref, onMounted, onUnmounted, reactive } from "vue";
+import { ref, onMounted, onDeactivated, onActivated, reactive } from "vue";
 import { ElMessage, type FormRules, type FormInstance } from "element-plus";
 import { useHandleData2 } from "@/hooks/useHandleData";
 import { getLocationTree } from "@/api/system/functionPosition";
@@ -419,13 +419,15 @@ let intervalId = ref(); //定时器
 onMounted(() => {
   // 获取body的窗口高度
   bodyHeight.value = document.body.clientHeight;
+});
+onActivated(() => {
   // 当组件挂载后开始定时器
   intervalId.value = setInterval(() => {
     // 调用获取数据的接口方法
     getCardContent();
   }, 5000);
 });
-onUnmounted(() => {
+onDeactivated(() => {
   // 当组件卸载前清除定时器
   clearInterval(intervalId.value);
 });
@@ -487,5 +489,8 @@ getCardContent();
 }
 .lubClass > ::-webkit-scrollbar {
   display: none;
+}
+[v-cloak] {
+  display: none !important;
 }
 </style>
