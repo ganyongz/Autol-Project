@@ -175,7 +175,7 @@ const getlubStatistics = async () => {
     ElMessage.error(res?.mssage);
   }
 };
-// 获取润滑记录
+// 获取润滑记录列表
 const getLubRecord = async () => {
   let params = {
     startTime: dateRange.value[0],

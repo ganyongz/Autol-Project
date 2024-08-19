@@ -45,7 +45,7 @@
 import * as echarts from "echarts";
 import { onMounted, ref, toRefs } from "vue";
 import { ElMessage } from "element-plus";
-import { lub_HisAlarmEventByPage } from "@/api/online/anlageuebersicht";
+import { lub_lubAlarmEventPage } from "@/api/online/anlageuebersicht";
 import dayjs from "dayjs";
 const props = defineProps({
   partId: {
@@ -63,10 +63,10 @@ const getHisAlarm = async () => {
     startTime: dateRange.value[0],
     endTime: dateRange.value[1]
   };
-  const res: any = await lub_HisAlarmEventByPage(params);
+  const res: any = await lub_lubAlarmEventPage(params);
   if (res.code == "200") {
-    tableData.value = res.data.data;
-    total.value = res.data.count;
+    tableData.value = res.data.records;
+    total.value = res.data.total;
   } else {
     ElMessage.error(res?.mssage);
   }
@@ -88,7 +88,6 @@ const dateRange = ref([startOfWeek, endOfWeek]);
 const searchFun = () => {
   getHisAlarm();
 };
-
 onMounted(() => {
   let chartContainer = echarts.init(document.getElementById("main2"));
   option && chartContainer.setOption(option);

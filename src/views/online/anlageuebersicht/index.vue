@@ -188,7 +188,8 @@
 </template>
 
 <script lang="ts" setup name="anlageuebersicht">
-import { ref, onMounted, reactive } from "vue";
+// 设备总览
+import { ref, onMounted, onUnmounted, reactive } from "vue";
 import { ElMessage, type FormRules, type FormInstance } from "element-plus";
 import { useHandleData2 } from "@/hooks/useHandleData";
 import { getLocationTree } from "@/api/system/functionPosition";
@@ -414,9 +415,19 @@ const handleClose = () => {
   ruleForm.endPoint = "";
 };
 let bodyHeight = ref(500);
+let intervalId = ref(); //定时器
 onMounted(() => {
   // 获取body的窗口高度
   bodyHeight.value = document.body.clientHeight;
+  // 当组件挂载后开始定时器
+  intervalId.value = setInterval(() => {
+    // 调用获取数据的接口方法
+    getCardContent();
+  }, 5000);
+});
+onUnmounted(() => {
+  // 当组件卸载前清除定时器
+  clearInterval(intervalId.value);
 });
 getCardContent();
 </script>
