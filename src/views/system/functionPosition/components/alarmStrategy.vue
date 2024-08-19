@@ -40,6 +40,29 @@
         </template>
       </el-table-column>
 
+      <el-table-column prop="startPoint" label="ATL3000使用润滑起点">
+        <template #default="scope">
+          <el-input v-model="scope.row.startPoint" v-if="scope.row.seen"></el-input>
+          <span v-else>{{ scope.row.startPoint }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column prop="endPoint" label="ATL3000使用润滑终点">
+        <template #default="scope">
+          <el-input v-model="scope.row.endPoint" v-if="scope.row.seen"></el-input>
+          <span v-else>{{ scope.row.endPoint }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column prop="relevancyLub" label="是否关联润滑">
+        <template #default="scope">
+          <el-select v-model="scope.row.relevancyLub" placeholder="请选择" style="width: 100%" v-if="scope.row.seen">
+            <el-option v-for="item in relevancyLubOptions" :key="item.value" :label="item.label" :value="item.value" />
+          </el-select>
+          <span v-else>{{ scope.row.relevancyLub == 1 ? "是" : "否" }}</span>
+        </template>
+      </el-table-column>
+
       <el-table-column fixed="right" label="操作">
         <template #default="scope">
           <el-button link type="warning" @click="saveRow(scope.row)" v-if="scope.row.seen">保存</el-button>
@@ -86,6 +109,11 @@ const props = defineProps({
 const thresholdTypeOptions = [
   { value: 1, label: "超上限" },
   { value: 2, label: "超下限" }
+];
+// 是否关联润滑
+const relevancyLubOptions = [
+  { value: 1, label: "是" },
+  { value: 0, label: "否" }
 ];
 const { nodeData } = toRefs(props);
 let newData = ref({
