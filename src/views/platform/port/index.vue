@@ -71,7 +71,7 @@
           <div class="item1" v-for="item in 50" :key="item" @click="ToTargetPage(item)">
             <el-row :gutter="20">
               <el-col :span="10">
-                <img style="width: 100%; height: 80%" src="@/views/platform/port/images/红c.png" alt="图片" />
+                <img style="width: 75%" src="@/views/platform/port/images/红c.png" alt="图片" />
               </el-col>
               <el-col :span="14">
                 <p># {{ item }}号机</p>
@@ -274,17 +274,17 @@ onBeforeUnmount(() => {
 }
 
 /* 适配小屏幕设备 */
-@media (width <= 1600px) {
-  .item1 {
-    width: calc(50% - 20px);
-    margin-bottom: 10px;
-  }
-}
+// @media (width <= 1600px) {
+//   .item1 {
+//     width: calc(50% - 20px);
+//     margin-bottom: 10px;
+//   }
+// }
 
-@media (width <= 768px) {
-  .item1 {
-    width: 100%;
-    margin-bottom: 10px;
-  }
-}
+// @media (width <= 768px) {
+//   .item1 {
+//     width: 100%;
+//     margin-bottom: 10px;
+//   }
+// }
 </style>
