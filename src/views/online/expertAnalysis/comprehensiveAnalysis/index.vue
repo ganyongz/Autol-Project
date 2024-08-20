@@ -71,6 +71,7 @@
           :key="tplKey"
           style="height: 400px; text-align: center; vertical-align: middle; border: 1px solid #dddddd; border-radius: 15px"
         >
+          <!-- 趋势图 -->
           <tendencyChart @search-result="searchResult" :station-id="stationId" />
         </div>
       </el-main>
@@ -89,6 +90,8 @@ import envelopeSpectrum from "@/views/online/expertAnalysis/comprehensiveAnalysi
 import cepstrum from "@/views/online/expertAnalysis/comprehensiveAnalysis/components/cepstrum.vue";
 import xihuaSpectrum from "@/views/online/expertAnalysis/comprehensiveAnalysis/components/xihuaSpectrum.vue";
 import { getLocationTree } from "@/api/system/functionPosition";
+import { useRoute } from "vue-router";
+const route = useRoute();
 let tplKey = ref(0);
 let boxingKey = ref(1);
 // tabs 切换
@@ -120,8 +123,8 @@ const defaultProps = {
   label: "name",
   type: "type"
 };
-let stationId = ref("");
-let checkedId = ref("");
+let stationId = ref();
+let checkedId = ref();
 // 处理数据
 const setDisabled = data => {
   data.forEach(item => {
@@ -200,25 +203,35 @@ const handleNodeExpand = (data: TreeNode, node: any, instance: any) => {
     instance.store.nodesMap[node.key].expanded = true;
   }
 };
+let expandData: any = ref([]);
 onMounted(async () => {
   await getLocationTreeFun();
-  const firstType4Node = getFirstType4Node(treeData.value);
-  if (firstType4Node && treeRef.value) {
-    treeRef.value.store.nodesMap[firstType4Node.key].expanded = true;
+  if (route.query.pointId) {
+    showTRee.value = false;
+    nextTick(() => {
+      stationId.value = route.query.pointId;
+      checkedId.value = route.query.pointId;
+      // treeRef.value.setCheckedKeys([route.query.pointId]);
+      expandData.value.push(route.query.pointId);
+      showTRee.value = true;
+    });
+  } else {
+    const firstType4Node = getFirstType4Node(treeData.value);
+    if (firstType4Node && treeRef.value) {
+      treeRef.value.store.nodesMap[firstType4Node.key].expanded = true;
+    }
   }
 });
-let expandData: any = ref([]);
 let showTRee = ref(true);
+// 获取第一个type为4的节点
 function getFirstType4Node(nodes: TreeNode[]): any {
   showTRee.value = false;
   for (const node of nodes) {
     if (node && node.type === 4) {
       stationId.value = node.id;
-
       checkedId.value = node.id;
       nextTick(() => {
         expandData.value.push(node.id);
-
         showTRee.value = true;
       });
       treeRef.value.setCheckedKeys([node.id]);

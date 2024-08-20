@@ -51,7 +51,7 @@
                         </div>
                       </template>
                       <div>
-                        <el-button @click="openDialog('基本分析')">基本分析</el-button>
+                        <el-button @click="openDialog(item)">基本分析</el-button>
                         <!-- <el-button @click="openDialog('趋势分析')">趋势分析</el-button> -->
                       </div>
                     </el-popover>
@@ -249,10 +249,10 @@ const beforeClose1 = () => {
 const detailParams = ref({
   title: "新增"
 });
-const openDialog = (title: string) => {
-  console.log(title);
+const openDialog = (obj1: any) => {
   //路由跳转
-  router.push("/online/expertAnalysis/comprehensiveAnalysis/index");
+  // router.push("/online/expertAnalysis/comprehensiveAnalysis/index");
+  router.push({ path: "/online/expertAnalysis/comprehensiveAnalysis/index", query: { pointId: obj1.pointId } });
 };
 // close - 关闭
 // 参数设置(普通泵)
