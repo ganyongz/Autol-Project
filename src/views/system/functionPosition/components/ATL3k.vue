@@ -48,6 +48,15 @@
       <el-table-column prop="boxNum" label="箱体编号" />
       <el-table-column prop="pointNum" label="点位编号" />
       <el-table-column prop="cumulativeOil" label="累计油量(ml)" />
+      <el-table-column prop="status" label="状态">
+        <template #default="scope">
+          <div
+            v-if="scope.row.status == null || scope.row.status == 0"
+            style="width: 15px; height: 15px; margin: 0 auto; background-color: green; border-radius: 50%"
+          ></div>
+          <div v-else style="width: 15px; height: 15px; margin: 0 auto; background-color: red; border-radius: 50%"></div>
+        </template>
+      </el-table-column>
       <el-table-column fixed="right" label="操作" min-width="120">
         <template #default="scope">
           <el-button link type="primary" size="small" @click="handleEdit(scope.row)"> 编辑 </el-button>
