@@ -11,7 +11,7 @@
 </template>
 
 <script setup lang="ts" name="GlobalConfiguration">
-// 全局配置
+// 系统配置
 import { config_setConfig, config_getConfig } from "@/api/system/configuration";
 import { ref } from "vue";
 import { ElMessage } from "element-plus";

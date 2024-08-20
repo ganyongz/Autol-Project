@@ -38,82 +38,90 @@
                   </el-popover> -->
                 </div>
               </template>
-              <!-- 1.振动 -->
-              <div v-if="outItem.VibRealData && outItem.VibRealData.length > 0">
-                <div style="color: #009688; text-align: left">轴承振动情况：</div>
-                <div v-for="(item, index) in outItem.VibRealData" :key="index">
-                  <el-popover placement="right" :width="300" trigger="hover">
-                    <template #reference>
-                      <div style="display: flex; justify-content: space-between">
-                        <p style="margin: 5px 0; cursor: pointer">{{ item.pointName }} :</p>
-                        <p style="margin: 5px 0; color: #19be6b">{{ item.value }}</p>
-                      </div>
-                    </template>
-                    <div>
-                      <el-button @click="openDialog('基本分析')">基本分析</el-button>
-                      <!-- <el-button @click="openDialog('趋势分析')">趋势分析</el-button> -->
-                    </div>
-                  </el-popover>
-                </div>
-              </div>
-              <el-divider
-                v-if="
-                  outItem.VibRealData && outItem.VibRealData.length > 0 && outItem?.LubRealData && outItem?.LubRealData.length > 0
-                "
-              />
-              <!-- 2.润滑监控 -->
-              <div class="lubClass" v-if="outItem?.LubRealData && outItem?.LubRealData.length > 0">
-                <!-- 1 -->
-                <div style="display: flex; justify-content: space-between">
-                  <div style="color: #009688; text-align: left">润滑监控：</div>
-                  <div>
-                    <el-button type="primary" @click="FunSetParameter(outItem)">参数</el-button>
-                    <el-button type="primary" @click="FunStatistics(outItem)">数据统计</el-button>
-                    <el-popover placement="right" :width="320" trigger="click">
+              <div style="overflow: auto">
+                <!-- 1.振动 -->
+                <div v-if="outItem.VibRealData && outItem.VibRealData.length > 0">
+                  <div style="color: #009688; text-align: left">轴承振动情况：</div>
+                  <div v-for="(item, index) in outItem.VibRealData" :key="index">
+                    <el-popover placement="right" :width="300" trigger="hover">
                       <template #reference>
-                        <el-button>操作</el-button>
+                        <div style="display: flex; justify-content: space-between">
+                          <p style="margin: 5px 0; cursor: pointer">{{ item.pointName }} :</p>
+                          <p style="margin: 5px 0; color: #19be6b">{{ item.value }}</p>
+                        </div>
                       </template>
-                      <!-- 非ATL3000 -->
-                      <div v-if="outItem.PumpStationType != 3">
-                        handle
-                        <el-button @click="kaibeng(outItem)">开泵</el-button>
-                        <el-button @click="guanbeng(outItem)">关泵</el-button>
-                        <el-button @click="dongjie(outItem)">冻结</el-button>
-                        <el-button @click="jiedong(outItem)">解冻</el-button>
-                      </div>
-                      <!-- ATL3000操作 -->
-                      <div v-if="outItem.PumpStationType == 3">
-                        <el-button @click="pump_handle('ziDong', outItem)">自动</el-button>
-                        <el-button @click="pump_handle('shouDong', outItem)">手动</el-button>
-                        <el-button @click="pump_handle('fuWei', outItem)">复位</el-button>
-                        <el-button @click="pump_handle('tingZhi', outItem)">停止</el-button>
+                      <div>
+                        <el-button @click="openDialog('基本分析')">基本分析</el-button>
+                        <!-- <el-button @click="openDialog('趋势分析')">趋势分析</el-button> -->
                       </div>
                     </el-popover>
-                    <el-button type="primary" @click="viewDetails(outItem)">详情</el-button>
                   </div>
                 </div>
-                <!-- 2 -->
-                <div style="overflow-y: auto">
-                  <div v-for="(item, index) in outItem?.LubRealData" :key="index">
-                    <div style="display: flex; justify-content: space-between">
-                      <p style="margin: 5px 0">{{ item.name }}</p>
-                      <p style="margin: 5px 0; color: #19be6b">{{ item.value }}</p>
+                <el-divider
+                  v-if="
+                    outItem.VibRealData &&
+                    outItem.VibRealData.length > 0 &&
+                    outItem?.LubRealData &&
+                    outItem?.LubRealData.length > 0
+                  "
+                />
+                <!-- 2.润滑监控 -->
+                <div class="lubClass" v-if="outItem?.LubRealData && outItem?.LubRealData.length > 0">
+                  <!-- 1 -->
+                  <div style="display: flex; justify-content: space-between">
+                    <div style="color: #009688; text-align: left">润滑监控：</div>
+                    <div>
+                      <el-button type="primary" @click="FunSetParameter(outItem)">参数</el-button>
+                      <el-button type="primary" @click="FunStatistics(outItem)">数据统计</el-button>
+                      <el-popover placement="right" :width="320" trigger="click">
+                        <template #reference>
+                          <el-button>操作</el-button>
+                        </template>
+                        <!-- 非ATL3000 -->
+                        <div v-if="outItem.PumpStationType != 3">
+                          handle
+                          <el-button @click="kaibeng(outItem)">开泵</el-button>
+                          <el-button @click="guanbeng(outItem)">关泵</el-button>
+                          <el-button @click="dongjie(outItem)">冻结</el-button>
+                          <el-button @click="jiedong(outItem)">解冻</el-button>
+                        </div>
+                        <!-- ATL3000操作 -->
+                        <div v-if="outItem.PumpStationType == 3">
+                          <el-button @click="pump_handle('ziDong', outItem)">自动</el-button>
+                          <el-button @click="pump_handle('shouDong', outItem)">手动</el-button>
+                          <el-button @click="pump_handle('fuWei', outItem)">复位</el-button>
+                          <el-button @click="pump_handle('tingZhi', outItem)">停止</el-button>
+                        </div>
+                      </el-popover>
+                      <el-button type="primary" @click="viewDetails(outItem)">详情</el-button>
+                    </div>
+                  </div>
+                  <!-- 2 -->
+                  <div style="overflow-y: auto">
+                    <div v-for="(item, index) in outItem?.LubRealData" :key="index">
+                      <div style="display: flex; justify-content: space-between">
+                        <p style="margin: 5px 0">{{ item.name }}</p>
+                        <p style="margin: 5px 0; color: #19be6b">{{ item.value }}</p>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-              <el-divider
-                v-if="
-                  outItem?.LubRealData && outItem?.LubRealData.length > 0 && outItem.OilRealData && outItem.OilRealData.length > 0
-                "
-              />
-              <!-- 3.油液 -->
-              <div v-if="outItem.OilRealData && outItem.OilRealData.length > 0">
-                <div style="color: #009688; text-align: left">油液状态：</div>
-                <div v-for="(item, index) in outItem.OilRealData" :key="index">
-                  <div style="display: flex; justify-content: space-between">
-                    <p style="margin: 5px 0">{{ item.name }}:</p>
-                    <p style="margin: 5px 0; color: #19be6b">{{ item.value }}</p>
+                <el-divider
+                  v-if="
+                    outItem?.LubRealData &&
+                    outItem?.LubRealData.length > 0 &&
+                    outItem.OilRealData &&
+                    outItem.OilRealData.length > 0
+                  "
+                />
+                <!-- 3.油液 -->
+                <div v-if="outItem.OilRealData && outItem.OilRealData.length > 0">
+                  <div style="color: #009688; text-align: left">油液状态：</div>
+                  <div v-for="(item, index) in outItem.OilRealData" :key="index">
+                    <div style="display: flex; justify-content: space-between">
+                      <p style="margin: 5px 0">{{ item.name }}:</p>
+                      <p style="margin: 5px 0; color: #19be6b">{{ item.value }}</p>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -200,6 +208,7 @@ import setParameter from "@/views/online/anlageuebersicht/components/setParamete
 import setAtl3k from "@/views/online/anlageuebersicht/components/setAtl3k.vue";
 import ATL3kDetail from "@/views/online/anlageuebersicht/components/ATL3kDetail.vue";
 // import dataStatistics from "@/views/online/anlageuebersicht/components/dataStatistics.vue";
+import { config_getValue } from "@/api/system/configuration";
 import { useRouter } from "vue-router";
 const router = useRouter();
 const comeBackCompany = () => {
@@ -210,6 +219,7 @@ const defaultProps = {
   label: "name",
   id: "id"
 };
+let timeValue = ref(5000);
 let selectVal = ref();
 let selectDatas: any = ref([]);
 // 切换设备
@@ -420,12 +430,23 @@ onMounted(() => {
   // 获取body的窗口高度
   bodyHeight.value = document.body.clientHeight;
 });
-onActivated(() => {
+
+const getTimeValueFun = async () => {
+  const res: any = await config_getValue({ key: "Data_Refresh_time" });
+  if (res.code == "200") {
+    timeValue.value = res.data.value * 1000;
+    console.log(timeValue.value);
+  } else {
+    ElMessage.error(res?.mssage);
+  }
+};
+onActivated(async () => {
+  await getTimeValueFun();
   // 当组件挂载后开始定时器
   intervalId.value = setInterval(() => {
     // 调用获取数据的接口方法
     getCardContent();
-  }, 5000);
+  }, timeValue.value);
 });
 onDeactivated(() => {
   // 当组件卸载前清除定时器

@@ -10,3 +10,7 @@ export const config_getConfig = (params: any) => {
 export const config_setConfig = (params: any) => {
   return http.post(`Lub/SystemConfig/setConfig`, params);
 };
+// 获取配置内容
+export const config_getValue = (params: any) => {
+  return http.get(`Lub/SystemConfig/getValue`, params);
+};
