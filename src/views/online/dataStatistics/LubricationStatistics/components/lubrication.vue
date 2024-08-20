@@ -109,6 +109,7 @@
         <el-table-column prop="startTime" label="开泵时间" />
         <el-table-column prop="endTime" label="关泵时间" />
         <el-table-column prop="lubCount" label="润滑次数" />
+        <el-table-column prop="lubPoint" label="润滑点号" />
         <el-table-column prop="runTime" label="润滑时长" />
         <el-table-column prop="lubFlow" label="润滑油量(ml)" />
         <el-table-column prop="status" label="润滑状态">

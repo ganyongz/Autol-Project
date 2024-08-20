@@ -15,7 +15,7 @@
             <div style="padding: 10px; font-size: 16px; font-weight: 500">
               <div style="display: grid; grid-template-columns: 1fr 1fr">
                 <div style="height: 220px; text-align: center">
-                  <img src="@/views/dataScreen/images/gongChengJiXie.gif" style="width: 100%; height: 100%" alt="工程机械" />
+                  <img src="@/views/dataScreen/images/gongchengjixie.png" style="width: 100%; height: 100%" alt="工程机械" />
                 </div>
                 <div class="showData">
                   <p>润滑系统：90</p>
@@ -40,7 +40,7 @@
               <div style="padding: 10px; font-size: 16px; font-weight: 500">
                 <div style="display: grid; grid-template-columns: 1fr 1fr">
                   <div style="height: 200px; text-align: center">
-                    <img src="@/views/dataScreen/images/kuangShan.jpg" style="width: 100%; height: 100%" alt="矿山" />
+                    <img src="@/views/dataScreen/images/kuangShan1.jpg" style="width: 100%; height: 100%" alt="矿山" />
                   </div>
                   <div class="showData">
                     <p>润滑系统：11</p>

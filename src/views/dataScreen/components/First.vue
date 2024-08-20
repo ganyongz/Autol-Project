@@ -46,7 +46,7 @@
               <div style="padding: 10px; font-size: 16px; font-weight: 500">
                 <div style="display: grid; grid-template-columns: 1fr 1fr">
                   <div style="height: 200px; text-align: center">
-                    <img src="@/views/dataScreen/images/gangKou.png" style="width: 100%; height: 100%" alt="港口" />
+                    <img src="@/views/dataScreen/images/gangKou1.png" style="width: 100%; height: 100%" alt="港口" />
                   </div>
                   <div class="showData">
                     <p>润滑系统：100</p>
