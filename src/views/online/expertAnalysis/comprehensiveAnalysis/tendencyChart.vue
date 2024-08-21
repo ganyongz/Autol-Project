@@ -58,8 +58,8 @@ const timeOPtions = [
 let customValue = ref();
 const handleSelect = (val: any) => {
   switch (val) {
-    case "1": //实时数据（最近一小时）
-      timeScreen.value[0] = dayjs().subtract(1, "hour").format("YYYY-MM-DD HH:mm:ss");
+    case "1": //实时数据（最近5分钟）
+      timeScreen.value[0] = dayjs().subtract(5, "minute").format("YYYY-MM-DD HH:mm:ss");
       timeScreen.value[1] = dayjs().format("YYYY-MM-DD HH:mm:ss");
       getTrendChart();
       break;
@@ -175,10 +175,10 @@ const setBarChart2 = () => {
             symbol: ["none", "none"],
             data: [
               {
+                name: "预警值",
                 yAxis: waringValue.value, // 预警值
                 label: {
-                  // 不显示基准线名称
-                  show: true
+                  formatter: "{b}: {c}"
                 },
                 lineStyle: {
                   type: "solid", // 基准线样式为虚线
@@ -186,10 +186,12 @@ const setBarChart2 = () => {
                 }
               },
               {
+                name: "危险值",
                 yAxis: dangerValue.value, // 危险值
                 label: {
+                  formatter: "{b}: {c}"
                   // 不显示基准线名称
-                  show: true
+                  // show: true
                 },
                 lineStyle: {
                   type: "solid", // 基准线样式为虚线
@@ -217,7 +219,7 @@ let dangerValue = ref();
 let waringValue = ref();
 onMounted(async () => {
   // debugger;
-  timeScreen.value[0] = dayjs().subtract(1, "hour").format("YYYY-MM-DD HH:mm:ss");
+  timeScreen.value[0] = dayjs().subtract(5, "minute").format("YYYY-MM-DD HH:mm:ss");
   timeScreen.value[1] = dayjs().format("YYYY-MM-DD HH:mm:ss");
   if (stationId.value) {
     await getTrendChart();

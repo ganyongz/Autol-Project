@@ -10,34 +10,39 @@
       </div>
       <div v-loading="loading" element-loading-text="读取中...">
         <div class="mb-8 fs-14">
-          组别：<el-input v-model="parameterOfApparatus.group" class="parameter-box mr-12" type="text" />
+          <span class="labelClass">组别：</span>
+          <el-input v-model="parameterOfApparatus.group" class="parameter-box mr-12" type="text" />
         </div>
 
         <div class="mb-8 fs-14">
-          连锁号：<el-input v-model="parameterOfApparatus.chainNumber" class="parameter-box mr-12" type="text" />
+          <span class="labelClass">连锁号：</span>
+          <el-input v-model="parameterOfApparatus.chainNumber" class="parameter-box mr-12" type="text" />
         </div>
 
         <div class="mb-8 fs-14">
-          起点：<el-input v-model="parameterOfApparatus.startPoint" class="parameter-box mr-12" type="text" />
+          <span class="labelClass">起点：</span>
+          <el-input v-model="parameterOfApparatus.startPoint" class="parameter-box mr-12" type="text" />
         </div>
 
         <div class="mb-8 fs-14">
-          终点：<el-input v-model="parameterOfApparatus.endPoint" class="parameter-box mr-12" type="text" />
+          <span class="labelClass">终点：</span>
+          <el-input v-model="parameterOfApparatus.endPoint" class="parameter-box mr-12" type="text" />
         </div>
 
         <div class="mb-16 fs-14">
-          休止时间：
+          <span class="labelClass">休止时间：</span>
           <el-input v-model="parameterOfApparatus.restHour" class="parameter-box mr-8" type="text" />时
           <el-input v-model="parameterOfApparatus.restMin" class="parameter-box mx-8" type="text" />分
         </div>
 
         <div class="mb-16 fs-14">
-          润滑时间：
+          <span class="labelClass">润滑时间：</span>
           <el-input v-model="parameterOfApparatus.lubTime" class="parameter-box mx-8" type="text" />秒
         </div>
 
         <div class="mb-16 fs-14">
-          润滑油量：<el-input v-model="parameterOfApparatus.lubOil" class="parameter-box mr-12" type="text" />ml
+          <span class="labelClass">润滑油量：</span>
+          <el-input v-model="parameterOfApparatus.lubOil" class="parameter-box mr-12" type="text" />ml
         </div>
         <div style="text-align: right">
           <el-button color="#095C98" type="primary" class="mr-12" @click="getDeviceParam()"> 读取 </el-button>
@@ -143,10 +148,16 @@ const settingUpFun = async () => {
     ElMessage.error(res?.mssage);
   }
 };
+getPumpParams(); //获取数据
 </script>
 <style scoped lang="scss">
+.labelClass {
+  display: inline-block;
+  width: 100px;
+  text-align: left;
+}
 .parameter-box {
-  width: 72px;
+  width: 200px;
   height: 28px;
   color: #57c2ff;
   text-align: center;

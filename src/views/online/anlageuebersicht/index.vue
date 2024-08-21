@@ -152,7 +152,7 @@
       </template>
     </myDialog>
     <!-- 参数设置(ATL3000) -->
-    <myDialog title="参数设置" ref="myDialog3" draggable width="30%" :before-close="beforeClose3">
+    <myDialog title="参数设置" ref="myDialog3" draggable width="40%" :before-close="beforeClose3">
       <template #content>
         <setAtl3k
           v-if="ShowSetAtl3k"
