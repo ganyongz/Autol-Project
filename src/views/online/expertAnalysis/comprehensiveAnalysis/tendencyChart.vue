@@ -141,6 +141,9 @@ const setBarChart2 = () => {
       },
       yAxis: {
         type: "value",
+        max: function (extent) {
+          return extent.max > dangerValue.value ? extent.max : dangerValue.value;
+        },
         // 隐藏y轴
         axisLine: {
           show: true
@@ -169,7 +172,31 @@ const setBarChart2 = () => {
           }),
           smooth: true,
           markLine: {
-            data: [{ xAxis: "Tue" }]
+            symbol: ["none", "none"],
+            data: [
+              {
+                yAxis: waringValue.value, // 预警值
+                label: {
+                  // 不显示基准线名称
+                  show: true
+                },
+                lineStyle: {
+                  type: "solid", // 基准线样式为虚线
+                  color: "yellow"
+                }
+              },
+              {
+                yAxis: dangerValue.value, // 危险值
+                label: {
+                  // 不显示基准线名称
+                  show: true
+                },
+                lineStyle: {
+                  type: "solid", // 基准线样式为虚线
+                  color: "red"
+                }
+              }
+            ]
           }
         }
       ]
@@ -186,6 +213,8 @@ const setBarChart2 = () => {
     chartInstance.setOption(option.value);
   }
 };
+let dangerValue = ref();
+let waringValue = ref();
 onMounted(async () => {
   // debugger;
   timeScreen.value[0] = dayjs().subtract(1, "hour").format("YYYY-MM-DD HH:mm:ss");
@@ -239,6 +268,9 @@ onMounted(async () => {
         },
         yAxis: {
           type: "value",
+          max: function (extent) {
+            return extent.max > dangerValue.value ? extent.max : dangerValue.value;
+          },
           // 隐藏y轴
           axisLine: {
             show: true
@@ -296,6 +328,8 @@ const getTrendChart = async () => {
   if (res.code == "200") {
     chartData.value = res.data.realData;
     tableName.value = res.data.tableName;
+    dangerValue.value = res.data.dangerValue;
+    waringValue.value = res.data.waringValue;
     nextTick(() => {
       setBarChart2();
     });

@@ -214,6 +214,7 @@ onMounted(async () => {
       // treeRef.value.setCheckedKeys([route.query.pointId]);
       expandData.value.push(route.query.pointId);
       showTRee.value = true;
+      tplKey.value += 1;
     });
   } else {
     const firstType4Node = getFirstType4Node(treeData.value);
