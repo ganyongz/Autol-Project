@@ -31,7 +31,7 @@ const submit = async () => {
   if (res.code == "200") {
     getConfig();
   } else {
-    ElMessage.error(res?.mssage);
+    ElMessage.error(res?.message);
   }
 };
 // 获取配置项
@@ -51,7 +51,7 @@ const getConfig = async () => {
       });
     }
   } else {
-    ElMessage.error(res?.mssage);
+    ElMessage.error(res?.message);
   }
 };
 

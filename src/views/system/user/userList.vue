@@ -106,7 +106,7 @@ const getUserList = async (params: any) => {
     tableData.value = res.data.records;
     total.value = res.data.total;
   } else {
-    ElMessage.error(res?.mssage);
+    ElMessage.error(res?.message);
   }
 };
 // 查询
@@ -136,7 +136,7 @@ const deleteFun = (ids: any) => {
       params.pageNum = 1;
       getUserList(params);
     } else {
-      ElMessage.error(res?.mssage);
+      ElMessage.error(res?.message);
     }
   });
 };

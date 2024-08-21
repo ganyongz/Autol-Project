@@ -122,7 +122,7 @@ const getDeviceParam = async () => {
       getPumpParams();
     }, 3000);
   } else {
-    ElMessage.error(res?.mssage);
+    ElMessage.error(res?.message);
   }
 };
 // 获取(实时)数据
@@ -138,7 +138,7 @@ const getPumpParams = async () => {
       backgroundParameter.value = res.data;
     }
   } else {
-    ElMessage.error(res?.mssage);
+    ElMessage.error(res?.message);
   }
 };
 
@@ -160,9 +160,9 @@ const settingUpFun = async () => {
   }
   const res: any = await pump_setPumpParams(result);
   if (res.code == "200") {
-    ElMessage.error(res?.mssage);
+    ElMessage.error(res?.message);
   } else {
-    ElMessage.error(res?.mssage);
+    ElMessage.error(res?.message);
   }
 };
 </script>

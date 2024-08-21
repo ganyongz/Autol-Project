@@ -173,7 +173,7 @@ const saveForm = async () => {
     ElMessage.success("保存成功");
     mittBus.emit("refreshLocationTree");
   } else {
-    ElMessage.error(res?.mssage);
+    ElMessage.error(res?.message);
   }
 };
 
@@ -186,7 +186,7 @@ const getPointDetailFun = async () => {
     Object.assign(ruleForm.value, data);
     // ruleForm.name = data.name;
   } else {
-    ElMessage.error(res?.mssage);
+    ElMessage.error(res?.message);
   }
 };
 // 删除测点
@@ -224,7 +224,7 @@ const submitForm = async (val: any) => {
     getPointDetailFun();
     ElMessage.success("保存成功");
   } else {
-    ElMessage.error(res?.mssage);
+    ElMessage.error(res?.message);
   }
   myDialog1.value.close();
   IsShowBindTmp.value = false;

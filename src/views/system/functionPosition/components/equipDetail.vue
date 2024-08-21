@@ -152,7 +152,7 @@ const saveForm = async () => {
     ElMessage.success("保存成功");
     mittBus.emit("refreshLocationTree");
   } else {
-    ElMessage.error(res?.mssage);
+    ElMessage.error(res?.message);
   }
 };
 // 上传
@@ -187,7 +187,7 @@ const departTreeFun = async () => {
     showSelect.value = true;
     getEquipDetailFun();
   } else {
-    ElMessage.error(res?.mssage);
+    ElMessage.error(res?.message);
   }
 };
 // 获取详情
@@ -207,7 +207,7 @@ const getEquipDetailFun = async () => {
     ruleForm.classify = data.classify;
     uploadImgKey.value += 1;
   } else {
-    ElMessage.error(res?.mssage);
+    ElMessage.error(res?.message);
   }
 };
 // 删除设备
@@ -247,7 +247,7 @@ const submitForm = async () => {
     ElMessage.success("保存成功");
     mittBus.emit("refreshLocationTree");
   } else {
-    ElMessage.error(res?.mssage);
+    ElMessage.error(res?.message);
   }
   myDialog1.value.close();
   IsShowAdd.value = false;

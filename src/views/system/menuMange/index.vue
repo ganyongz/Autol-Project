@@ -89,7 +89,7 @@ const getMenuListFun = async () => {
       handleObj(dataArr);
     }
   } else {
-    ElMessage.error(res?.mssage);
+    ElMessage.error(res?.message);
   }
 };
 // 递归处理节点

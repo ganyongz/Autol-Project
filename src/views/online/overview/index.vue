@@ -37,7 +37,7 @@ const getList = async () => {
   if (res.code == "200") {
     equipmentList.value = res.data;
   } else {
-    ElMessage.error(res?.mssage);
+    ElMessage.error(res?.message);
   }
 };
 getList();

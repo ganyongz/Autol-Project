@@ -194,7 +194,7 @@ const getLocationTreeFun = async () => {
     treeData.value = res.data as any;
     setDisabled(treeData.value); //处理数据
   } else {
-    ElMessage.error(res?.mssage);
+    ElMessage.error(res?.message);
   }
 };
 

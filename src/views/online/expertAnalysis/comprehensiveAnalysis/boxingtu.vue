@@ -170,7 +170,7 @@ const getTrendChart = async () => {
     yAxisData.value = res.data?.yData;
     boxingKey.value += 1;
   } else {
-    ElMessage.error(res?.mssage);
+    ElMessage.error(res?.message);
   }
 };
 onUnmounted(() => {

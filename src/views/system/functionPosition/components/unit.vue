@@ -220,7 +220,7 @@ const getEquipPartDetailFun = async () => {
     formInline.plcAddress = data.plcAddress;
     getEquipPointList();
   } else {
-    ElMessage.error(res?.mssage);
+    ElMessage.error(res?.message);
   }
 };
 // 删除部件
@@ -233,7 +233,7 @@ const saveUnit = async () => {
     ElMessage.success("保存成功");
     mittBus.emit("refreshLocationTree");
   } else {
-    ElMessage.error(res?.mssage);
+    ElMessage.error(res?.message);
   }
 }; //编辑部件
 // 部件下的点位列表
@@ -245,7 +245,7 @@ const getEquipPointList = async () => {
   if (res.code == "200") {
     tableData.value = res.data as any;
   } else {
-    ElMessage.error(res?.mssage);
+    ElMessage.error(res?.message);
   }
 };
 const tabHandleClick = (tab: any, event: Event) => {
@@ -275,7 +275,7 @@ const saveEquipPoint = async () => {
     closeDialog();
     getEquipPointList();
   } else {
-    ElMessage.error(res?.mssage);
+    ElMessage.error(res?.message);
   }
 };
 // 删除测点

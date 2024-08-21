@@ -147,7 +147,7 @@ const submit = async (formEl: FormInstance | undefined) => {
         emit("submitForm");
         formEl.resetFields();
       } else {
-        ElMessage.error(res?.mssage);
+        ElMessage.error(res?.message);
       }
     } else {
       console.log("error submit!", fields);
@@ -162,7 +162,7 @@ const getUserList = async (params: any) => {
     // console.log(res);
     options.value = res.data.records;
   } else {
-    ElMessage.error(res?.mssage);
+    ElMessage.error(res?.message);
   }
 };
 </script>

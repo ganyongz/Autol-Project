@@ -233,7 +233,7 @@ const getEquipListFun = async () => {
   if (res.code == "200") {
     selectDatas.value = res.data as any;
   } else {
-    ElMessage.error(res?.mssage);
+    ElMessage.error(res?.message);
   }
 };
 getEquipListFun();
@@ -331,7 +331,7 @@ const getCardContent = async () => {
     cards.value = res.data;
     // console.log(cards.value, "卡片");
   } else {
-    ElMessage.error(res?.mssage);
+    ElMessage.error(res?.message);
   }
 };
 // 详情(ATL3000)
@@ -437,7 +437,7 @@ const getTimeValueFun = async () => {
     timeValue.value = res.data.value * 1000;
     console.log(timeValue.value);
   } else {
-    ElMessage.error(res?.mssage);
+    ElMessage.error(res?.message);
   }
 };
 onActivated(async () => {

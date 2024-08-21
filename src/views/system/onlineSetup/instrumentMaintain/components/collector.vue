@@ -113,7 +113,7 @@ const getCollectorList = async () => {
   if (res.code == "200") {
     tableData.value = res.data;
   } else {
-    ElMessage.error(res?.mssage);
+    ElMessage.error(res?.message);
   }
 };
 
@@ -141,7 +141,7 @@ const submitForm = async () => {
     getCollectorList();
     ElMessage.success("保存成功");
   } else {
-    ElMessage.error(res?.mssage);
+    ElMessage.error(res?.message);
   }
   myDialog1.value.close();
   IsShowAdd.value = false;
@@ -179,7 +179,7 @@ const getSensorList = async (rowData: any) => {
       });
     });
   } else {
-    ElMessage.error(res?.mssage);
+    ElMessage.error(res?.message);
   }
 };
 // 删除传感器
@@ -207,7 +207,7 @@ const submitForm2 = async () => {
     getSensorList({ id: rowData.value.id });
     ElMessage.success("保存成功");
   } else {
-    ElMessage.error(res?.mssage);
+    ElMessage.error(res?.message);
   }
   myDialog2.value.close();
   IsShowSensor.value = false;

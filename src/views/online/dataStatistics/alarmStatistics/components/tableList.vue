@@ -58,7 +58,7 @@ const getTableList = async () => {
     tableData.value = res.data.records;
     total.value = res.data.total;
   } else {
-    // ElMessage.error(res?.mssage);
+    // ElMessage.error(res?.message);
   }
 };
 const handleSizeChange = (val: number) => {

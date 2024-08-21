@@ -173,7 +173,7 @@ const getlubStatistics = async () => {
     month.value = res.data.month;
     week.value = res.data.week;
   } else {
-    ElMessage.error(res?.mssage);
+    ElMessage.error(res?.message);
   }
 };
 // 获取润滑记录列表
@@ -190,7 +190,7 @@ const getLubRecord = async () => {
     tableData.value = res.data.data;
     total.value = res.data.count;
   } else {
-    ElMessage.error(res?.mssage);
+    ElMessage.error(res?.message);
   }
 };
 
@@ -226,7 +226,7 @@ const getlubTrend = async () => {
       data3.value = [];
     }
   } else {
-    ElMessage.error(res?.mssage);
+    ElMessage.error(res?.message);
   }
 };
 // 基于准备好的dom，初始化echarts实例

@@ -172,7 +172,7 @@ const departTreeFun = async () => {
     deptData = res.data;
     showSelect.value = true;
   } else {
-    ElMessage.error(res?.mssage);
+    ElMessage.error(res?.message);
   }
 };
 onBeforeMount(() => {

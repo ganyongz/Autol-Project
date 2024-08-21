@@ -53,7 +53,7 @@ const getMenuListFun = async () => {
     let datas = mergeButtonsToChildren(datasArray);
     menuTree.value = datas as any;
   } else {
-    ElMessage.error(res?.mssage);
+    ElMessage.error(res?.message);
   }
 };
 // 查询角色已关联的菜单
@@ -66,7 +66,7 @@ const getCheckedMenus = async () => {
     currentIds.value = [];
     handleObj(dataArray);
   } else {
-    ElMessage.error(res?.mssage);
+    ElMessage.error(res?.message);
   }
 };
 // 递归处理勾选tree节点

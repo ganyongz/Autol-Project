@@ -125,7 +125,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
         getEquipPointList();
         dialogVisible.value = false;
       } else {
-        ElMessage.error(res?.mssage);
+        ElMessage.error(res?.message);
       }
     } else {
       console.log("error submit!", fields);
@@ -138,7 +138,7 @@ const getEquipPointList = async () => {
   if (res.code == "200") {
     tableData.value = res.data as any;
   } else {
-    ElMessage.error(res?.mssage);
+    ElMessage.error(res?.message);
   }
 };
 // 取消

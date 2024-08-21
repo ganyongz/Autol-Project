@@ -342,7 +342,7 @@ const getTrendChart = async () => {
     };
     emit("searchResult", parameter);
   } else {
-    ElMessage.error(res?.mssage);
+    ElMessage.error(res?.message);
   }
 };
 onUnmounted(() => {

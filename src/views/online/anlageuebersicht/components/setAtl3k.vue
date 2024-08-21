@@ -110,7 +110,7 @@ const open = async val => {
       getPumpParams();
     }, 3000);
   } else {
-    ElMessage.error(res?.mssage);
+    ElMessage.error(res?.message);
   }
 };
 // 获取(实时)数据
@@ -122,7 +122,7 @@ const getPumpParams = async () => {
   if (res.code == "200") {
     parameterOfApparatus.value = Object.assign(res.data);
   } else {
-    ElMessage.error(res?.mssage);
+    ElMessage.error(res?.message);
   }
   loading.value = false;
 };
@@ -143,9 +143,9 @@ const settingUpFun = async () => {
   result = { ...parameters, ...variableData };
   const res: any = await pump_setPumpParams(result);
   if (res.code == "200") {
-    ElMessage.error(res?.mssage);
+    ElMessage.error(res?.message);
   } else {
-    ElMessage.error(res?.mssage);
+    ElMessage.error(res?.message);
   }
 };
 getPumpParams(); //获取数据

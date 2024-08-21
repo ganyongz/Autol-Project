@@ -161,7 +161,7 @@ const saveRow = async (val: any) => {
       }
     }
   } else {
-    ElMessage.error(res?.mssage);
+    ElMessage.error(res?.message);
   }
 };
 // 测点下阈值报警策略列表
@@ -170,7 +170,7 @@ const getPointThresholdTacticsList = async () => {
   if (res.code == "200") {
     tableData.value = res.data;
   } else {
-    ElMessage.error(res?.mssage);
+    ElMessage.error(res?.message);
   }
 };
 // 删除
@@ -205,7 +205,7 @@ const submitForm = async (val: any) => {
     ElMessage.success("保存成功");
     getPointThresholdTacticsList();
   } else {
-    ElMessage.error(res?.mssage);
+    ElMessage.error(res?.message);
   }
   myDialog1.value.close();
   IsShowAdd.value = false;

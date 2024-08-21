@@ -35,7 +35,7 @@ const getEquipListFun = async () => {
     menuTree.value = res.data as any;
     getCheckedEquips(menuTree.value);
   } else {
-    ElMessage.error(res?.mssage);
+    ElMessage.error(res?.message);
   }
 };
 // 查询角色已关联的设备

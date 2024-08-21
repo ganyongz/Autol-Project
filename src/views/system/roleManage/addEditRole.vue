@@ -88,7 +88,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
         ElMessage.success("保存成功");
         emit("submitForm");
       } else {
-        ElMessage.error(res?.mssage);
+        ElMessage.error(res?.message);
       }
     } else {
       console.log("error submit!", fields);

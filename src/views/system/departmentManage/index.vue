@@ -196,7 +196,7 @@ const departTreeFun = async () => {
     //     });
     // });
   } else {
-    ElMessage.error(res?.mssage);
+    ElMessage.error(res?.message);
   }
 };
 departTreeFun();
@@ -225,7 +225,7 @@ const submitFun = async () => {
     ElMessage.success("保存成功");
     departTreeFun();
   } else {
-    ElMessage.error(res?.mssage);
+    ElMessage.error(res?.message);
   }
 };
 // 点击部门
@@ -246,7 +246,7 @@ const getUserListFun = async () => {
   if (res.code == "200") {
     tableData.value = res.data.records; //绑定是否正确？？？
   } else {
-    ElMessage.error(res?.mssage);
+    ElMessage.error(res?.message);
   }
 };
 
@@ -292,7 +292,7 @@ const submitUsers = async () => {
     getUserListFun(); //刷新列表
     myDialog2.value.close();
   } else {
-    ElMessage.error(res?.mssage);
+    ElMessage.error(res?.message);
   }
 };
 // 删除部门用户
@@ -326,7 +326,7 @@ const submitEquip = async () => {
     myDialog3.value.close();
     departTreeFun();
   } else {
-    ElMessage.error(res?.mssage);
+    ElMessage.error(res?.message);
   }
 };
 // 分页

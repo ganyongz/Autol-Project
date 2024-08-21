@@ -77,7 +77,7 @@ const getTreeList = async () => {
   if (res.code == "200") {
     treeData.value = res.data as any;
   } else {
-    ElMessage.error(res?.mssage);
+    ElMessage.error(res?.message);
   }
 };
 // main 时间查询

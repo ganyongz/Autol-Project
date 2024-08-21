@@ -155,7 +155,7 @@ const submitFun = async () => {
     ElMessage.success("保存成功");
     getLocationTreeFun();
   } else {
-    ElMessage.error(res?.mssage);
+    ElMessage.error(res?.message);
   }
 };
 // 获取位置安装树
@@ -172,7 +172,7 @@ const getLocationTreeFun = async () => {
       });
     }
   } else {
-    ElMessage.error(res?.mssage);
+    ElMessage.error(res?.message);
   }
 };
 // 删除
@@ -210,7 +210,7 @@ const submitForm = async () => {
     ElMessage.success("保存成功");
     getLocationTreeFun();
   } else {
-    ElMessage.error(res?.mssage);
+    ElMessage.error(res?.message);
   }
   myDialog1.value.close();
   IsShowAdd.value = false;

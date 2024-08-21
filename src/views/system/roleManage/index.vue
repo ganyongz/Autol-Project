@@ -166,7 +166,7 @@ const getRoleListFun = async () => {
     treeData.value = res.data as any;
     console.log(treeData.value, "获取角色列表");
   } else {
-    ElMessage.error(res?.mssage);
+    ElMessage.error(res?.message);
   }
 };
 // 获取角色下的用户
@@ -175,7 +175,7 @@ const getUserListFun = async (id: any) => {
   if (res.code == "200") {
     tableData.value = res.data as any;
   } else {
-    ElMessage.error(res?.mssage);
+    ElMessage.error(res?.message);
   }
 };
 
@@ -214,7 +214,7 @@ const submitUsers = async () => {
     getUserListFun(roleId.value); //刷新列表
     myDialog2.value.close();
   } else {
-    ElMessage.error(res?.mssage);
+    ElMessage.error(res?.message);
   }
 };
 // 删除
@@ -244,7 +244,7 @@ const submitMenus = async () => {
     ElMessage.success("绑定成功");
     myDialog3.value.close();
   } else {
-    ElMessage.error(res?.mssage);
+    ElMessage.error(res?.message);
   }
 };
 
