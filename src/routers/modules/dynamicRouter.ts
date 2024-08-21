@@ -38,7 +38,8 @@ export const initDynamicRouter = async () => {
       if (item.component && typeof item.component == "string") {
         item.component = modules["/src/views" + item.component + ".vue"];
       }
-      if (item.meta.title == "驾驶舱") {
+      // 全屏处理
+      if (item.meta.title == "驾驶舱" || item.meta.title == "二级驾驶舱") {
         router.addRoute(item as unknown as RouteRecordRaw);
       } else {
         router.addRoute("layout", item as unknown as RouteRecordRaw);
