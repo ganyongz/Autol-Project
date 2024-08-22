@@ -17,11 +17,11 @@
           </div>
         </div>
         <div class="portOutLine">
-          <el-tree-select v-model="selectValue" :data="selectData" :render-after-expand="false" />
+          <el-tree-select v-model="selectValue" :data="selectData" :render-after-expand="false" :props="defaultProps" />
           <div class="portNavigation" style="background-color: green">
             <el-row :gutter="20">
               <el-col :span="10">
-                <img style="width: 100%; height: 100px" src="@/views/platform/port/images/红c.png" alt="图片" />
+                <img style="width: 100%; height: 100px" src="@/views/platform/port/images/fengjiRed.png" alt="图片" />
               </el-col>
               <el-col :span="14">
                 <p>监测总数</p>
@@ -71,7 +71,7 @@
           <div class="item1" v-for="item in 50" :key="item" @click="ToTargetPage(item)">
             <el-row :gutter="20">
               <el-col :span="10">
-                <img style="width: 75%" src="@/views/platform/port/images/红c.png" alt="图片" />
+                <img style="width: 75%" src="@/views/platform/port/images/gangkouRed.png" alt="图片" />
               </el-col>
               <el-col :span="14">
                 <p># {{ item }}号机</p>
@@ -134,29 +134,31 @@
 <script setup lang="ts" name="cockpit">
 import { ref, onBeforeUnmount, onMounted } from "vue";
 import alarmInfo from "@/views/platform/fengdian/components/alarmInfo.vue";
+import { industry_industryCockpitDropDown } from "@/api/dataScreen";
 import dayjs from "dayjs";
 import { HOME_URL } from "@/config";
 import { useRouter } from "vue-router";
+import { ElMessage } from "element-plus";
 const router = useRouter();
-let selectValue = ref("哈巴河风电场");
-let selectData = ref([
-  {
-    value: "1",
-    label: "龙源电力集团"
-  },
-  {
-    value: "2",
-    label: "哈巴河风电场"
-  },
-  {
-    value: "3",
-    label: "海口国投洋浦港"
-  }
-]);
+let selectValue = ref();
+const defaultProps = {
+  value: "id",
+  label: "platformName"
+};
+let selectData = ref();
 const ToTargetPage = (val: any) => {
   router.push(`/online/anlageuebersicht/index?id=${val}`);
 };
 const dataScreenRef = ref<HTMLElement | null>(null);
+// let screenDatas = ref();
+const getDatas = async () => {
+  let res: any = await industry_industryCockpitDropDown({});
+  if (res.code == "200") {
+    selectData.value = res.data;
+  } else {
+    ElMessage.error(res?.message);
+  }
+};
 onMounted(() => {
   if (dataScreenRef.value) {
     dataScreenRef.value.style.transform = `scale(${getScale()}) translate(-50%, -50%)`;
@@ -188,6 +190,8 @@ onBeforeUnmount(() => {
   window.removeEventListener("resize", resize);
   clearInterval(timer as unknown as number);
 });
+// 调用
+getDatas();
 </script>
 
 <style lang="scss" scoped>

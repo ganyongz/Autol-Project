@@ -20,9 +20,9 @@
                   <img src="@/views/dataScreen/images/windElectricity.png" style="width: 100%; height: 100%" alt="风电图" />
                 </div>
                 <div class="showData">
-                  <p>润滑系统：34</p>
-                  <p>状态监测：67</p>
-                  <p>油液监测：135</p>
+                  <p>润滑系统：{{ screenDatas?.windPower.lubNum }}</p>
+                  <p>状态监测：{{ screenDatas?.windPower.vibNum }}</p>
+                  <p>油液监测：{{ screenDatas?.windPower.oilNum }}</p>
                 </div>
               </div>
             </div>
@@ -49,9 +49,9 @@
                     <img src="@/views/dataScreen/images/gangKou1.png" style="width: 100%; height: 100%" alt="港口" />
                   </div>
                   <div class="showData">
-                    <p>润滑系统：100</p>
-                    <p>状态监测：100</p>
-                    <p>油液监测：100</p>
+                    <p>润滑系统：{{ screenDatas?.port.lubNum }}</p>
+                    <p>状态监测：{{ screenDatas?.port.vibNum }}</p>
+                    <p>油液监测：{{ screenDatas?.port.oilNum }}</p>
                   </div>
                 </div>
               </div>
@@ -75,9 +75,9 @@
                     <img src="@/views/dataScreen/images/shiPing.png" style="width: 100%; height: 100%" alt="食品" />
                   </div>
                   <div class="showData">
-                    <p>润滑系统：234</p>
-                    <p>状态监测：676</p>
-                    <p>油液监测：4567</p>
+                    <p>润滑系统：{{ screenDatas?.food.lubNum }}</p>
+                    <p>状态监测：{{ screenDatas?.food.vibNum }}</p>
+                    <p>油液监测：{{ screenDatas?.food.oilNum }}</p>
                   </div>
                 </div>
               </div>
@@ -92,6 +92,14 @@
 
 <script lang="ts" setup>
 import { useRouter } from "vue-router";
+import { toRefs } from "vue";
+const props = defineProps({
+  screenDatas: {
+    type: Object
+    // default: () => {}
+  }
+});
+let { screenDatas } = toRefs(props);
 const router = useRouter();
 const ToTargetPage = () => {
   //路由跳转

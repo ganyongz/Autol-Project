@@ -19,15 +19,15 @@
       <div class="dataScreen-main">
         <!-- 左 -->
         <div class="dataScreen-lf">
-          <First />
+          <First :key="tplKey" :screen-datas="screenDatas" />
         </div>
         <!-- 中 -->
         <div class="dataScreen-ct">
-          <Second />
+          <Second :key="tplKey" :screen-datas="screenDatas" />
         </div>
         <!-- 右 -->
         <div class="dataScreen-rg">
-          <Third />
+          <Third :key="tplKey" :screen-datas="screenDatas" />
         </div>
       </div>
     </div>
@@ -42,9 +42,23 @@ import First from "@/views/dataScreen/components/First.vue";
 import Second from "@/views/dataScreen/components/Second.vue";
 import Third from "@/views/dataScreen/components/Third.vue";
 import dayjs from "dayjs";
+import { ElMessage } from "element-plus";
+import { screen_CockpitStatistics } from "@/api/dataScreen";
 
 const router = useRouter();
 const dataScreenRef = ref<HTMLElement | null>(null);
+// 获取数据
+let tplKey = ref(1);
+let screenDatas = ref();
+const getDatas = async () => {
+  let res: any = await screen_CockpitStatistics({});
+  if (res.code == "200") {
+    screenDatas.value = res.data;
+    tplKey.value += 1;
+  } else {
+    ElMessage.error(res?.message);
+  }
+};
 
 onMounted(() => {
   if (dataScreenRef.value) {
@@ -79,6 +93,8 @@ onBeforeUnmount(() => {
   window.removeEventListener("resize", resize);
   clearInterval(timer as unknown as number);
 });
+// 调用
+getDatas();
 </script>
 <style lang="scss" scoped>
 @import "./index.scss";

@@ -18,9 +18,9 @@
                   <img src="@/views/dataScreen/images/gongchengjixie.png" style="width: 100%; height: 100%" alt="工程机械" />
                 </div>
                 <div class="showData">
-                  <p>润滑系统：90</p>
-                  <p>状态监测：100</p>
-                  <p>油液监测：110</p>
+                  <p>润滑系统：{{ screenDatas?.engineering.lubNum }}</p>
+                  <p>状态监测：{{ screenDatas?.engineering.vibNum }}</p>
+                  <p>油液监测：{{ screenDatas?.engineering.oilNum }}</p>
                 </div>
               </div>
             </div>
@@ -40,12 +40,12 @@
               <div style="padding: 10px; font-size: 16px; font-weight: 500">
                 <div style="display: grid; grid-template-columns: 1fr 1fr">
                   <div style="height: 200px; text-align: center">
-                    <img src="@/views/dataScreen/images/kuangShan1.jpg" style="width: 100%; height: 100%" alt="矿山" />
+                    <img src="@/views/dataScreen/images/kuangShan.png" style="width: 100%; height: 100%" alt="矿山" />
                   </div>
                   <div class="showData">
-                    <p>润滑系统：11</p>
-                    <p>状态监测：32</p>
-                    <p>油液监测：56</p>
+                    <p>润滑系统：{{ screenDatas?.mine.lubNum }}</p>
+                    <p>状态监测：{{ screenDatas?.mine.vibNum }}</p>
+                    <p>油液监测：{{ screenDatas?.mine.oilNum }}</p>
                   </div>
                 </div>
               </div>
@@ -69,9 +69,9 @@
                     <img src="@/views/dataScreen/images/shuiNi.png" style="width: 100%; height: 100%" alt="水泥" />
                   </div>
                   <div class="showData">
-                    <p>润滑系统：80</p>
-                    <p>状态监测：13</p>
-                    <p>油液监测：287</p>
+                    <p>润滑系统：{{ screenDatas?.cement.lubNum }}</p>
+                    <p>状态监测：{{ screenDatas?.cement.vibNum }}</p>
+                    <p>油液监测：{{ screenDatas?.cement.oilNum }}</p>
                   </div>
                 </div>
               </div>
@@ -83,7 +83,16 @@
   </div>
 </template>
 
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+import { toRefs } from "vue";
+const props = defineProps({
+  screenDatas: {
+    type: Object
+    // default: () => {}
+  }
+});
+let { screenDatas } = toRefs(props);
+</script>
 <style scoped lang="scss">
 .showData {
   margin-left: 10px;

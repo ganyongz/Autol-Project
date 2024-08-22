@@ -18,19 +18,20 @@
               <dv-border-box-8 style="top: 90px; left: 40px; width: 370px; height: 230px; color: #ffffff">
                 <div style="padding: 20px; font-size: 18px; font-weight: 700; color: #ffffff">
                   <!-- 表格 -->
-                  总数：1817
+                  总数：11
+                  <!-- 总数：{{ Number(statistics?.offline) + Number(statistics?.online) }} -->
                   <div style="display: flex; text-align: center">
                     <div>
                       <dv-decoration-9 style="width: 140px; height: 140px; margin-right: 10px">
                         <div color-green font-600 class="content" bg="~ dark/0">96%</div>
                       </dv-decoration-9>
-                      <p>在线数：1798</p>
+                      <p>在线数：{{ statistics?.online }}</p>
                     </div>
                     <div>
                       <dv-decoration-9 style="width: 140px; height: 140px" :color="['#cc0000', 'red']">
                         <div color-red font-600 class="content">4%</div>
                       </dv-decoration-9>
-                      <p>离线数：19</p>
+                      <p>离线数：{{ statistics?.offline }}</p>
                     </div>
                   </div>
                 </div>
@@ -53,17 +54,17 @@
                     <div style="position: absolute; top: 60px; right: 20px">
                       <div class="jiance">
                         <p class="circle1"></p>
-                        <p>润滑系统：1098</p>
+                        <p>润滑系统：{{ screenDatas?.All.lubNum }}</p>
                       </div>
                       <br />
                       <div class="jiance">
                         <p class="circle2"></p>
-                        <p>油液监测：150</p>
+                        <p>状态监测：{{ screenDatas?.All.vibNum }}</p>
                       </div>
                       <br />
                       <div class="jiance">
                         <p class="circle3"></p>
-                        <p>状态监测：262</p>
+                        <p>油液监测：{{ screenDatas?.All.oilNum }}</p>
                       </div>
                     </div>
                   </div>
@@ -94,8 +95,34 @@ import diqiu from "@/views/dataScreen/components/diqiu.vue";
 
 // import ringChart from "/@/components/FirstComponent/ringChart.vue";
 // import rowTable from "/@/components/FirstComponent/rowTable.vue";
-import { reactive } from "vue";
-const conf = reactive({
+import { ref, reactive, toRefs, onMounted } from "vue";
+import { ElMessage } from "element-plus";
+import { screen_CockpitOnlinePointStatistics } from "@/api/dataScreen";
+const props = defineProps({
+  screenDatas: {
+    type: Object
+    // default: () => {}
+  }
+});
+let { screenDatas } = toRefs(props);
+// 获取数据
+let statistics = ref();
+const getDatas = async () => {
+  let res: any = await screen_CockpitOnlinePointStatistics({});
+  if (res.code == "200") {
+    statistics.value = res.data;
+  } else {
+    ElMessage.error(res?.message);
+  }
+};
+onMounted(() => {
+  if (screenDatas?.value!.All) {
+    conf.data[0].value = screenDatas?.value!.All.lubNum;
+    conf.data[1].value = screenDatas?.value!.All.oilNum;
+    conf.data[2].value = screenDatas?.value!.All.vibNum;
+  }
+});
+let conf = reactive({
   lineWidth: 18,
   digitalFlopStyle: {
     fill: "pink",
@@ -106,18 +133,20 @@ const conf = reactive({
   data: [
     {
       name: "润滑系统",
-      value: 1098
+      value: 10
     },
     {
       name: "油液监测",
-      value: 150
+      value: 10
     },
     {
       name: "状态检测",
-      value: 262
+      value: 10
     }
   ]
 });
+// 调用
+getDatas();
 </script>
 
 <style lang="scss" scoped>
