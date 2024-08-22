@@ -16,7 +16,7 @@
             @change="changeVal"
           />
         </div>
-        <div>xxxx设备</div>
+        <div>{{ route.query?.name }}</div>
         <div style="display: flex">
           <p style="margin-right: 20px">综合分析：<span style="color: aqua">良好</span></p>
           <p>智能诊断：<span style="color: aqua">正常</span></p>
@@ -209,8 +209,10 @@ import setAtl3k from "@/views/online/anlageuebersicht/components/setAtl3k.vue";
 import ATL3kDetail from "@/views/online/anlageuebersicht/components/ATL3kDetail.vue";
 // import dataStatistics from "@/views/online/anlageuebersicht/components/dataStatistics.vue";
 import { config_getValue } from "@/api/system/configuration";
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 const router = useRouter();
+const route = useRoute();
+// console.log(route, "路由传值");
 const comeBackCompany = () => {
   router.back();
 };
@@ -220,7 +222,7 @@ const defaultProps = {
   id: "id"
 };
 let timeValue = ref(5000);
-let selectVal = ref();
+let selectVal = ref(route.query?.id);
 let selectDatas: any = ref([]);
 // 切换设备
 const changeVal = (val: any) => {
@@ -324,7 +326,7 @@ const jiedong = async val => {
 };
 //获取页面卡片
 let cards = ref();
-let equip_id = ref("834ff0707e2b4133ae982f4e7b6d2232");
+let equip_id = ref(route.query?.id);
 const getCardContent = async () => {
   const res: any = await equip_card({ equipId: equip_id.value });
   if (res.code == "200") {

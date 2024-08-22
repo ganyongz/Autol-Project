@@ -12,7 +12,7 @@
           </dv-border-box-5>
         </div>
 
-        <div style="cursor: pointer" @click="ToTargetPage">
+        <div style="cursor: pointer" @click="ToTargetPage(1)">
           <dv-border-box-8 style="top: 130px; left: 40px; width: 400px; height: 240px; color: #ffffff">
             <div style="padding: 10px; font-size: 16px; font-weight: 500">
               <div style="display: grid; grid-template-columns: 1fr 1fr">
@@ -33,7 +33,7 @@
           <!-- 三级标题 -->
         </div>
         <!-- 2222 -->
-        <div style="cursor: pointer" @click="ToTargetPage">
+        <div style="cursor: pointer" @click="ToTargetPage(2)">
           <!-- 三级标题 -- 港口 -->
           <div>
             <dv-border-box-5 :color="['#225762', '#225762']" style="top: 120px; left: 40px; width: 280px; height: 40px">
@@ -101,9 +101,9 @@ const props = defineProps({
 });
 let { screenDatas } = toRefs(props);
 const router = useRouter();
-const ToTargetPage = () => {
+const ToTargetPage = (tType: any) => {
   //路由跳转
-  router.push("/platform/port/index");
+  router.push({ path: "/platform/port/index", query: { type: tType } });
 };
 </script>
 <style scoped lang="scss">

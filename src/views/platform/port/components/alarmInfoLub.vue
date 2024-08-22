@@ -6,29 +6,23 @@
 <script lang="ts" setup>
 import { ref, toRefs } from "vue";
 let props = defineProps({
-  transmitDatas: {}
+  transmitDatas: {
+    type: Array,
+    default: () => [{ partName: "", alarmLevel: "" }]
+  }
 });
 let { transmitDatas } = toRefs(props);
-console.log(transmitDatas);
+// 检查数组不为空，然后使用 .map() 方法提取 partName 和 alarmLevel
+const dataArray =
+  transmitDatas?.value.length > 0 ? transmitDatas?.value.map((item: any) => [item.partName, item.alarmLevel]) : [];
 const config = ref({
   header: ["部件名称", "报警等级"],
-  data: [
-    ["#1", "低报"],
-    ["#2", "低低报"],
-    ["#3", "高报"],
-    ["#4", "高报"],
-    ["#5", "低报"],
-    ["#6", "高高报"],
-    ["#7", "低低报"],
-    ["#8", "高报"],
-    ["#9", "高报"],
-    ["#10", "低报"]
-  ],
+  data: [],
   index: false,
   // columnWidth: [50],
   align: ["center"]
 });
-
+config.value.data = dataArray as any;
 const mouseoverHandler = (e: any) => {
   console.log(e);
 };
