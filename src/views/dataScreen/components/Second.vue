@@ -18,18 +18,21 @@
               <dv-border-box-8 style="top: 90px; left: 40px; width: 370px; height: 230px; color: #ffffff">
                 <div style="padding: 20px; font-size: 18px; font-weight: 700; color: #ffffff">
                   <!-- 表格 -->
-                  总数：11
-                  <!-- 总数：{{ Number(statistics?.offline) + Number(statistics?.online) }} -->
+                  总数：{{ statistics?.allNum }}
                   <div style="display: flex; text-align: center">
                     <div>
                       <dv-decoration-9 style="width: 140px; height: 140px; margin-right: 10px">
-                        <div color-green font-600 class="content" bg="~ dark/0">96%</div>
+                        <div color-green font-600 class="content" bg="~ dark/0">
+                          {{ Number((statistics?.online / statistics?.allNum) * 100).toFixed(1) }}%
+                        </div>
                       </dv-decoration-9>
                       <p>在线数：{{ statistics?.online }}</p>
                     </div>
                     <div>
                       <dv-decoration-9 style="width: 140px; height: 140px" :color="['#cc0000', 'red']">
-                        <div color-red font-600 class="content">4%</div>
+                        <div color-red font-600 class="content">
+                          {{ Number((statistics?.offline / statistics?.allNum) * 100).toFixed(1) }}%
+                        </div>
                       </dv-decoration-9>
                       <p>离线数：{{ statistics?.offline }}</p>
                     </div>
@@ -38,7 +41,7 @@
               </dv-border-box-8>
             </div>
           </div>
-          <!-- 下一个 -->
+          <!-- 监测 -->
           <div style="width: 100%">
             <div>
               <dv-border-box-5 :color="['#225762', '#225762']" style="top: 80px; left: 40px; width: 280px; height: 40px">
@@ -95,7 +98,7 @@ import diqiu from "@/views/dataScreen/components/diqiu.vue";
 
 // import ringChart from "/@/components/FirstComponent/ringChart.vue";
 // import rowTable from "/@/components/FirstComponent/rowTable.vue";
-import { ref, reactive, toRefs, onMounted } from "vue";
+import { ref, reactive, toRefs, watch } from "vue";
 import { ElMessage } from "element-plus";
 import { screen_CockpitOnlinePointStatistics } from "@/api/dataScreen";
 const props = defineProps({
@@ -105,9 +108,9 @@ const props = defineProps({
   }
 });
 let { screenDatas } = toRefs(props);
-// 获取数据
+// 获取状态统计数据
 let statistics = ref();
-const getDatas = async () => {
+const getDatas1 = async () => {
   let res: any = await screen_CockpitOnlinePointStatistics({});
   if (res.code == "200") {
     statistics.value = res.data;
@@ -115,13 +118,6 @@ const getDatas = async () => {
     ElMessage.error(res?.message);
   }
 };
-onMounted(() => {
-  if (screenDatas?.value!.All) {
-    conf.data[0].value = screenDatas?.value!.All.lubNum;
-    conf.data[1].value = screenDatas?.value!.All.oilNum;
-    conf.data[2].value = screenDatas?.value!.All.vibNum;
-  }
-});
 let conf = reactive({
   lineWidth: 18,
   digitalFlopStyle: {
@@ -145,8 +141,19 @@ let conf = reactive({
     }
   ]
 });
+watch(
+  () => screenDatas?.value?.All,
+  newVal => {
+    if (newVal) {
+      conf.data[0].value = newVal.lubNum;
+      conf.data[1].value = newVal.oilNum;
+      conf.data[2].value = newVal.vibNum;
+    }
+  },
+  { immediate: true, deep: true }
+);
 // 调用
-getDatas();
+getDatas1();
 </script>
 
 <style lang="scss" scoped>

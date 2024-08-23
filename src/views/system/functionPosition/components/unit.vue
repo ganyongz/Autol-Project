@@ -62,11 +62,11 @@
           <el-input v-model="formInline.schaefflerDeviceId" placeholder="舍弗勒的设备字符" clearable />
         </el-form-item>
 
-        <el-form-item label="网关sn号" :required="snPlcRequired && !SFLRequired" v-if="snPlcRequired && !SFLRequired">
+        <el-form-item label="网关sn号" :required="snPlcRequired && TXRequired" v-if="snPlcRequired && TXRequired">
           <el-input v-model="formInline.gatewaySn" placeholder="网关sn号" clearable />
         </el-form-item>
 
-        <el-form-item label="plc地址" :required="snPlcRequired && !SFLRequired" v-if="snPlcRequired && !SFLRequired">
+        <el-form-item label="plc地址" :required="snPlcRequired && TXRequired" v-if="snPlcRequired && TXRequired">
           <el-input v-model="formInline.plcAddress" placeholder="plc地址" clearable />
         </el-form-item>
       </el-form>

@@ -54,7 +54,7 @@
                   </el-form-item>
                 </el-col>
 
-                <el-col :span="12">
+                <!-- <el-col :span="12">
                   <el-form-item label="使用范围" required>
                     <el-select v-model="formData.locationPurpose" placeholder="请选择范围">
                       <el-option label="范围1" :value="0" />
@@ -63,7 +63,7 @@
                       <el-option label="范围4" :value="3" />
                     </el-select>
                   </el-form-item>
-                </el-col>
+                </el-col> -->
               </el-row>
             </el-form>
           </div>
@@ -110,7 +110,7 @@ const handleNodeClick = (val: any) => {
   formData.value.sort = val?.displayOrder;
   formData.value.name = val?.name;
   formData.value.type = val.type;
-  formData.value.locationPurpose = val?.locationPurpose; //字段里没有
+  //formData.value.locationPurpose = val?.locationPurpose; //字段里没有
   setParentId.value = val.id;
 };
 
@@ -127,8 +127,8 @@ const formData = ref({
   parentId: "-1",
   sort: null, //层级 从1 开始
   name: "",
-  type: undefined, //类型
-  locationPurpose: "" //使用范围区分系统使用
+  type: undefined //类型
+  //locationPurpose: "" //使用范围区分系统使用
 });
 // 添加顶级部门
 const addRootDepart = () => {

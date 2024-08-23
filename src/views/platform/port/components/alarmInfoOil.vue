@@ -20,7 +20,8 @@ const config = ref({
   data: [],
   index: false,
   // columnWidth: [50],
-  align: ["center"]
+  align: ["center"],
+  headerBGC: "#205f76"
 });
 config.value.data = dataArray as any;
 const mouseoverHandler = (e: any) => {
