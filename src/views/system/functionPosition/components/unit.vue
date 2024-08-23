@@ -39,13 +39,13 @@
           </el-radio-group>
         </el-form-item>
 
-        <el-form-item label="通讯方式" prop="messageType" :required="TXRequired">
+        <el-form-item label="通讯方式" prop="messageType" :required="TXRequired" v-if="TXRequired">
           <el-select v-model="formInline.messageType" class="m-2" placeholder="请选择">
             <el-option v-for="item in messageTypeOptions" :key="item.value" :label="item.label" :value="item.value" />
           </el-select>
         </el-form-item>
 
-        <el-form-item label="润滑泵类型" prop="pumpStationType" :required="TXRequired">
+        <el-form-item label="润滑泵类型" prop="pumpStationType" :required="TXRequired" v-if="TXRequired">
           <el-select v-model="formInline.pumpStationType" class="m-2" placeholder="请选择">
             <el-option v-for="item in pumpStationTypeOptions" :key="item.value" :label="item.label" :value="item.value" />
           </el-select>
@@ -58,15 +58,15 @@
           </div>
         </el-form-item>
 
-        <el-form-item label="舍弗勒的设备字符" :required="SFLRequired">
+        <el-form-item label="舍弗勒的设备字符" :required="SFLRequired" v-if="SFLRequired">
           <el-input v-model="formInline.schaefflerDeviceId" placeholder="舍弗勒的设备字符" clearable />
         </el-form-item>
 
-        <el-form-item label="网关sn号" :required="snPlcRequired">
+        <el-form-item label="网关sn号" :required="snPlcRequired && !SFLRequired" v-if="snPlcRequired && !SFLRequired">
           <el-input v-model="formInline.gatewaySn" placeholder="网关sn号" clearable />
         </el-form-item>
 
-        <el-form-item label="plc地址" :required="snPlcRequired">
+        <el-form-item label="plc地址" :required="snPlcRequired && !SFLRequired" v-if="snPlcRequired && !SFLRequired">
           <el-input v-model="formInline.plcAddress" placeholder="plc地址" clearable />
         </el-form-item>
       </el-form>

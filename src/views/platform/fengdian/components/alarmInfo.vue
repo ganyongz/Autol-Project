@@ -6,7 +6,9 @@
 <script lang="ts" setup>
 import { ref, toRefs } from "vue";
 let props = defineProps({
-  transmitDatas: {}
+  transmitDatas: {
+    type: Array
+  }
 });
 let { transmitDatas } = toRefs(props);
 console.log(transmitDatas);

@@ -22,7 +22,7 @@
       <div class="portNavigation" style="background-color: green">
         <el-row :gutter="20">
           <el-col :span="10">
-            <img style="width: 100%; height: 100px" src="@/views/platform/port/images/fengji2.png" alt="图片" />
+            <!-- <img style="width: 100%; height: 100px" src="@/views/platform/port/images/fengji2.png" alt="图片" /> -->
           </el-col>
           <el-col :span="14">
             <p>监测总数</p>
@@ -34,7 +34,7 @@
       <div class="portNavigation" style="background-color: red">
         <el-row :gutter="20">
           <el-col :span="10">
-            <img style="width: 100%; height: 100px" src="@/views/platform/port/images/fengji2.png" alt="图片" />
+            <!-- <img style="width: 100%; height: 100px" src="@/views/platform/port/images/fengji2.png" alt="图片" /> -->
           </el-col>
           <el-col :span="14">
             <p>故障数量</p>
@@ -46,7 +46,7 @@
       <div class="portNavigation" style="background-color: yellow">
         <el-row :gutter="20">
           <el-col :span="10">
-            <img style="width: 100%; height: 100px" src="@/views/platform/port/images/fengji2.png" alt="图片" />
+            <!-- <img style="width: 100%; height: 100px" src="@/views/platform/port/images/fengji2.png" alt="图片" /> -->
           </el-col>
           <el-col :span="14">
             <p>预警数量</p>
@@ -58,7 +58,7 @@
       <div class="portNavigation" style="background-color: green">
         <el-row :gutter="20">
           <el-col :span="10">
-            <img style="width: 100%; height: 100px" src="@/views/platform/port/images/fengji2.png" alt="图片" />
+            <!-- <img style="width: 100%; height: 100px" src="@/views/platform/port/images/fengji2.png" alt="图片" /> -->
           </el-col>
           <el-col :span="14">
             <p>正常数量</p>
@@ -72,7 +72,7 @@
       <div class="item1" v-for="item in 50" :key="item" @click="ToTargetPage(item)">
         <el-row :gutter="20">
           <el-col :span="10">
-            <img style="width: 80%; height: 75px" src="@/views/platform/port/images/fengji2.png" alt="图片" />
+            <!-- <img style="width: 80%; height: 75px" src="@/views/platform/port/images/fengji2.png" alt="图片" /> -->
           </el-col>
           <el-col :span="14">
             <p># {{ item }}号机</p>
