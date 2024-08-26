@@ -12,7 +12,7 @@
       <template #tableHeader="scope">
         <el-button type="primary" :icon="CirclePlus" @click="openDialog('新增', {})">新增报警策略</el-button>
         <el-button v-auth="'batchAdd'" type="primary" :icon="Upload" plain @click="batchAdd">批量添加</el-button>
-        <el-button type="primary" :icon="Download" plain @click="downloadFile">导出数据</el-button>
+        <el-button v-if="false" type="primary" :icon="Download" plain @click="downloadFile">导出数据</el-button>
         <el-button v-if="false" type="primary" plain @click="toDetail">To 子集详情页面</el-button>
         <el-button type="danger" :icon="Delete" plain @click="batchDelete(scope.selectedListIds)"> 批量删除 </el-button>
       </template>

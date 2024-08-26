@@ -3,7 +3,7 @@
     ref="ruleFormRef"
     style="max-width: 600px"
     :model="ruleForm"
-    :rules="rules"
+    :rules="ruleForm.type == 1 ? rules1 : rules2"
     label-width="auto"
     class="demo-ruleForm"
     :size="formSize"
@@ -14,23 +14,23 @@
     </el-form-item>
     <el-form-item label="类型" prop="type">
       <el-select v-model="ruleForm.type" placeholder="请选择类型">
-        <el-option label="类型1" :value="1" />
-        <el-option label="类型2" :value="2" />
+        <el-option label="超上限" :value="1" />
+        <el-option label="超下限" :value="2" />
       </el-select>
     </el-form-item>
 
     <el-form-item label="低报" prop="lowValue">
-      <el-input v-model="ruleForm.lowValue" />
+      <el-input v-model.number="ruleForm.lowValue" />
     </el-form-item>
     <el-form-item label="低低报" prop="lowerValue">
-      <el-input v-model="ruleForm.lowerValue" />
+      <el-input v-model.number="ruleForm.lowerValue" />
     </el-form-item>
 
     <el-form-item label="高报" prop="highValue">
-      <el-input v-model="ruleForm.highValue" />
+      <el-input v-model.number="ruleForm.highValue" />
     </el-form-item>
     <el-form-item label="高高报" prop="higherValue">
-      <el-input v-model="ruleForm.higherValue" />
+      <el-input v-model.number="ruleForm.higherValue" />
     </el-form-item>
 
     <div style="text-align: center">
@@ -77,14 +77,25 @@ let ruleForm = reactive<RuleForm>({
   higherValue: ""
 });
 
-const rules = reactive<FormRules<RuleForm>>({
-  name: [{ required: true, message: "请输入名称", trigger: "blur" }],
-  type: [{ required: true, message: "请选择类型", trigger: "blur" }]
+const rules1 = reactive<FormRules<RuleForm>>({
+  name: [{ required: true, message: "请输入名称", trigger: "change" }],
+  type: [{ required: true, message: "请选择类型", trigger: "change" }],
+  highValue: [{ required: true, message: "请输入高报值", trigger: "blur" }],
+  higherValue: [{ required: true, message: "请输入高高报值", trigger: "blur" }],
+  lowerValue: [{ required: false }],
+  lowValue: [{ required: false }]
+});
+const rules2 = reactive<FormRules<RuleForm>>({
+  name: [{ required: true, message: "请输入名称", trigger: "change" }],
+  type: [{ required: true, message: "请选择类型", trigger: "change" }],
+  lowerValue: [{ required: true, message: "请输入低低报值", trigger: "blur" }],
+  lowValue: [{ required: true, message: "请输入低报值", trigger: "blur" }],
+  highValue: [{ required: false }],
+  higherValue: [{ required: false }]
 });
 // 方法区
 onBeforeMount(() => {
   if (rowData?.value && title.value == "编辑") {
-    console.log(rowData?.value, "数据呢----");
     ruleForm = rowData.value as any;
   } else {
   }
@@ -92,6 +103,15 @@ onBeforeMount(() => {
 const emit = defineEmits(["closeDialog", "submitForm"]);
 const submitForm = async (formEl: FormInstance | undefined) => {
   if (!formEl) return;
+  if (parseFloat(ruleForm.lowValue) <= parseFloat(ruleForm.lowerValue)) {
+    ElMessage.warning("低低报的值要小于低报");
+    return;
+  }
+
+  if (parseFloat(ruleForm.higherValue) <= parseFloat(ruleForm.highValue)) {
+    ElMessage.warning("高高报要大于高报");
+    return;
+  }
   await formEl.validate(async (valid, fields) => {
     if (valid) {
       const res: any = await Threshold_addOrUpdate(ruleForm);

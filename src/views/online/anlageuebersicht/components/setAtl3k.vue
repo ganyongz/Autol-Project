@@ -31,19 +31,25 @@
 
         <div class="mb-16 fs-14">
           <span class="labelClass">休止时间：</span>
-          <el-input v-model="parameterOfApparatus.restHour" class="parameter-box mr-8" type="text" />时
-          <el-input v-model="parameterOfApparatus.restMin" class="parameter-box mx-8" type="text" />分
+          <el-input v-model.number="parameterOfApparatus.restHour" class="parameter-box mr-8" type="text" />时
+          <el-input v-model.number="parameterOfApparatus.restMin" class="parameter-box mx-8" type="text" />分
         </div>
 
         <div class="mb-16 fs-14">
           <span class="labelClass">润滑时间：</span>
-          <el-input v-model="parameterOfApparatus.lubTime" class="parameter-box mx-8" type="text" />秒
+          <el-input v-model.number="parameterOfApparatus.lubTime" class="parameter-box mx-8" type="text" />秒
         </div>
 
         <div class="mb-16 fs-14">
           <span class="labelClass">润滑油量：</span>
-          <el-input v-model="parameterOfApparatus.lubOil" class="parameter-box mr-12" type="text" />ml
+          <el-input v-model.number="parameterOfApparatus.lubOil" class="parameter-box mr-12" type="text" />ml
         </div>
+
+        <div class="mb-16 fs-14">
+          <span class="labelClass">补油时间：</span>
+          <el-input v-model.number="parameterOfApparatus.refuelingTime" class="parameter-box mx-8" type="text" />秒
+        </div>
+
         <div style="text-align: right">
           <el-button color="#095C98" type="primary" class="mr-12" @click="getDeviceParam()"> 读取 </el-button>
           <el-button color="#095C98" type="primary" @click="settingUpFun()"> 设置 </el-button>
@@ -75,7 +81,8 @@ let parameterOfApparatus: any = ref({
   restHour: "", // 休止时
   restMin: "", // 休止分
   lubTime: "", // 润滑时长
-  lubOil: "" // 润滑油量
+  lubOil: "", // 润滑油量
+  refuelingTime: "" //补油时间
 });
 // 读取(下发指令)
 const getDeviceParam = () => {

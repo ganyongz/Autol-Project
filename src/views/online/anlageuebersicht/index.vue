@@ -25,7 +25,12 @@
       <el-main style="display: flex" v-cloak>
         <div style="align-items: center; width: 100%; height: calc(100% - 20px); overflow-y: auto" v-cloak>
           <el-space style="flex-wrap: nowrap; justify-content: flex-start">
-            <el-card v-for="outItem in cards" :key="outItem" class="box-card" :style="{ height: bodyHeight - 350 + 'px' }">
+            <el-card
+              v-for="outItem in cards"
+              :key="outItem"
+              class="box-card"
+              :style="{ height: bodyHeight - 350 + 'px', overflowY: 'auto' }"
+            >
               <template #header>
                 <div class="card-header" style="display: flex; justify-content: space-between">
                   <!-- 设备名称(顶部标题) -->

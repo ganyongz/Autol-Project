@@ -35,7 +35,7 @@
         />
       </el-form-item>
 
-      <el-form-item label="设备分类">
+      <el-form-item label="设备分类" prop="classify">
         <el-select v-model="ruleForm.classify" class="m-2" placeholder="请选择">
           <el-option v-for="item in classifyOptions" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
@@ -118,7 +118,8 @@ let ruleForm = reactive<RuleForm>({
 });
 
 const rules = reactive<FormRules<RuleForm>>({
-  name: [{ required: true, message: "请输入名称", trigger: "blur" }]
+  name: [{ required: true, message: "请输入名称", trigger: "blur" }],
+  classify: [{ required: true, message: "请输选择设备分类", trigger: "change" }]
 });
 // 方法区
 

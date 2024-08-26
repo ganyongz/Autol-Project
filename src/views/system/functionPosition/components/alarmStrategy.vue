@@ -145,6 +145,40 @@ const editRow = (val: any) => {
   });
 };
 const saveRow = async (val: any) => {
+  if (!val.thresholdType) {
+    ElMessage.warning("阈值报警类型不能为空");
+    return;
+  }
+  if (val.thresholdType == 1) {
+    //超上限校验
+    if (!val.highValue) {
+      ElMessage.warning("高报不能为空");
+      return;
+    }
+    if (!val.higherValue) {
+      ElMessage.warning("高高报不能为空");
+      return;
+    }
+    if (parseFloat(val.higherValue) <= parseFloat(val.highValue)) {
+      ElMessage.warning("高高报要大于高报");
+      return;
+    }
+  }
+  if (val.thresholdType == 2) {
+    //超下限校验
+    if (!val.lowValue) {
+      ElMessage.warning("低报不能为空");
+      return;
+    }
+    if (!val.lowerValue) {
+      ElMessage.warning("低低报不能为空");
+      return;
+    }
+    if (parseFloat(val.lowValue) <= parseFloat(val.lowerValue)) {
+      ElMessage.warning("低低报的值要小于低报");
+      return;
+    }
+  }
   let apiUrl = val.id ? equipPoint_updateThresholdTactics : equipPoint_bindThresholdTacticsByCustomize;
   let params = val;
   if (!val?.pointId) {
