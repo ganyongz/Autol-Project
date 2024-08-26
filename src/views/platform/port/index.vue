@@ -27,18 +27,7 @@
           <div class="portNavigation" style="border: 1px solid green; border-radius: 10px" @click="inquireEquipByStatus(0)">
             <el-row :gutter="20">
               <el-col :span="10">
-                <img
-                  v-if="route.query.type == '1'"
-                  style="width: 100%; height: 100px"
-                  src="@/views/platform/port/images/fengjiGreen.png"
-                  alt="图片"
-                />
-                <img
-                  v-if="route.query.type == '2'"
-                  style="width: 100%; height: 100px"
-                  src="@/views/platform/port/images/gangkouGreen.png"
-                  alt="图片"
-                />
+                <img style="width: 100%; height: 100px" src="@/views/platform/port/images/gangkouGreen.png" alt="图片" />
               </el-col>
               <el-col :span="14">
                 <p>监测总数</p>
@@ -50,18 +39,7 @@
           <div class="portNavigation" style="border: 1px solid red; border-radius: 10px" @click="inquireEquipByStatus(3)">
             <el-row :gutter="20">
               <el-col :span="10">
-                <img
-                  v-if="route.query.type == '1'"
-                  style="width: 100%; height: 100px"
-                  src="@/views/platform/port/images/fengjiRed.png"
-                  alt="图片"
-                />
-                <img
-                  v-if="route.query.type == '2'"
-                  style="width: 100%; height: 100px"
-                  src="@/views/platform/port/images/gangkouRed.png"
-                  alt="图片"
-                />
+                <img style="width: 100%; height: 100px" src="@/views/platform/port/images/gangkouRed.png" alt="图片" />
               </el-col>
               <el-col :span="14">
                 <p>报警数量</p>
@@ -73,18 +51,7 @@
           <div class="portNavigation" style="border: 1px solid yellow; border-radius: 10px" @click="inquireEquipByStatus(2)">
             <el-row :gutter="20">
               <el-col :span="10">
-                <img
-                  v-if="route.query.type === '1'"
-                  style="width: 100%; height: 100px"
-                  src="@/views/platform/port/images/fengjiYellow.png"
-                  alt="图片"
-                />
-                <img
-                  v-if="route.query.type === '2'"
-                  style="width: 100%; height: 100px"
-                  src="@/views/platform/port/images/gangkouYellow.png"
-                  alt="图片"
-                />
+                <img style="width: 100%; height: 100px" src="@/views/platform/port/images/gangkouYellow.png" alt="图片" />
               </el-col>
               <el-col :span="14">
                 <p>预警数量</p>
@@ -96,18 +63,7 @@
           <div class="portNavigation" style="border: 1px solid yellowgreen; border-radius: 10px" @click="inquireEquipByStatus(1)">
             <el-row :gutter="20">
               <el-col :span="10">
-                <img
-                  v-if="route.query.type === '1'"
-                  style="width: 100%; height: 100px"
-                  src="@/views/platform/port/images/fengjiGreen.png"
-                  alt="图片"
-                />
-                <img
-                  v-if="route.query.type === '2'"
-                  style="width: 100%; height: 100px"
-                  src="@/views/platform/port/images/gangkouGreen.png"
-                  alt="图片"
-                />
+                <img style="width: 100%; height: 100px" src="@/views/platform/port/images/gangkouGreen.png" alt="图片" />
               </el-col>
               <el-col :span="14">
                 <p>正常数量</p>
@@ -121,18 +77,7 @@
           <div class="item1" v-for="item in equipDatas" :key="item" @click="ToTargetPage(item)">
             <el-row :gutter="20">
               <el-col :span="10">
-                <img
-                  v-if="route.query.type === '1'"
-                  style="width: 100%; height: 100px"
-                  src="@/views/platform/port/images/fengjiGreen.png"
-                  alt="图片"
-                />
-                <img
-                  v-if="route.query.type === '2'"
-                  style="width: 75%"
-                  src="@/views/platform/port/images/gangkouGreen.png"
-                  alt="图片"
-                />
+                <img style="width: 75%" src="@/views/platform/port/images/gangkouGreen.png" alt="图片" />
               </el-col>
               <el-col :span="14">
                 <p>{{ item.name }}</p>
@@ -310,30 +255,30 @@ let nub_alarmOil = ref();
 let alarmVib = ref();
 let nub_alarmVib = ref();
 const getIndustryCockpitAlarmPart = async (type: any) => {
-  if (route.query.type) {
-    let res: any = await industry_industryCockpitAlarmPart({
-      industryType: route.query.type, //1 风电设备 2港口设备 3食品设备 4工程机械 5矿山 6水泥
-      type: type, //查询类型 1润滑 2油液 3振动
-      tenantId: selectValue.value //租户id
-    });
-    if (res.code == "200") {
-      if (type == 1) {
-        alarmLub.value = res.data.data;
-        nub_alarmLub.value = res.data.num;
-      }
-      if (type == 2) {
-        alarmOil.value = res.data.data;
-        nub_alarmOil.value = res.data.num;
-      }
-      if (type == 3) {
-        alarmVib.value = res.data.data;
-        nub_alarmVib.value = res.data.num;
-      }
-      tplKey.value += 1;
-    } else {
-      ElMessage.error(res?.message);
+  // if (route.query.type) {
+  let res: any = await industry_industryCockpitAlarmPart({
+    industryType: 2, //1 风电设备 2港口设备 3食品设备 4工程机械 5矿山 6水泥
+    type: type, //查询类型 1润滑 2油液 3振动
+    tenantId: selectValue.value //租户id
+  });
+  if (res.code == "200") {
+    if (type == 1) {
+      alarmLub.value = res.data.data;
+      nub_alarmLub.value = res.data.num;
     }
+    if (type == 2) {
+      alarmOil.value = res.data.data;
+      nub_alarmOil.value = res.data.num;
+    }
+    if (type == 3) {
+      alarmVib.value = res.data.data;
+      nub_alarmVib.value = res.data.num;
+    }
+    tplKey.value += 1;
+  } else {
+    ElMessage.error(res?.message);
   }
+  // }
 };
 
 // 获取设备列表
@@ -343,22 +288,22 @@ let waringNum = ref(0);
 let dangerNum = ref(0);
 let equipDatas = ref();
 const getEquipList = async () => {
-  if (route.query.type) {
-    let res: any = await industry_industryCockpitEquipList({
-      industryType: route.query.type, //1 风电设备 2港口设备 3食品设备 4工程机械 5矿山 6水泥
-      status: status.value, //状态 0全部 1正常 2预警 3报警
-      tenantId: selectValue.value //租户id
-    });
-    if (res.code == "200") {
-      equipDatas.value = res.data.data;
-      allNum.value = res.data.allNum;
-      normalNum.value = res.data.normalNum;
-      waringNum.value = res.data.waringNum;
-      dangerNum.value = res.data.dangerNum;
-    } else {
-      ElMessage.error(res?.message);
-    }
+  // if (route.query.type) {
+  let res: any = await industry_industryCockpitEquipList({
+    industryType: route.query?.type ? route.query?.type : 2, //1 风电设备 2港口设备 3食品设备 4工程机械 5矿山 6水泥
+    status: status.value, //状态 0全部 1正常 2预警 3报警
+    tenantId: selectValue.value //租户id
+  });
+  if (res.code == "200") {
+    equipDatas.value = res.data.data;
+    allNum.value = res.data.allNum;
+    normalNum.value = res.data.normalNum;
+    waringNum.value = res.data.waringNum;
+    dangerNum.value = res.data.dangerNum;
+  } else {
+    ElMessage.error(res?.message);
   }
+  // }
 };
 
 // 调用

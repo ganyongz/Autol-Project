@@ -29,3 +29,7 @@ export const MqttServer_addOrUpdateTopic = (params: any) => {
 export const MqttServer_deleteTopicIds = (params: any) => {
   return http.post(`Lub/MqttServer/deleteTopicIds`, params);
 };
+// 重置mqtt连接
+export const MqttServer_resetConnect = (params: any) => {
+  return http.get(`DataParsing/MQTT/resetConnect`, params);
+};

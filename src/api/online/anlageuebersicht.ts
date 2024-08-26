@@ -46,3 +46,7 @@ export const lub_HisAlarmEventByPage = (params: any) => {
 export const lub_lubAlarmEventPage = (params: any) => {
   return http.get(`Lub/LubAlarm/lubAlarmEventPage`, {}, { params });
 };
+// 近30日润滑报警趋势
+export const lub_lubAlarmTrend = (params: any) => {
+  return http.get(`Lub/LubAlarm/lubAlarmTrend`, {}, { params });
+};

@@ -169,7 +169,7 @@ const getSensorList = async (rowData: any) => {
   if (res.code == "200") {
     cgq_tableData.value = res.data;
     // 获取数据后，遍历选中(选中回显)
-    multipleSelection.value[0] = pointDetail.value["bindServerPointId"] as never;
+    multipleSelection.value[0] = pointDetail?.value && (pointDetail?.value["bindServerPointId"] as never);
     nextTick(() => {
       cgq_tableData.value.forEach(item => {
         let result = multipleSelection.value.find(val => val == item["id"]);

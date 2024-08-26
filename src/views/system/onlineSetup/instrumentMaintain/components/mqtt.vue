@@ -4,6 +4,7 @@
     <el-divider />
     <div>
       <el-button type="primary" @click="addCollectorFun('新增MQTT', {})">新增MQTT</el-button>
+      <el-button type="primary" @click="refreshMqtt">刷新连接</el-button>
     </div>
     <el-table
       :data="tableData"
@@ -101,7 +102,8 @@ import {
   MqttServer_deleteById,
   MqttServer_TopicList,
   MqttServer_addOrUpdateTopic,
-  MqttServer_deleteTopicIds
+  MqttServer_deleteTopicIds,
+  MqttServer_resetConnect
 } from "@/api/system/mqtt";
 
 const props = defineProps({
@@ -114,6 +116,15 @@ const { pointDetail } = toRefs(props);
 let tableData = ref([]);
 let topic_tableData = ref([]);
 // 方法区
+// 刷新连接
+const refreshMqtt = async () => {
+  let res: any = await MqttServer_resetConnect({});
+  if (res.code == "200") {
+    ElMessage.success(res?.message);
+  } else {
+    ElMessage.error(res?.message);
+  }
+};
 //获取MQTT列表
 const getCollectorList = async () => {
   const res: any = await MqttServer_List({});
@@ -176,7 +187,7 @@ const getSensorList = async (rowData: any) => {
   if (res.code == "200") {
     topic_tableData.value = res.data;
     // 获取数据后，遍历选中(选中回显)
-    multipleSelection.value[0] = pointDetail.value["bindServerPointId"] as never;
+    multipleSelection.value[0] = pointDetail?.value && (pointDetail?.value["bindServerPointId"] as never);
     nextTick(() => {
       topic_tableData.value.forEach(item => {
         let result = multipleSelection.value.find(val => val == item["id"]);

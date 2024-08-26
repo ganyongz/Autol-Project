@@ -437,9 +437,9 @@ const getTimeValueFun = async () => {
   const res: any = await config_getValue({ key: "Data_Refresh_time" });
   if (res.code == "200") {
     timeValue.value = res.data.value * 1000;
-    console.log(timeValue.value);
   } else {
-    ElMessage.error(res?.message);
+    // 不用提示
+    // ElMessage.error(res?.message);
   }
 };
 onActivated(async () => {

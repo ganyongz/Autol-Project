@@ -10,30 +10,24 @@
           :data="treeData"
           :props="defaultProps"
           :filter-node-method="filterNode"
+          @node-click="nodeClick"
         />
       </el-aside>
       <el-main style="height: 1000px; background-color: var(--el-bg-color)">
         <div style="margin-bottom: 10px">
-          开始时间: <el-date-picker v-model="startTime" type="date" placeholder="请选择" /> 结束时间:
-          <el-date-picker v-model="endTime" type="date" placeholder="请选择" />
-          <el-button type="primary" round style="margin-left: 10px">查询</el-button>
+          开始时间:<el-date-picker v-model="startTime" type="date" placeholder="请选择" value-format="YYYY-MM-DD HH:mm:ss" />
+          结束时间:<el-date-picker v-model="endTime" type="date" placeholder="请选择" value-format="YYYY-MM-DD 23:59:59" />
+          <el-button type="primary" round style="margin-left: 10px" @click="searchByTime">查询</el-button>
         </div>
         <!-- 报警及危险总数 -->
-        <div class="outDiv">
-          <alarmPie />
-          <!-- <div class="first">
-            <alarmPie />
-          </div>
-          <div class="second">
-            <dangerPie />
-          </div> -->
-        </div>
+        <div id="main2" ref="chartContainer" style="width: 100vw; height: 300px"></div>
+        <!-- <div class="outDiv"></div> -->
         <!-- 报警列表 -->
         <div>
           <el-tabs v-model="activeName" class="demo-tabs" @tab-click="handleClick">
             <el-tab-pane v-for="item in tabs" :label="item.label" :name="item.name" :key="item.label"></el-tab-pane>
           </el-tabs>
-          <tableList />
+          <tableList :key="rushKey" :node-type="nodeType" :node-id="nodeId" :start-time="startTime" :end-time="endTime" />
         </div>
       </el-main>
     </el-container>
@@ -42,11 +36,13 @@
 
 <script lang="ts" setup name="alarmStatistics">
 // 历史报警统计
-import alarmPie from "@/views/online/dataStatistics/alarmStatistics/components/alarmPie.vue";
+import * as echarts from "echarts";
+// import alarmPie from "@/views/online/dataStatistics/alarmStatistics/components/alarmPie.vue";
 // import dangerPie from "@/views/online/dataStatistics/alarmStatistics/components/dangerPie.vue";
 import tableList from "@/views/online/dataStatistics/alarmStatistics/components/tableList.vue";
 import { getLocationTree } from "@/api/system/functionPosition";
-import { ref, watch } from "vue";
+import { alarm_Trend } from "@/api/online/alarmStatistics";
+import { ref, watch, onMounted } from "vue";
 import { ElTree, ElMessage } from "element-plus";
 
 interface Tree {
@@ -81,8 +77,8 @@ const getTreeList = async () => {
   }
 };
 // main 时间查询
-const startTime = ref("");
-const endTime = ref("");
+let startTime = ref("");
+let endTime = ref("");
 // 报警列表
 const activeName = ref("1");
 const tabs = [
@@ -97,6 +93,91 @@ const tabs = [
 const handleClick = () => {
   console.log("12345");
 };
+// 树节点点击事件
+let rushKey = ref(1);
+let nodeType = ref();
+let nodeId = ref();
+const nodeClick = (nodeData: any) => {
+  nodeType.value = nodeData?.type;
+  nodeId.value = nodeData?.id;
+  rushKey.value += 1;
+};
+// 时间查询
+const searchByTime = () => {
+  if (startTime.value && endTime.value) {
+    rushKey.value += 1;
+  }
+};
+// 11111111111111111
+// let trendKey = ref(1);
+let dangerNums: any = ref([]);
+let times: any = ref([]);
+let waringNums: any = ref([]);
+onMounted(async () => {
+  await getTrend();
+  let chartContainer = echarts.init(document.getElementById("main2"));
+  option && chartContainer.setOption(option);
+});
+// 准备日期数据
+// let dates = ["2024-01-01", "2024-01-02", "2024-01-03", "2024-01-04"];
+
+// 准备报警次数数据
+// let warningCounts = [5, 10, 15, 20];
+
+// 准备修复次数数据
+// let repairCounts = [8, 7, 6, 5];
+
+// 指定图表的配置项和数据
+let option = {
+  tooltip: {
+    trigger: "axis",
+    axisPointer: {
+      type: "shadow"
+    }
+  },
+  legend: {
+    data: ["报警", "预警"]
+  },
+  xAxis: {
+    type: "category",
+    data: []
+  },
+  yAxis: {
+    type: "value"
+  },
+  series: [
+    {
+      name: "报警",
+      type: "line",
+      data: []
+    },
+    {
+      name: "预警",
+      type: "line",
+      data: []
+    }
+  ]
+};
+// 获取报警趋势记录
+const getTrend = async () => {
+  let res: any = await alarm_Trend({});
+  if (res.code == "200" && res.data.length > 0) {
+    let arrs: any = res.data;
+    // 遍历 objects 数组
+    arrs.forEach(obj => {
+      dangerNums.value.push(obj?.dangerNum);
+      times.value.push(obj?.time);
+      waringNums.value.push(obj?.waringNum);
+    });
+    // trendKey.value += 1;
+    option.xAxis.data = times.value;
+    option.series[0].data = dangerNums.value;
+    option.series[1].data = waringNums.value;
+  } else {
+    ElMessage.error(res?.message);
+  }
+};
+// 22222222222222222
 // 调用
 getTreeList();
 </script>

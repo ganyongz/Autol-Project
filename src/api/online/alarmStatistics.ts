@@ -6,3 +6,7 @@ import http from "@/api";
 export const alarm_List = (params: any) => {
   return http.post(`Lub/HisAlarmEvent/page`, params);
 };
+// 历史报警趋势
+export const alarm_Trend = (params: any) => {
+  return http.post(`Lub/HisAlarmEvent/Trend`, params);
+};

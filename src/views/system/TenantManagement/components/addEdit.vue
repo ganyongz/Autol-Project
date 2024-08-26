@@ -89,7 +89,7 @@ const rules = reactive<FormRules<RuleForm>>({
   expirationTime: [{ required: true, message: "请设定租户授权过期时间", trigger: "change" }],
   platformName: [
     { required: true, message: "请输入平台名称", trigger: "blur" },
-    { min: 3, max: 5, message: "长度1 ~ 15", trigger: "blur" }
+    { min: 1, max: 20, message: "长度1 ~ 20", trigger: "blur" }
   ]
 });
 // 方法区

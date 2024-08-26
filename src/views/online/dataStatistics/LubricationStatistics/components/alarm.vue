@@ -45,7 +45,7 @@
 import * as echarts from "echarts";
 import { onMounted, ref, toRefs } from "vue";
 import { ElMessage } from "element-plus";
-import { lub_lubAlarmEventPage } from "@/api/online/anlageuebersicht";
+import { lub_lubAlarmEventPage, lub_lubAlarmTrend } from "@/api/online/anlageuebersicht";
 import dayjs from "dayjs";
 const props = defineProps({
   partId: {
@@ -53,7 +53,7 @@ const props = defineProps({
   }
 });
 const { partId } = toRefs(props);
-console.log(partId);
+console.log(partId?.value);
 // 获取报警记录
 const getHisAlarm = async () => {
   let params = {
@@ -88,19 +88,20 @@ const dateRange = ref([startOfWeek, endOfWeek]);
 const searchFun = () => {
   getHisAlarm();
 };
-onMounted(() => {
+onMounted(async () => {
+  await getTrend();
   let chartContainer = echarts.init(document.getElementById("main2"));
   option && chartContainer.setOption(option);
 });
 
 // 准备日期数据
-let dates = ["2024-01-01", "2024-01-02", "2024-01-03", "2024-01-04"];
+let times: any = ref([]);
 
 // 准备报警次数数据
-let warningCounts = [5, 10, 15, 20];
+let dangerNums: any = ref([]);
 
 // 准备修复次数数据
-let repairCounts = [8, 7, 6, 5];
+// let repairCounts = [8, 7, 6, 5];
 
 // 指定图表的配置项和数据
 let option = {
@@ -111,27 +112,45 @@ let option = {
     }
   },
   legend: {
-    data: ["报警次数", "修复次数"]
+    data: ["报警"]
   },
   xAxis: {
     type: "category",
-    data: dates
+    data: times
   },
   yAxis: {
     type: "value"
   },
   series: [
     {
-      name: "报警次数",
+      name: "报警",
       type: "line",
-      data: warningCounts
-    },
-    {
-      name: "修复次数",
-      type: "line",
-      data: repairCounts
+      data: dangerNums
     }
+    // {
+    //   name: "修复次数",
+    //   type: "line",
+    //   data: repairCounts
+    // }
   ]
+};
+// 获取30天报警趋势记录
+const getTrend = async () => {
+  let res: any = await lub_lubAlarmTrend({});
+  if (res.code == "200") {
+    if (res.data.length > 0) {
+      let arrs: any = res.data;
+      // 遍历 objects 数组
+      arrs.forEach(obj => {
+        dangerNums.value.push(obj?.num);
+        times.value.push(obj?.DateTime);
+      });
+      option.xAxis.data = times.value;
+      option.series[0].data = dangerNums.value;
+    }
+  } else {
+    ElMessage.error(res?.message);
+  }
 };
 // table 列表
 let tableData = ref([]);
