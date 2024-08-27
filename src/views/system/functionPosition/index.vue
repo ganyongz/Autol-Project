@@ -2,9 +2,9 @@
   <div>
     <!-- 功能位置 -->
     <el-container class="layout-container-demo">
-      <el-aside width="240px" style="margin-right: 10px; border-radius: 10px">
+      <el-aside style="margin-right: 10px; border-radius: 10px">
         <el-tree
-          style="max-width: 240px"
+          style="width: 240px; max-width: 240px"
           :data="treeData"
           :props="defaultProps"
           node-key="id"

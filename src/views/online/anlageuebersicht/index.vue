@@ -202,7 +202,7 @@
 
 <script lang="ts" setup name="anlageuebersicht">
 // 设备总览
-import { ref, onMounted, onDeactivated, onActivated, reactive } from "vue";
+import { ref, onMounted, onDeactivated, onUnmounted, onActivated, reactive } from "vue";
 import { ElMessage, type FormRules, type FormInstance } from "element-plus";
 import { useHandleData2 } from "@/hooks/useHandleData";
 import { getLocationTree } from "@/api/system/functionPosition";
@@ -457,6 +457,9 @@ onActivated(async () => {
 });
 onDeactivated(() => {
   // 当组件卸载前清除定时器
+  clearInterval(intervalId.value);
+});
+onUnmounted(() => {
   clearInterval(intervalId.value);
 });
 getCardContent();

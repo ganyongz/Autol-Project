@@ -86,7 +86,7 @@ const login = (formEl: FormInstance | undefined) => {
           title: getTimeState(),
           message: "欢迎登录 Autol 管理系统",
           type: "success",
-          duration: 3000
+          duration: 2000
         });
       }, 100);
     } finally {

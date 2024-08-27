@@ -2,9 +2,9 @@
   <div>
     <!-- 仪器维护 -->
     <el-container>
-      <el-aside width="300px">
+      <el-aside>
         <el-tree
-          style="max-width: 300px; height: 100%"
+          style="width: 200px; max-width: 300px; height: 100%"
           :data="data"
           node-key="label"
           :default-checked-keys="['采集器']"

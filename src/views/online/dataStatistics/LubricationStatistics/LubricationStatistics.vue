@@ -2,10 +2,10 @@
   <div class="table-box bg-color">
     <!-- 润滑、报警记录 -->
     <el-container>
-      <el-aside width="200px">
+      <el-aside>
         <el-tree
           ref="treeRef"
-          style="max-width: 600px"
+          style="width: 200px; max-width: 600px"
           :data="treeData"
           :props="defaultProps"
           node-key="id"
