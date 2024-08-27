@@ -37,7 +37,8 @@
       <!-- 表格操作 -->
       <template #operation="scope">
         <el-button type="primary" link :icon="EditPen" @click="openDrawer('编辑', scope.row)">编辑</el-button>
-        <el-button type="primary" link :icon="Delete" @click="deleteAccount(scope.row)">删除</el-button>
+        <el-button type="danger" link :icon="Delete" @click="deleteAccount(scope.row)">删除</el-button>
+        <el-button type="primary" link :icon="Plus" @click="relevanceEquipment(scope.row)">关联设备</el-button>
       </template>
     </ProTable>
     <UserDrawer ref="drawerRef" />
@@ -54,10 +55,18 @@
         />
       </template>
     </myDialog>
-    <!-- <div style="text-align: center">
-      <el-button type="primary" @click="submitForm2"> 保存 </el-button>
-      <el-button @click="resetForm">关闭</el-button>
-    </div> -->
+    <!-- 关联设备 -->
+    <myDialog title="关联设备" ref="myDialog2" draggable width="900px" :before-close="beforeClose2">
+      <template #content>
+        <addEquipment :key="equipmentKey" ref="addEquipmentRef" :tenant-id="userId"></addEquipment>
+      </template>
+      <template #footer>
+        <div style="text-align: center">
+          <el-button type="primary" size="default" @click="submitEquipment">保存</el-button>
+          <el-button size="default" @click="beforeClose2">取消</el-button>
+        </div>
+      </template>
+    </myDialog>
   </div>
 </template>
 
@@ -72,19 +81,12 @@ import ProTable from "@/components/ProTable/index.vue";
 import ImportExcel from "@/components/ImportExcel/index.vue";
 import UserDrawer from "@/views/proTable/components/UserDrawer.vue";
 import { ProTableInstance } from "@/components/ProTable/interface";
-import { CirclePlus, Delete, EditPen, Download, Upload } from "@element-plus/icons-vue";
+import { CirclePlus, Delete, EditPen, Download, Upload, Plus } from "@element-plus/icons-vue";
 import { exportUserInfo, BatchAddUser } from "@/api/modules/user";
-import { Tenant_List, Tenant_delete } from "@/api/system/TenantManagement";
+import { Tenant_List, Tenant_delete, Tenant_saveTenantLocation } from "@/api/system/TenantManagement";
 import addEdit from "@/views/system/TenantManagement/components/addEdit.vue";
+import addEquipment from "@/views/system/TenantManagement/components/addEquipment.vue";
 const router = useRouter();
-// const emit = defineEmits(["closeDialog", "submitForm"]);
-// const resetForm = () => {
-//   emit("closeDialog");
-// };
-// const submitForm2 = () => {
-//   emit("submitForm", proTable.value?.selectedListIds);
-// };
-
 // 跳转详情页
 const toDetail = () => {
   router.push(`/proTable/useProTable/detail/${Math.random().toFixed(3)}?params=detail-page`);
@@ -94,10 +96,8 @@ onMounted(() => {
 });
 // ProTable 实例
 const proTable = ref<ProTableInstance>();
-
 // 如果表格需要初始化请求参数，直接定义传给 ProTable (之后每次请求都会自动带上该参数，此参数更改之后也会一直带上，改变此参数会自动刷新表格数据)
 const initParam = reactive({ type: 1 });
-
 // dataCallback 是对于返回的表格数据做处理，如果你后台返回的数据不是 list && total && pageNum && pageSize 这些字段，可以在这里进行处理成这些字段
 // 或者直接去 hooks/useTable.ts 文件中把字段改为你后端对应的就行
 const dataCallback = (data: any) => {
@@ -108,7 +108,6 @@ const dataCallback = (data: any) => {
     pageSize: data.size
   };
 };
-
 // 如果你想在请求之前对当前请求参数做一些操作，可以自定义如下函数：params 为当前所有的请求参数（包括分页），最后返回请求列表接口
 // 默认不做操作就直接在 ProTable 组件上绑定	:requestApi="getThresholdList"
 const getTableList = (params: any) => {
@@ -127,24 +126,9 @@ const getTableList = (params: any) => {
 //     </el-button>
 //   );
 // };
-// // 报警类型枚举
-// const getAlarmStatus = reactive([
-//   { value: 1, label: "超上限" },
-//   { value: 2, label: "超下限" }
-// ]);
+
 // 表格配置项
 const columns: any = reactive([
-  // { type: "selection", fixed: "left", width: 70 },
-  // { type: "sort", label: "Sort", width: 80 },
-  // { type: "expand", label: "Expand", width: 85 },
-  // { prop: "name", label: "名称" },
-  // {
-  //   prop: "type",
-  //   label: "报警类型",
-  //   tag: true,
-  //   enum: getAlarmStatus,
-  //   fieldNames: { label: "label", value: "value" }
-  // },
   { prop: "name", label: "租户名" },
   { prop: "platformName", label: "平台名称" },
   { prop: "expirationTime", label: "租户授权过期时间" },
@@ -229,5 +213,28 @@ const closeDialog = () => {
   // 取消
   myDialog1.value.close();
   IsShowAdd.value = false;
+};
+// 关联设备数据
+let equipmentKey = ref(1);
+let userId = ref("");
+const addEquipmentRef = ref();
+const myDialog2 = ref();
+const beforeClose2 = () => {
+  myDialog2.value.close();
+};
+const submitEquipment = async () => {
+  let res: any = await Tenant_saveTenantLocation(addEquipmentRef.value.checkedObjs);
+  if (res.code == "200") {
+    ElMessage.success("绑定成功");
+    myDialog2.value.close();
+  } else {
+    ElMessage.error(res?.message);
+  }
+};
+// open
+const relevanceEquipment = (val: any) => {
+  userId.value = val.id;
+  myDialog2.value.open();
+  equipmentKey.value++;
 };
 </script>

@@ -150,7 +150,7 @@ const settingUpFun = async () => {
   result = { ...parameters, ...variableData };
   const res: any = await pump_setPumpParams(result);
   if (res.code == "200") {
-    ElMessage.error(res?.message);
+    ElMessage.success(res?.message);
   } else {
     ElMessage.error(res?.message);
   }

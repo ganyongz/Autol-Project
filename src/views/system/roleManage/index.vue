@@ -164,7 +164,7 @@ const getRoleListFun = async () => {
   let res: any = await getRoleList();
   if (res.code == "200") {
     treeData.value = res.data as any;
-    console.log(treeData.value, "获取角色列表");
+    // console.log(treeData.value, "获取角色列表");
   } else {
     ElMessage.error(res?.message);
   }
@@ -229,7 +229,7 @@ const myDialog3 = ref();
 const beforeClose3 = () => {
   myDialog3.value.close();
 };
-let menuKey = ref(0);
+let menuKey = ref(1);
 const bindMeus = () => {
   if (!!roleId.value) {
     menuKey.value++;

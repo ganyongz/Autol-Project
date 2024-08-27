@@ -14,3 +14,11 @@ export const Tenant_addOrUpdate = (params: any) => {
 export const Tenant_delete = (params: any) => {
   return http.get(`Lub/Tenant/delete`, {}, { params });
 };
+// 保存租户关联设备数据
+export const Tenant_saveTenantLocation = (params: any) => {
+  return http.post(`Lub/Tenant/saveTenantLocation`, params);
+};
+// 租户获取关联设备数据
+export const Tenant_getLocationListByTenantId = (params: any) => {
+  return http.get(`Lub/Tenant/getLocationListByTenantId`, {}, { params });
+};
