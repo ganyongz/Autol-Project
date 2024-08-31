@@ -12,11 +12,11 @@
             node-key="id"
             :props="defaultProps"
             style="width: 240px"
-            clearable
-            @change="changeVal"
+            :default-expanded-keys="[selectVal ? selectVal : null]"
+            @node-click="changeVal"
           />
         </div>
-        <div>{{ route.query?.name }}</div>
+        <div>{{ equipTitle }}</div>
         <div style="display: flex">
           <p style="margin-right: 20px">综合分析：<span style="color: aqua">良好</span></p>
           <p>智能诊断：<span style="color: aqua">正常</span></p>
@@ -84,7 +84,6 @@
                         </template>
                         <!-- 非ATL3000 -->
                         <div v-if="outItem.PumpStationType != 3">
-                          handle
                           <el-button @click="kaibeng(outItem)">开泵</el-button>
                           <el-button @click="guanbeng(outItem)">关泵</el-button>
                           <el-button @click="dongjie(outItem)">冻结</el-button>
@@ -228,11 +227,16 @@ const defaultProps = {
 };
 let timeValue = ref(5000);
 let selectVal = ref(route.query?.id);
+let equipTitle = ref(route.query?.name);
 let selectDatas: any = ref([]);
-// 切换设备
 const changeVal = (val: any) => {
-  equip_id.value = val;
-  getCardContent();
+  if (val.type == 2) {
+    localStorage.setItem("deviceID", val.id);
+    localStorage.setItem("deviceNAME", val.name);
+    equip_id.value = val.id;
+    equipTitle.value = val.name;
+    getCardContent();
+  }
 };
 // 获取菜单列表
 const getEquipListFun = async () => {
@@ -245,7 +249,7 @@ const getEquipListFun = async () => {
 };
 getEquipListFun();
 
-// open - 开始
+// open1 - 开始
 let rowData = ref();
 const myDialog1 = ref();
 const IsShowAdd = ref(false);
@@ -261,7 +265,7 @@ const openDialog = (obj1: any) => {
   // router.push("/online/expertAnalysis/comprehensiveAnalysis/index");
   router.push({ path: "/online/expertAnalysis/comprehensiveAnalysis/index", query: { pointId: obj1.pointId } });
 };
-// close - 关闭
+// close1 - 关闭
 // 参数设置(普通泵)
 const myDialog2 = ref();
 const IsShowSetTpl = ref(false);
@@ -331,7 +335,7 @@ const jiedong = async val => {
 };
 //获取页面卡片
 let cards = ref();
-let equip_id = ref(route.query?.id);
+let equip_id = ref();
 const getCardContent = async () => {
   const res: any = await equip_card({ equipId: equip_id.value });
   if (res.code == "200") {
@@ -449,6 +453,19 @@ const getTimeValueFun = async () => {
 };
 onActivated(async () => {
   await getTimeValueFun();
+  if (route.query?.id) {
+    localStorage.setItem("deviceID", route.query?.id as any);
+    localStorage.setItem("deviceNAME", route.query?.name as any);
+    equip_id.value = route.query?.id;
+    selectVal.value = route.query?.id;
+    getCardContent();
+  }
+  if (localStorage.getItem("deviceID") && !route.query?.id) {
+    equip_id.value = localStorage.getItem("deviceID");
+    selectVal.value = localStorage.getItem("deviceID");
+    equipTitle.value = localStorage.getItem("deviceNAME");
+    getCardContent();
+  }
   // 当组件挂载后开始定时器
   intervalId.value = setInterval(() => {
     // 调用获取数据的接口方法
@@ -462,7 +479,6 @@ onDeactivated(() => {
 onUnmounted(() => {
   clearInterval(intervalId.value);
 });
-getCardContent();
 </script>
 <style scoped lang="scss">
 .contentBox {

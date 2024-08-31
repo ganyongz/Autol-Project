@@ -2,7 +2,9 @@
   <div class="d-flex flex-column">
     <!-- 1 -->
     <div class="mb-5" style="margin-bottom: 10px">
+      <span>日期:</span>
       <el-date-picker
+        style="margin-right: 10px"
         v-model="dateRange"
         type="datetimerange"
         unlink-panels
@@ -11,6 +13,13 @@
         end-placeholder="结束日期"
         value-format="YYYY-MM-DD HH:mm:ss"
       ></el-date-picker>
+      <span>润滑点号:</span>
+      <el-input
+        v-model.number="lubPoint"
+        style="width: 240px; margin-right: 10px"
+        onkeyup="value=value.replace(/[^\d]/g,'')"
+        placeholder="请输入整数点位号"
+      />
       <el-button type="primary" @click="searchFun">查询</el-button>
     </div>
     <!-- 2 -->
@@ -147,6 +156,7 @@ const props = defineProps({
 });
 const { partId } = toRefs(props);
 // 润滑统计
+let lubPoint = ref<number>();
 let week = ref({
   lubCount: 0,
   flowCount: 0,
@@ -183,7 +193,8 @@ const getLubRecord = async () => {
     endTime: dateRange.value[1],
     partId: partId?.value,
     pageNum: pageNum.value,
-    pageSize: pageSize.value
+    pageSize: pageSize.value,
+    lubPoint: lubPoint.value
   };
   const res: any = await lub_LubRecordByPage(params);
   if (res.code == "200") {

@@ -77,7 +77,19 @@
           <div class="item1" v-for="item in equipDatas" :key="item" @click="ToTargetPage(item)">
             <el-row :gutter="20">
               <el-col :span="10">
-                <img style="width: 75%" src="@/views/platform/port/images/gangkouGreen.png" alt="图片" />
+                <img
+                  v-if="item?.alarmLevel == '2'"
+                  style="width: 75%"
+                  src="@/views/platform/port/images/gangkouRed.png"
+                  alt="图片"
+                />
+                <img
+                  v-else-if="item?.alarmLevel == '1'"
+                  style="width: 75%"
+                  src="@/views/platform/port/images/gangkouYellow.png"
+                  alt="图片"
+                />
+                <img v-else style="width: 75%" src="@/views/platform/port/images/gangkouGreen.png" alt="图片" />
               </el-col>
               <el-col :span="14">
                 <p>{{ item.name }}</p>
@@ -91,6 +103,9 @@
                   <div class="text" v-if="item?.LubStatus !== null && item?.LubStatus == '0'">
                     润滑<span class="dot dotGreen"></span>
                   </div>
+                  <div class="text" v-if="item?.LubStatus !== null && item?.LubStatus == '9'">
+                    润滑<span class="dot dotGray"></span>
+                  </div>
 
                   <div class="text" v-if="item?.OilStatus !== null && item?.OilStatus == '2'">
                     油液<span class="dot dotRed"></span>
@@ -101,6 +116,9 @@
                   <div class="text" v-if="item?.OilStatus !== null && item?.OilStatus == '0'">
                     油液<span class="dot dotGreen"></span>
                   </div>
+                  <div class="text" v-if="item?.OilStatus !== null && item?.OilStatus == '9'">
+                    油液<span class="dot dotGray"></span>
+                  </div>
 
                   <div class="text" v-if="item?.VibStatus !== null && item?.VibStatus == '2'">
                     振动<span class="dot dotRed"></span>
@@ -110,6 +128,9 @@
                   </div>
                   <div class="text" v-if="item?.VibStatus !== null && item?.VibStatus == '0'">
                     振动<span class="dot dotGreen"></span>
+                  </div>
+                  <div class="text" v-if="item?.VibStatus !== null && item?.VibStatus == '9'">
+                    振动<span class="dot dotGray"></span>
                   </div>
                 </div>
               </el-col>
@@ -365,15 +386,16 @@ getDatas(); //下拉列表
 .item1 {
   box-sizing: border-box; /* 防止padding导致宽度超出100% */
   width: calc(25% - 20px); /* 假设间隔为10px */
-  height: 100px;
+  height: 140px;
   padding: 10px;
   margin: 10px;
   color: #ffffff;
   text-align: center;
   cursor: pointer;
   border: 1px solid #cccccc;
+  border-radius: 10px;
   .el-row {
-    margin-top: -10px;
+    // margin-top: -10px;
   }
 }
 .container1 {
@@ -399,6 +421,9 @@ getDatas(); //下拉列表
   }
   .dotGreen {
     background-color: #6dd775;
+  }
+  .dotGray {
+    background-color: gray;
   }
 }
 

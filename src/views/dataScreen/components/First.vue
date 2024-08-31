@@ -101,9 +101,16 @@ const props = defineProps({
 });
 let { screenDatas } = toRefs(props);
 const router = useRouter();
+// 路由跳转 (跳转到对应模块)
 const ToTargetPage = (tType: any) => {
-  //路由跳转
-  router.push({ path: "/platform/port/index", query: { type: tType } });
+  if (tType === 1) {
+    //风电
+    router.push({ path: "/platform/port/index", query: { type: tType } });
+  }
+  if (tType === 2) {
+    //港口
+    router.push({ path: "/platform/port/index", query: { type: tType } });
+  }
 };
 </script>
 <style scoped lang="scss">

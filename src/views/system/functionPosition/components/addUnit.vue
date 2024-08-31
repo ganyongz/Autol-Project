@@ -127,7 +127,7 @@ let ruleForm = reactive<RuleForm>({
   description: "",
   remark: "",
   code: "",
-  sort: undefined,
+  sort: 1,
   useVib: null,
   useLub: null,
   useOil: null,
@@ -139,7 +139,8 @@ let ruleForm = reactive<RuleForm>({
 });
 
 const rules = reactive<FormRules<RuleForm>>({
-  name: [{ required: true, message: "请输入名称", trigger: "blur" }]
+  name: [{ required: true, message: "请输入名称", trigger: "blur" }],
+  sort: [{ required: true, message: "排序字段不能为空", trigger: "blur" }]
 });
 // 方法区
 // 数据监听

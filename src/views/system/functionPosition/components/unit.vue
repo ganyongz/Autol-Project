@@ -188,7 +188,7 @@ const formInline = reactive({
   description: "",
   remark: "",
   code: "",
-  sort: null,
+  sort: 1,
   id: undefined,
   useVib: null,
   useLub: null,
@@ -305,12 +305,8 @@ watchEffect(() => {
   }
 });
 const rules = reactive<any>({
-  TXRequired: [
-    {
-      message: "请选择通讯方式",
-      trigger: "change"
-    }
-  ]
+  TXRequired: [{ message: "请选择通讯方式", trigger: "change" }],
+  sort: [{ required: true, message: "排序字段不能为空", trigger: "blur" }]
 });
 
 //  ATL3000配置

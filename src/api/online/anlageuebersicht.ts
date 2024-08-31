@@ -50,3 +50,8 @@ export const lub_lubAlarmEventPage = (params: any) => {
 export const lub_lubAlarmTrend = (params: any) => {
   return http.get(`Lub/LubAlarm/lubAlarmTrend`, {}, { params });
 };
+// ---------- 改版的部件详情 ------------
+// 获取部件下实时数据信息
+export const equip_partRealData = (params: any) => {
+  return http.get(`Lub/equipPart/partRealData`, {}, { params });
+};

@@ -88,17 +88,11 @@ const dateRange = ref([startOfWeek, endOfWeek]);
 const searchFun = () => {
   getHisAlarm();
 };
-onMounted(async () => {
-  await getTrend();
-  let chartContainer = echarts.init(document.getElementById("main2"));
-  option && chartContainer.setOption(option);
-});
-
 // 准备日期数据
-let times: any = ref([]);
+let times = ref();
 
 // 准备报警次数数据
-let dangerNums: any = ref([]);
+let dangerNums = ref();
 
 // 准备修复次数数据
 // let repairCounts = [8, 7, 6, 5];
@@ -116,7 +110,7 @@ let option = {
   },
   xAxis: {
     type: "category",
-    data: times
+    data: times.value
   },
   yAxis: {
     type: "value"
@@ -125,7 +119,7 @@ let option = {
     {
       name: "报警",
       type: "line",
-      data: dangerNums
+      data: dangerNums.value
     }
     // {
     //   name: "修复次数",
@@ -134,6 +128,11 @@ let option = {
     // }
   ]
 };
+onMounted(async () => {
+  await getTrend();
+  let chartContainer = echarts.init(document.getElementById("main2"));
+  option && chartContainer.setOption(option);
+});
 // 获取30天报警趋势记录
 const getTrend = async () => {
   let res: any = await lub_lubAlarmTrend({});

@@ -118,7 +118,7 @@ let ruleForm = reactive<RuleForm>({
   remark: "",
   code: "",
   deptId: "",
-  sort: null,
+  sort: 1,
   classify: undefined
 });
 const classifyOptions = [
@@ -131,7 +131,8 @@ const classifyOptions = [
 ];
 const rules = reactive<FormRules<RuleForm>>({
   name: [{ required: true, message: "请输入名称", trigger: "blur" }],
-  classify: [{ required: true, message: "请输选择设备分类", trigger: "change" }]
+  classify: [{ required: true, message: "请输选择设备分类", trigger: "change" }],
+  sort: [{ required: true, message: "排序字段不能为空", trigger: "blur" }]
 });
 // 方法区
 // 保存设备

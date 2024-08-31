@@ -25,9 +25,9 @@
           <el-input v-model="ruleForm.name" />
         </el-form-item>
 
-        <el-form-item label="累计油量" prop="cumulativeOil">
+        <!-- <el-form-item label="累计油量" prop="cumulativeOil">
           <el-input v-model.number="ruleForm.cumulativeOil" />
-        </el-form-item>
+        </el-form-item> -->
 
         <el-form-item>
           <el-button type="primary" @click="submitForm(ruleFormRef)"> 保存 </el-button>
@@ -47,7 +47,7 @@
       <el-table-column prop="name" label="部位名称" width="240" />
       <el-table-column prop="boxNum" label="箱体编号" />
       <el-table-column prop="pointNum" label="点位编号" />
-      <el-table-column prop="cumulativeOil" label="累计油量(ml)" />
+      <!-- <el-table-column prop="cumulativeOil" label="累计油量(ml)" /> -->
       <el-table-column prop="status" label="状态">
         <template #default="scope">
           <div
@@ -93,7 +93,7 @@ interface RuleForm {
   boxNum: number | unknown;
   pointNum: number | unknown;
   name: string;
-  cumulativeOil: number | unknown;
+  // cumulativeOil: number | unknown;
 }
 
 const formSize = ref<ComponentSize>("default");
@@ -103,16 +103,16 @@ let ruleForm = reactive<RuleForm>({
   partId: partId?.value,
   boxNum: undefined,
   pointNum: undefined,
-  name: "",
-  cumulativeOil: undefined
+  name: ""
+  // cumulativeOil: undefined
 });
 
 const rules = reactive<FormRules<RuleForm>>({
   name: [{ required: true, message: "请输入部位名称", trigger: "blur" }],
   partId: [{ required: true, message: "部件id不能为空", trigger: "blur" }],
   boxNum: [{ required: true, message: "请输入箱体编号", trigger: "blur" }],
-  pointNum: [{ required: true, message: "请输入点位编号", trigger: "blur" }],
-  cumulativeOil: [{ required: true, message: "请输入累计油量", trigger: "blur" }]
+  pointNum: [{ required: true, message: "请输入点位编号", trigger: "blur" }]
+  // cumulativeOil: [{ required: true, message: "请输入累计油量", trigger: "blur" }]
 });
 // 保存
 const submitForm = async (formEl: FormInstance | undefined) => {

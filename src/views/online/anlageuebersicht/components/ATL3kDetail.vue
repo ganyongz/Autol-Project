@@ -8,7 +8,7 @@
       :header-cell-style="{ 'text-align': 'center' }"
     >
       <el-table-column type="index" label="序号" width="55" />
-      <el-table-column prop="name" label="部位名称" width="240" />
+      <el-table-column prop="name" label="部位名称" />
       <el-table-column prop="boxNum" label="箱体编号" />
       <el-table-column prop="pointNum" label="点位编号" />
       <el-table-column prop="cumulativeOil" label="累计油量(ml)" />
@@ -27,11 +27,11 @@
 
 <script setup lang="ts">
 import { ref, toRefs } from "vue";
-import { atl_Atl3000BoxConfigList } from "@/api/system/functionPosition";
+import { atl_atl3000Detail } from "@/api/system/functionPosition";
 import { ElMessage } from "element-plus";
 const props = defineProps({
   partId: {
-    type: Number
+    type: String || Number
   }
 });
 const { partId } = toRefs(props);
@@ -40,7 +40,7 @@ const tableData = ref();
 
 // 获取列表
 const getEquipPointList = async () => {
-  let res: any = await atl_Atl3000BoxConfigList({ partId: partId?.value });
+  let res: any = await atl_atl3000Detail({ partId: partId?.value });
   if (res.code == "200") {
     tableData.value = res.data as any;
   } else {
