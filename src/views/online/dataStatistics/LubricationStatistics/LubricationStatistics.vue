@@ -29,7 +29,7 @@
   </div>
 </template>
 <script lang="ts" setup name="LubricationStatistics">
-import { ref, onMounted } from "vue";
+import { ref, onMounted, onActivated } from "vue";
 import { type TabsPaneContext, ElMessage } from "element-plus";
 import lubrication from "@/views/online/dataStatistics/LubricationStatistics/components/lubrication.vue";
 import alarm from "@/views/online/dataStatistics/LubricationStatistics/components/alarm.vue";
@@ -38,13 +38,29 @@ import { useRoute } from "vue-router";
 const route = useRoute();
 let partId = ref();
 let defaultCheckedKeys = ref();
-partId.value = route.query?.partId;
+partId.value = route.query?.partId ? route.query?.partId : localStorage.getItem("partID");
 defaultCheckedKeys.value = partId?.value ? [partId?.value] : [];
 let treeRef = ref();
+let activeName = ref("first");
 onMounted(() => {
   treeRef.value.setCurrentKey = partId.value;
+  if (route.query?.type && route.query?.type === "alarm") {
+    activeName.value = "second";
+  } else {
+    activeName.value = "first";
+  }
 });
-const activeName = ref("first");
+onActivated(() => {
+  if (route.query?.partId) {
+    localStorage.setItem("partID", route.query?.partId as string);
+    partId.value = route.query?.partId;
+    defaultCheckedKeys.value = [route.query?.partId];
+  }
+  if (localStorage.getItem("partID") && !route.query?.partId) {
+    partId.value = localStorage.getItem("partID");
+    defaultCheckedKeys.value = [localStorage.getItem("partID")];
+  }
+});
 let publicKey = ref(1);
 const handleClick = (tab: TabsPaneContext, event: Event) => {
   console.log(tab, event);

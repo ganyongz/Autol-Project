@@ -2,16 +2,16 @@
   <div class="table-box bg-color">
     <!-- 润滑、报警记录 -->
     <el-container>
-      <el-aside>
+      <el-aside :class="['c_card-gray', 'left-card', 'h-100', 'mr-16', zoomIcon ? 'takeBack' : 'unfold']">
         <el-tree
           ref="treeRef"
-          :class="['c_card-gray', 'left-card', 'h-100', 'mr-16', zoomIcon ? 'takeBack' : 'unfold']"
           style="width: 240px; max-width: 600px"
           :data="treeData"
           :props="defaultProps"
           node-key="id"
           :default-expanded-keys="[defaultCheckedKeys]"
-          :default-checked-keys="[defaultCheckedKeys]"
+          :current-node-key="partId"
+          :highlight-current="true"
           @node-click="handleNodeClick"
         />
       </el-aside>
@@ -25,16 +25,16 @@
             <el-icon v-if="zoomIcon" size="25px"><Fold /></el-icon>
             <el-icon v-else size="25px"><Expand /></el-icon>
           </div>
-          <el-tabs v-model="activeName" class="demo-tabs" @tab-change="tabChangeFun">
+          <!-- <el-tabs v-model="activeName" class="demo-tabs" @tab-change="tabChangeFun">
             <el-tab-pane label="站点详情" name="first"> </el-tab-pane>
             <el-tab-pane label="润滑记录" name="second"> </el-tab-pane>
             <el-tab-pane label="报警记录" name="third"> </el-tab-pane>
-          </el-tabs>
+          </el-tabs> -->
         </div>
 
-        <equipmentDetail v-if="activeName == 'first' && partId" :key="publicKey1" :part-id="partId" />
-        <lubrication v-if="activeName == 'second'" :key="publicKey2" :part-id="partId" />
-        <alarm v-if="activeName == 'third'" :key="publicKey3" :part-id="partId" />
+        <equipmentDetail v-if="partId" :key="publicKey1" :part-id="partId" />
+        <!-- <lubrication v-if="activeName == 'second'" :key="publicKey2" :part-id="partId" />
+        <alarm v-if="activeName == 'third'" :key="publicKey3" :part-id="partId" /> -->
       </el-main>
     </el-container>
   </div>
@@ -42,21 +42,21 @@
 <script lang="ts" setup name="LubricationStatistics">
 import { ref, onMounted, onActivated } from "vue";
 import { ElMessage } from "element-plus";
-import lubrication from "@/views/online/dataStatistics/LubricationStatistics/components/lubrication.vue";
-import alarm from "@/views/online/dataStatistics/LubricationStatistics/components/alarm.vue";
+// import lubrication from "@/views/online/dataStatistics/LubricationStatistics/components/lubrication.vue";
+// import alarm from "@/views/online/dataStatistics/LubricationStatistics/components/alarm.vue";
 import equipmentDetail from "@/views/online/dataStatistics/LubricationStatistics/components/equipmentDetail.vue";
 import { getLocationTree } from "@/api/system/functionPosition";
 import { useRoute } from "vue-router";
 const route = useRoute();
 let partId = ref();
 let defaultCheckedKeys = ref();
-partId.value = route.query?.partId;
+partId.value = route.query?.partId ? route.query?.partId : localStorage.getItem("deviceID");
 defaultCheckedKeys.value = partId?.value ? partId?.value : null;
 let treeRef = ref();
 onMounted(() => {
   treeRef.value.setCurrentKey = partId.value;
 });
-const activeName = ref("first");
+// const activeName = ref("first");
 let publicKey1 = ref(1);
 let publicKey2 = ref(1);
 let publicKey3 = ref(1);
@@ -72,7 +72,7 @@ const handleNodeClick = (data: Tree) => {
   console.log(data, "节点数据");
   // 只有当type为3时才查询
   if (data?.type == 3) {
-    localStorage.setItem("deviceID", data.id);
+    localStorage.setItem("deviceID", data.id as any);
     partId.value = data.id;
     publicKey1.value += 1;
     publicKey2.value += 1;
@@ -95,9 +95,9 @@ const getEquipTreeList = async () => {
     ElMessage.error(res?.message);
   }
 };
-function tabChangeFun(e) {
-  activeName.value = e;
-}
+// function tabChangeFun(e) {
+//   activeName.value = e;
+// }
 // region TODO clickToZoom 点击缩放
 const zoomIcon = ref(true);
 // const treeDivRef = ref<HTMLDivElement>();

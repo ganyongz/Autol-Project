@@ -10,7 +10,10 @@
     <div style="flex: 1; height: 100%">
       <!-- 1.振动 -->
       <dv-border-box7 v-if="cards?.VibRealData && cards?.VibRealData.length > 0" style="margin-bottom: 20px">
-        <div style="padding: 10px 20px 0; color: #009688; text-align: left">轴承振动情况：</div>
+        <div style="display: flex; justify-content: space-between; padding: 10px 20px 0">
+          <div style="padding: 10px 20px 0; color: #009688; text-align: left">轴承振动情况：</div>
+          <el-button size="small" type="primary" @click="FunAlarmRecord(cards, 'alarm')">报警记录</el-button>
+        </div>
         <div style="height: 10rem; padding: 20px; overflow-y: auto">
           <div v-for="(item, index) in cards?.VibRealData" :key="index">
             <el-popover placement="right" :width="300" trigger="hover">
@@ -36,6 +39,8 @@
           <div style="color: #009688; text-align: left">润滑监控：</div>
           <div>
             <el-button size="small" type="primary" @click="FunSetParameter(cards)">参数</el-button>
+            <el-button size="small" type="primary" @click="FunAlarmRecord(cards, 'lubrication')">润滑记录</el-button>
+            <el-button size="small" type="primary" @click="FunAlarmRecord(cards, 'alarm')">报警记录</el-button>
             <!-- <el-button size="small" type="primary" @click="FunStatistics(cards)">数据统计</el-button> -->
             <el-popover placement="right" :width="320" trigger="click">
               <template #reference>
@@ -72,7 +77,10 @@
       <!-- 3.油液 -->
       <dv-border-box7 v-if="cards?.OilRealData && cards?.OilRealData.length > 0">
         <!-- <div style="height: 10rem; padding: 20px; overflow-y: auto"> -->
-        <div style="padding: 10px 20px 0; color: #009688; text-align: left">油液状态：</div>
+        <div style="display: flex; justify-content: space-between; padding: 10px 20px 0">
+          <div style="padding: 10px 20px 0; color: #009688; text-align: left">油液状态：</div>
+          <el-button size="small" type="primary" @click="FunAlarmRecord(cards, 'alarm')">报警记录</el-button>
+        </div>
         <div style="height: 10rem; padding: 20px; overflow-y: auto">
           <div v-for="(item, index) in cards?.OilRealData" :key="index">
             <div style="display: flex; justify-content: space-between">
@@ -94,6 +102,8 @@
         description="暂无数据记录"
       />
     </div>
+
+    <!-- 基本分析 -->
     <myDialog :title="detailParams.title" ref="myDialog1" draggable width="50%" :before-close="beforeClose1">
       <template #content>
         <analyses v-if="IsShowAdd" ref="addEditRoleRef" :row-data="rowData" :title="detailParams.title" />
@@ -160,7 +170,6 @@ import { ref, reactive, toRefs } from "vue";
 import { ElMessage, type FormRules, type FormInstance } from "element-plus";
 import { equip_partRealData, pump_OperatePump } from "@/api/online/anlageuebersicht";
 import { useHandleData2 } from "@/hooks/useHandleData";
-
 import myDialog from "@/components/dialog/myDialog.vue";
 import analyses from "@/views/online/anlageuebersicht/components/analyses.vue";
 import setParameter from "@/views/online/anlageuebersicht/components/setParameter.vue";
@@ -181,44 +190,6 @@ const getCardContent = async () => {
   const res: any = await equip_partRealData({ partId: partId?.value });
   if (res.code == "200") {
     cards.value = res.data;
-    // cards.value.VibRealData = [
-    //   { pointName: "x方向", value: "0.039" },
-    //   { pointName: "x方向", value: "0.039" },
-    //   { pointName: "x方向", value: "0.039" },
-    //   { pointName: "x方向", value: "0.039" },
-    //   { pointName: "x方向", value: "0.039" },
-    //   { pointName: "x方向", value: "0.039" },
-    //   { pointName: "x方向", value: "0.039" },
-    //   { pointName: "x方向", value: "0.039" },
-    //   { pointName: "x方向", value: "0.039" },
-    //   { pointName: "x方向", value: "0.039" },
-    //   { pointName: "x方向", value: "0.039" },
-    //   { pointName: "x方向", value: "0.039" },
-    //   { pointName: "x方向", value: "0.039" },
-    //   { pointName: "x方向", value: "0.039" },
-    //   { pointName: "x方向", value: "0.039" },
-    //   { pointName: "x方向", value: "0.039" },
-    //   { pointName: "x方向", value: "0.039" },
-    //   { pointName: "x方向", value: "0.039" },
-    //   { pointName: "x方向", value: "0.039" },
-    //   { pointName: "x方向", value: "0.039" },
-    //   { pointName: "x方向", value: "0.039" },
-    //   { pointName: "x方向", value: "0.039" },
-    //   { pointName: "x方向", value: "0.039" },
-    //   { pointName: "x方向", value: "0.039" },
-    //   { pointName: "x方向", value: "0.039" },
-    //   { pointName: "x方向", value: "0.039" },
-    //   { pointName: "x方向", value: "0.039" },
-    //   { pointName: "x方向", value: "0.039" },
-    //   { pointName: "x方向", value: "0.039" },
-    //   { pointName: "x方向", value: "0.039" },
-    //   { pointName: "x方向", value: "0.039" },
-    //   { pointName: "x方向", value: "0.039" },
-    //   { pointName: "x方向", value: "0.039" },
-    //   { pointName: "x方向", value: "0.039" },
-    //   { pointName: "x方向", value: "0.039" },
-    //   { pointName: "x方向", value: "0.039" }
-    // ];
     // console.log(cards.value, "卡片");
   } else {
     ElMessage.error(res?.message);
@@ -240,7 +211,15 @@ const openDialog = (obj1: any) => {
   router.push({ path: "/online/expertAnalysis/comprehensiveAnalysis/index", query: { pointId: obj1.pointId } });
 };
 // close1 - 关闭
-// 111111111
+// 报警记录 start
+const FunAlarmRecord = (val: any, type: string) => {
+  console.log(val.partId, "部件id");
+  router.push({
+    path: "/online/dataStatistics/LubricationStatistics/LubricationStatistics",
+    query: { partId: val.partId, type: type }
+  });
+};
+// 报警记录 end
 const myDialog3 = ref();
 // 参数设置(普通泵)
 const myDialog2 = ref();
@@ -248,8 +227,6 @@ const IsShowSetTpl = ref(false);
 let setParameters = ref();
 // 公用方法
 const FunSetParameter = (val: any) => {
-  debugger;
-  console.log(val, "9999");
   setParameters.value = val;
   if (val?.PumpStationType == 3) {
     // ATL3000
@@ -396,7 +373,6 @@ const handleClose = () => {
   ruleForm.startPoint = "";
   ruleForm.endPoint = "";
 };
-// 222222222222222
 
 // 调用
 getCardContent();

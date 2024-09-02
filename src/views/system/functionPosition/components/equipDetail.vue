@@ -242,8 +242,8 @@ const closeDialog = () => {
   myDialog1.value.close();
   IsShowAdd.value = false;
 };
+// 保存设备
 const submitForm = async () => {
-  // 添加设备
   let res: any = await equipPart_addOrUpdate(addEditRoleRef.value.ruleForm);
   if (res.code == "200") {
     ElMessage.success("保存成功");

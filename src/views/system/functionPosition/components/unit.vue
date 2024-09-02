@@ -69,6 +69,12 @@
         <el-form-item label="plc地址" :required="snPlcRequired && TXRequired" v-if="snPlcRequired && TXRequired">
           <el-input v-model="formInline.plcAddress" placeholder="plc地址" clearable />
         </el-form-item>
+
+        <el-form-item label="部件图片" prop="imageFileId">
+          <UploadImg :key="uploadImgKey" v-model:image-id="formInline.imageFileId" :file-size="5">
+            <template #tip> 上传图片最大为 5M </template>
+          </UploadImg>
+        </el-form-item>
       </el-form>
     </el-card>
     <el-card>
@@ -153,6 +159,7 @@ import myDialog from "@/components/dialog/myDialog.vue";
 import addPoint from "@/views/system/functionPosition/components/addPoint.vue";
 import ATL3k from "@/views/system/functionPosition/components/ATL3k.vue";
 import mittBus from "@/utils/mittBus";
+import UploadImg from "@/components/Upload/Img.vue";
 let props = defineProps({
   nodeData: {
     type: Object,
@@ -197,9 +204,11 @@ const formInline = reactive({
   schaefflerDeviceId: "",
   pumpStationType: null,
   gatewaySn: "",
-  plcAddress: ""
+  plcAddress: "",
+  imageFileId: "" //部件图片id
 });
 // 获取详情
+let uploadImgKey = ref<number>(1);
 const getEquipPartDetailFun = async () => {
   let res: any = await equipPart_findById({ id: nodeData.value["id"] });
   if (res.code == "200") {
@@ -218,6 +227,8 @@ const getEquipPartDetailFun = async () => {
     formInline.pumpStationType = data.pumpStationType;
     formInline.gatewaySn = data.gatewaySn;
     formInline.plcAddress = data.plcAddress;
+    formInline.imageFileId = data.imageFileId;
+    uploadImgKey.value += 1;
     getEquipPointList();
   } else {
     ElMessage.error(res?.message);
