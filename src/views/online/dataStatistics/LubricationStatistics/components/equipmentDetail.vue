@@ -166,7 +166,7 @@
 </template>
 
 <script setup lang="ts" name="equipmentDetail">
-import { ref, reactive, toRefs, onUnmounted, nextTick } from "vue";
+import { ref, reactive, toRefs, onUnmounted, nextTick, onDeactivated } from "vue";
 import { ElMessage, type FormRules, type FormInstance } from "element-plus";
 import { equip_partRealData, pump_OperatePump } from "@/api/online/anlageuebersicht";
 import { useHandleData2 } from "@/hooks/useHandleData";
@@ -389,6 +389,12 @@ let timer: any;
 timer = setInterval(getCardContent, 5000);
 // 组件卸载时清除定时器
 onUnmounted(() => {
+  if (timer) {
+    clearInterval(timer);
+  }
+});
+// 组件切换时执行
+onDeactivated(() => {
   if (timer) {
     clearInterval(timer);
   }
