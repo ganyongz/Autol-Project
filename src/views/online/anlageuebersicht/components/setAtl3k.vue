@@ -1,56 +1,57 @@
 <template>
   <div>
     <div class="realTimeData-box p-20 my-12">
-      <div class="mb-12" style="display: flex; align-items: center; justify-content: space-between">
-        <div>
-          <!-- <img src="../../../assets/images/icons/ic_cs.png" class="mr-1" alt=""> -->
-          <span style="color: #409eff">参数修改</span>
-        </div>
-        <div class="fs-14" style="color: #999999">采集时间：{{ parameterOfApparatus.DataTime }}</div>
-      </div>
+      <div class="fs-14" style="color: #999999">采集时间：{{ parameterOfApparatus.DataTime }}</div>
       <div v-loading="loading" element-loading-text="读取中...">
-        <div class="mb-8 fs-14">
-          <span class="labelClass">组别：</span>
-          <el-input v-model="parameterOfApparatus.group" class="parameter-box mr-12" type="text" />
-        </div>
+        <div style="width: 350px; margin: 0 auto">
+          <div class="mb-8 fs-14">
+            <span class="labelClass">组别：</span>
+            <el-input v-model="parameterOfApparatus.group" class="parameter-box mr-12" type="text" />
+          </div>
 
-        <div class="mb-8 fs-14">
-          <span class="labelClass">连锁号：</span>
-          <el-input v-model="parameterOfApparatus.chainNumber" class="parameter-box mr-12" type="text" />
-        </div>
+          <div class="mb-8 fs-14">
+            <span class="labelClass">连锁号：</span>
+            <el-input v-model="parameterOfApparatus.chainNumber" class="parameter-box mr-12" type="text" />
+          </div>
 
-        <div class="mb-8 fs-14">
-          <span class="labelClass">起点：</span>
-          <el-input v-model="parameterOfApparatus.startPoint" class="parameter-box mr-12" type="text" />
-        </div>
+          <div class="mb-8 fs-14">
+            <span class="labelClass">起点：</span>
+            <el-input v-model="parameterOfApparatus.startPoint" class="parameter-box mr-12" type="text" />
+          </div>
 
-        <div class="mb-8 fs-14">
-          <span class="labelClass">终点：</span>
-          <el-input v-model="parameterOfApparatus.endPoint" class="parameter-box mr-12" type="text" />
-        </div>
+          <div class="mb-8 fs-14">
+            <span class="labelClass">终点：</span>
+            <el-input v-model="parameterOfApparatus.endPoint" class="parameter-box mr-12" type="text" />
+          </div>
 
-        <div class="mb-16 fs-14">
-          <span class="labelClass">休止时间：</span>
-          <el-input v-model.number="parameterOfApparatus.restHour" class="parameter-box mr-8" type="text" />时
-          <el-input v-model.number="parameterOfApparatus.restMin" class="parameter-box mx-8" type="text" />分
-        </div>
+          <div class="mb-16 fs-14">
+            <span class="labelClass">休止时间：</span>
+            <el-input v-model.number="parameterOfApparatus.restHour" class="parameter-box" type="text" /> 时
+            <el-input v-model.number="parameterOfApparatus.restMin" class="parameter-box" type="text" /> 分
+          </div>
 
-        <div class="mb-16 fs-14">
-          <span class="labelClass">润滑时间：</span>
-          <el-input v-model.number="parameterOfApparatus.lubTime" class="parameter-box mx-8" type="text" />秒
-        </div>
+          <div class="mb-16 fs-14">
+            <span class="labelClass">润滑时间：</span>
+            <el-input v-model.number="parameterOfApparatus.lubTime" class="parameter-box mx-8" type="text" /> 秒
+          </div>
 
-        <div class="mb-16 fs-14">
-          <span class="labelClass">润滑油量：</span>
-          <el-input v-model.number="parameterOfApparatus.lubOil" class="parameter-box mr-12" type="text" />ml
-        </div>
+          <div class="mb-16 fs-14">
+            <span class="labelClass">润滑油量：</span>
+            <el-input v-model.number="parameterOfApparatus.lubOil" class="parameter-box mr-12" type="text" /> ml
+          </div>
 
-        <div class="mb-16 fs-14">
-          <span class="labelClass">补油时间：</span>
-          <el-input v-model.number="parameterOfApparatus.refuelingTime" class="parameter-box mx-8" type="text" />秒
+          <div class="mb-16 fs-14">
+            <span class="labelClass">补油时间：</span>
+            <el-input
+              v-model.number="parameterOfApparatus.refuelingTime"
+              oninput="value=value.replace(/^0+(\d)|[^\d]+/g,'')"
+              class="parameter-box mx-8"
+              type="text"
+            />
+            秒
+          </div>
         </div>
-
-        <div style="text-align: right">
+        <div style="text-align: center">
           <el-button color="#095C98" type="primary" class="mr-12" @click="getDeviceParam()"> 读取 </el-button>
           <el-button color="#095C98" type="primary" @click="settingUpFun()"> 设置 </el-button>
         </div>
@@ -136,6 +137,10 @@ const getPumpParams = async () => {
 
 // 设置
 const settingUpFun = async () => {
+  if (parameterOfApparatus.value.refuelingTime == "" || parameterOfApparatus.value.refuelingTime == undefined) {
+    ElMessage.warning("请填写补油时间");
+    return;
+  }
   let result = {};
   let parameters = {
     gatewaySn: setParameters.value["GatewaySn"],
@@ -164,7 +169,7 @@ getPumpParams(); //获取数据
   text-align: left;
 }
 .parameter-box {
-  width: 200px;
+  width: 100px;
   height: 28px;
   color: #57c2ff;
   text-align: center;
@@ -175,5 +180,8 @@ getPumpParams(); //获取数据
 .fs-14 {
   margin-bottom: 10px;
   font-size: 14px;
+  :deep(.el-input__inner) {
+    text-align: center;
+  }
 }
 </style>

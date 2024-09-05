@@ -20,6 +20,9 @@
         onkeyup="value=value.replace(/[^\d]/g,'')"
         placeholder="请输入整数点位号"
       />
+      <el-select v-model="status" placeholder="请选择" style="width: 240px; margin-right: 10px">
+        <el-option v-for="item in statusOptions" :key="item.value" :label="item.label" :value="item.value" />
+      </el-select>
       <el-button type="primary" @click="searchFun">查询</el-button>
     </div>
     <!-- 2 -->
@@ -123,8 +126,12 @@
         <el-table-column prop="lubFlow" label="润滑油量(ml)" />
         <el-table-column prop="status" label="润滑状态">
           <template #default="scope">
-            <el-tag v-if="scope.row.status == 0" type="success" disable-transitions>正常</el-tag>
-            <el-tag v-else type="danger" disable-transitions>故障</el-tag>
+            <!-- 0 正常 1故障  2堵塞  4油量不足  8通信失败 -->
+            <el-tag v-if="scope.row.status == 1" type="danger" disable-transitions>故障</el-tag>
+            <el-tag v-else-if="scope.row.status == 2" type="danger" disable-transitions>堵塞</el-tag>
+            <el-tag v-else-if="scope.row.status == 4" type="danger" disable-transitions>油量不足</el-tag>
+            <el-tag v-else-if="scope.row.status == 8" type="danger" disable-transitions>通信失败</el-tag>
+            <el-tag v-else type="success" disable-transitions>正常</el-tag>
           </template>
         </el-table-column>
       </el-table>
@@ -155,6 +162,34 @@ const props = defineProps({
   }
 });
 const { partId } = toRefs(props);
+// 状态筛选
+let status = ref("");
+let statusOptions = [
+  {
+    value: "",
+    label: "全部"
+  },
+  {
+    value: "0",
+    label: "正常"
+  },
+  {
+    value: "1",
+    label: "故障"
+  },
+  {
+    value: "2",
+    label: "堵塞"
+  },
+  {
+    value: "4",
+    label: "油量不足"
+  },
+  {
+    value: "8",
+    label: "通讯失败"
+  }
+];
 // 润滑统计
 let lubPoint = ref<number>();
 let week = ref({
@@ -189,12 +224,13 @@ const getlubStatistics = async () => {
 // 获取润滑记录列表
 const getLubRecord = async () => {
   let params = {
-    startTime: dateRange.value[0],
-    endTime: dateRange.value[1],
+    startTime: dateRange.value.length > 0 ? dateRange.value[0] : "",
+    endTime: dateRange.value.length > 0 ? dateRange.value[1] : "",
     partId: partId?.value,
     pageNum: pageNum.value,
     pageSize: pageSize.value,
-    lubPoint: lubPoint.value
+    lubPoint: lubPoint.value,
+    status: status.value
   };
   const res: any = await lub_LubRecordByPage(params);
   if (res.code == "200") {

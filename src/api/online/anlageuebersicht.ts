@@ -53,5 +53,5 @@ export const lub_lubAlarmTrend = (params: any) => {
 // ---------- 改版的部件详情 ------------
 // 获取部件下实时数据信息
 export const equip_partRealData = (params: any) => {
-  return http.get(`Lub/equipPart/partRealData`, {}, { params });
+  return http.get(`Lub/equipPart/partRealData`, {}, { params, loading: false });
 };

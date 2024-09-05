@@ -4,9 +4,6 @@
     <div id="main2" ref="chartContainer" style="width: 100vw; height: 300px"></div>
     <!-- 表格条件搜索 -->
     <div class="flex flex-wrap gap-4 items-center">
-      <el-select v-model="conditionVal" placeholder="报警状态" style="width: 240px" clearable>
-        <el-option v-for="item in conditionOptions" :key="item.value" :label="item.label" :value="item.value" />
-      </el-select>
       <el-date-picker
         v-model="dateRange"
         type="daterange"
@@ -16,8 +13,6 @@
         end-placeholder="结束日期"
       ></el-date-picker>
       <el-button type="primary" @click="searchFun">查询</el-button>
-      <el-button type="success">导出表格</el-button>
-      <el-button type="danger">删除</el-button>
     </div>
     <!-- 表格 -->
     <el-table :data="tableData" height="500px">
@@ -73,12 +68,6 @@ const getHisAlarm = async () => {
 };
 
 const chartContainer = ref();
-// 表格条件搜索
-const conditionVal = ref();
-const conditionOptions = [
-  { value: 1, label: "恢复" },
-  { value: 2, label: "报警" }
-];
 // 使用 Day.js 获取本周的起始和结束日期
 const startOfWeek = dayjs().startOf("day").subtract(7, "day").format("YYYY-MM-DD");
 const endOfWeek = dayjs().format("YYYY-MM-DD");
@@ -89,10 +78,10 @@ const searchFun = () => {
   getHisAlarm();
 };
 // 准备日期数据
-let times = ref();
+let times = ref<any>([]);
 
 // 准备报警次数数据
-let dangerNums = ref();
+let dangerNums = ref<any>([]);
 
 // 准备修复次数数据
 // let repairCounts = [8, 7, 6, 5];
@@ -135,7 +124,7 @@ onMounted(async () => {
 });
 // 获取30天报警趋势记录
 const getTrend = async () => {
-  let res: any = await lub_lubAlarmTrend({});
+  let res: any = await lub_lubAlarmTrend({ partId: partId?.value });
   if (res.code == "200") {
     if (res.data.length > 0) {
       let arrs: any = res.data;
@@ -166,7 +155,6 @@ const handleCurrentChange = (val: number) => {
   pageNum.value = val;
   getHisAlarm();
 };
-
 // 调用
 getHisAlarm();
 </script>

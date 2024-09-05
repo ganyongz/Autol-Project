@@ -74,7 +74,7 @@ interface Tree {
 }
 
 const handleNodeClick = (data: Tree) => {
-  console.log(data, "节点数据");
+  // console.log(data, "节点数据");
   // 只有当type为3时才查询
   if (data?.type == 3) {
     partId.value = data.id;

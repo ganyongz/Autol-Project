@@ -105,7 +105,7 @@ const router = useRouter();
 const ToTargetPage = (tType: any) => {
   if (tType === 1) {
     //风电
-    router.push({ path: "/platform/port/index", query: { type: tType } });
+    router.push({ path: "/platform/port/windPower", query: { type: tType } });
   }
   if (tType === 2) {
     //港口

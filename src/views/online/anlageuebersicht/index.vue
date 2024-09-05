@@ -1,6 +1,6 @@
 <template>
   <div class="contentBox" v-cloak>
-    <!-- 设备预览（单个设备） -->
+    <!-- 设备预览（单个设备-设备级） -->
     <el-container>
       <el-header style="display: flex; align-items: center; justify-content: space-between" v-cloak>
         <div>

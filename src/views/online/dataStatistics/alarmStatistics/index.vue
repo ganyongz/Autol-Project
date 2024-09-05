@@ -10,6 +10,10 @@
           :data="treeData"
           :props="defaultProps"
           :filter-node-method="filterNode"
+          node-key="id"
+          :default-expanded-keys="[nodeId]"
+          :current-node-key="nodeId"
+          :highlight-current="true"
           @node-click="nodeClick"
         />
       </el-aside>
@@ -20,7 +24,7 @@
           <el-button type="primary" round style="margin-left: 10px" @click="searchByTime">查询</el-button>
         </div>
         <!-- 报警及危险总数 -->
-        <div id="main2" ref="chartContainer" style="width: 100vw; height: 300px"></div>
+        <div id="main2" ref="chartContainer" style="width: 80vw; height: 300px"></div>
         <!-- <div class="outDiv"></div> -->
         <!-- 报警列表 -->
         <div>
@@ -35,20 +39,36 @@
 </template>
 
 <script lang="ts" setup name="alarmStatistics">
-// 历史报警统计
+// 振动报警统计
 import * as echarts from "echarts";
 // import alarmPie from "@/views/online/dataStatistics/alarmStatistics/components/alarmPie.vue";
 // import dangerPie from "@/views/online/dataStatistics/alarmStatistics/components/dangerPie.vue";
 import tableList from "@/views/online/dataStatistics/alarmStatistics/components/tableList.vue";
 import { getLocationTree } from "@/api/system/functionPosition";
 import { alarm_Trend } from "@/api/online/alarmStatistics";
-import { ref, watch, onMounted } from "vue";
+import { ref, watch, onMounted, onUnmounted, onDeactivated } from "vue";
 import { ElTree, ElMessage } from "element-plus";
-
+import { useRoute } from "vue-router";
+const route = useRoute();
+console.log(route, "来自父级的参数(振动报警)");
 interface Tree {
   [key: string]: any;
 }
-
+let nodeType = ref();
+let nodeId = ref();
+if (sessionStorage.getItem("nodeData")) {
+  nodeId.value = JSON.parse(sessionStorage.getItem("nodeData") as any).id;
+  nodeType.value = JSON.parse(sessionStorage.getItem("nodeData") as any).type;
+} else {
+  nodeId.value = route.query?.partId;
+  nodeType.value = route.query?.nodeType;
+}
+onUnmounted(() => {
+  sessionStorage.removeItem("nodeData"); //销毁缓存
+});
+onDeactivated(() => {
+  sessionStorage.removeItem("nodeData"); //销毁缓存
+});
 const filterText = ref("");
 const treeRef = ref<InstanceType<typeof ElTree>>();
 
@@ -95,9 +115,8 @@ const handleClick = () => {
 };
 // 树节点点击事件
 let rushKey = ref(1);
-let nodeType = ref();
-let nodeId = ref();
 const nodeClick = (nodeData: any) => {
+  sessionStorage.setItem("nodeData", JSON.stringify(nodeData));
   nodeType.value = nodeData?.type;
   nodeId.value = nodeData?.id;
   rushKey.value += 1;

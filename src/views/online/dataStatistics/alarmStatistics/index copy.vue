@@ -41,7 +41,7 @@
 </template>
 
 <script lang="ts" setup name="alarmStatistics">
-// 历史报警统计
+// 振动报警统计
 import alarmPie from "@/views/online/dataStatistics/alarmStatistics/components/alarmPie.vue";
 import dangerPie from "@/views/online/dataStatistics/alarmStatistics/components/dangerPie.vue";
 import tableList from "@/views/online/dataStatistics/alarmStatistics/components/tableList.vue";

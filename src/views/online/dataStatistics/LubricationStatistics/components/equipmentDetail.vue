@@ -1,18 +1,18 @@
 <template>
   <div class="box">
-    <div style="width: 50%; height: 100%">
+    <div style="width: 65%; height: 100%">
       <div style="width: 70%; height: 70%; margin: 0 auto">
         <!-- <el-image style="width: 100px; height: 100px" :initial-index="4" fit="cover" src="../images/equipment.png" /> -->
-        <img style="width: 90%" src="../images/equipment.png" alt="工艺图" />
+        <img style="width: 100%; height: 60%" src="../images/equipment.png" alt="工艺图" />
       </div>
     </div>
     <!-- 右侧卡片 -->
     <div style="flex: 1; height: 100%">
       <!-- 1.振动 -->
-      <dv-border-box7 v-if="cards?.VibRealData && cards?.VibRealData.length > 0" style="margin-bottom: 20px">
+      <dv-border-box10 v-if="cards?.VibRealData && cards?.VibRealData.length > 0" style="margin-bottom: 20px">
         <div style="display: flex; justify-content: space-between; padding: 10px 20px 0">
           <div style="padding: 10px 20px 0; color: #009688; text-align: left">轴承振动情况：</div>
-          <el-button size="small" type="primary" @click="FunAlarmRecord(cards, 'alarm')">报警记录</el-button>
+          <el-button size="small" type="primary" @click="ZDAlarmRecord(cards)">报警记录</el-button>
         </div>
         <div style="height: 10rem; padding: 20px; overflow-y: auto">
           <div v-for="(item, index) in cards?.VibRealData" :key="index">
@@ -31,16 +31,14 @@
             </el-popover>
           </div>
         </div>
-      </dv-border-box7>
+      </dv-border-box10>
       <!-- 2.润滑监控 -->
-      <dv-border-box7 v-if="cards?.LubRealData && cards?.LubRealData.length > 0">
+      <dv-border-box10 v-if="cards?.LubRealData && cards?.LubRealData.length > 0">
         <!-- 标题头 -->
-        <div style="display: flex; justify-content: space-between; padding: 10px 20px 0">
+        <div style="padding: 10px 20px 0">
           <div style="color: #009688; text-align: left">润滑监控：</div>
           <div>
             <el-button size="small" type="primary" @click="FunSetParameter(cards)">参数</el-button>
-            <el-button size="small" type="primary" @click="FunAlarmRecord(cards, 'lubrication')">润滑记录</el-button>
-            <el-button size="small" type="primary" @click="FunAlarmRecord(cards, 'alarm')">报警记录</el-button>
             <!-- <el-button size="small" type="primary" @click="FunStatistics(cards)">数据统计</el-button> -->
             <el-popover placement="right" :width="320" trigger="click">
               <template #reference>
@@ -62,6 +60,8 @@
               </div>
             </el-popover>
             <el-button size="small" type="primary" @click="viewDetails()">详情</el-button>
+            <el-button size="small" type="primary" @click="FunAlarmRecord(cards, 'lubrication')">润滑记录</el-button>
+            <el-button size="small" type="primary" @click="FunAlarmRecord(cards, 'alarm')">报警记录</el-button>
           </div>
         </div>
         <!-- 润滑信息 -->
@@ -73,9 +73,9 @@
             </div>
           </div>
         </div>
-      </dv-border-box7>
+      </dv-border-box10>
       <!-- 3.油液 -->
-      <dv-border-box7 v-if="cards?.OilRealData && cards?.OilRealData.length > 0">
+      <dv-border-box10 v-if="cards?.OilRealData && cards?.OilRealData.length > 0">
         <!-- <div style="height: 10rem; padding: 20px; overflow-y: auto"> -->
         <div style="display: flex; justify-content: space-between; padding: 10px 20px 0">
           <div style="padding: 10px 20px 0; color: #009688; text-align: left">油液状态：</div>
@@ -90,7 +90,7 @@
           </div>
         </div>
         <!-- </div> -->
-      </dv-border-box7>
+      </dv-border-box10>
       <el-empty
         v-if="
           !(
@@ -166,7 +166,7 @@
 </template>
 
 <script setup lang="ts" name="equipmentDetail">
-import { ref, reactive, toRefs } from "vue";
+import { ref, reactive, toRefs, onUnmounted, nextTick } from "vue";
 import { ElMessage, type FormRules, type FormInstance } from "element-plus";
 import { equip_partRealData, pump_OperatePump } from "@/api/online/anlageuebersicht";
 import { useHandleData2 } from "@/hooks/useHandleData";
@@ -189,7 +189,9 @@ let cards = ref();
 const getCardContent = async () => {
   const res: any = await equip_partRealData({ partId: partId?.value });
   if (res.code == "200") {
-    cards.value = res.data;
+    nextTick(() => {
+      cards.value = res.data;
+    });
     // console.log(cards.value, "卡片");
   } else {
     ElMessage.error(res?.message);
@@ -211,7 +213,7 @@ const openDialog = (obj1: any) => {
   router.push({ path: "/online/expertAnalysis/comprehensiveAnalysis/index", query: { pointId: obj1.pointId } });
 };
 // close1 - 关闭
-// 报警记录 start
+// 1 报警记录 start
 const FunAlarmRecord = (val: any, type: string) => {
   console.log(val.partId, "部件id");
   router.push({
@@ -220,6 +222,14 @@ const FunAlarmRecord = (val: any, type: string) => {
   });
 };
 // 报警记录 end
+// 2 振动报警记录 start
+const ZDAlarmRecord = (val: any) => {
+  router.push({
+    path: "/online/dataStatistics/alarmStatistics/index",
+    query: { partId: val.partId, nodeType: val.PumpStationType }
+  });
+};
+// 振动报警记录 end
 const myDialog3 = ref();
 // 参数设置(普通泵)
 const myDialog2 = ref();
@@ -373,7 +383,16 @@ const handleClose = () => {
   ruleForm.startPoint = "";
   ruleForm.endPoint = "";
 };
-
+// 创建一个定时器引用
+let timer: any;
+// 设置定时器，每 5 秒请求一次数据
+timer = setInterval(getCardContent, 5000);
+// 组件卸载时清除定时器
+onUnmounted(() => {
+  if (timer) {
+    clearInterval(timer);
+  }
+});
 // 调用
 getCardContent();
 </script>
