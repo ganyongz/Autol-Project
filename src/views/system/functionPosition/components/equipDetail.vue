@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- 设备 -->
-    <el-button type="primary" @click="submitEquipment(ruleFormRef)">保存</el-button>
+    <el-button type="primary" @click="submitEquipment(ruleFormRef)">保存111</el-button>
     <el-button type="danger" @click="deleteFun">删除</el-button>
     <el-button type="success" plain @click="addUnitFun(ruleForm)">添加部件</el-button>
     <p>基础信息</p>
@@ -57,7 +57,7 @@
           <img v-if="imageUrl" :src="imageUrl" class="avatar" />
           <el-icon v-else class="avatar-uploader-icon"><Plus /></el-icon>
         </el-upload> -->
-        <UploadImg :key="uploadImgKey" v-model:image-id="ruleForm.equipImageUrl" :file-size="5">
+        <UploadImg :key="uploadImgKey" @delete-img="deleteImg" v-model:image-id="ruleForm.equipImageUrl" :file-size="5">
           <template #tip> 上传图片最大为 5M </template>
         </UploadImg>
       </el-form-item>
@@ -135,6 +135,9 @@ const rules = reactive<FormRules<RuleForm>>({
   sort: [{ required: true, message: "排序字段不能为空", trigger: "blur" }]
 });
 // 方法区
+const deleteImg = () => {
+  submitEquipment(ruleFormRef.value);
+};
 // 保存设备
 const submitEquipment = async (formEl: FormInstance | undefined) => {
   if (!formEl) return;

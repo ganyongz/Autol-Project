@@ -98,6 +98,7 @@ let imageUrl = ref();
  * */
 const emit = defineEmits<{
   "update:imageId": [value: string];
+  deleteImg;
 }>();
 onMounted(async () => {
   if (props.imageId) {
@@ -149,6 +150,7 @@ const deleteImg = async () => {
     imageUrl.value = "";
   }
   emit("update:imageId", "");
+  emit("deleteImg");
 };
 
 /**
@@ -187,11 +189,11 @@ const beforeUpload: UploadProps["beforeUpload"] = rawFile => {
  * @description 图片上传成功
  * */
 const uploadSuccess = () => {
-  ElNotification({
-    title: "温馨提示",
-    message: "图片上传成功！",
-    type: "success"
-  });
+  // ElNotification({
+  //   title: "温馨提示",
+  //   message: "图片上传成功！",
+  //   type: "success"
+  // });
 };
 
 /**

@@ -53,7 +53,7 @@
           <img v-if="imageUrl" :src="imageUrl" class="avatar" />
           <el-icon v-else class="avatar-uploader-icon"><Plus /></el-icon>
         </el-upload> -->
-        <UploadImg v-model:image-id="ruleForm.equipImageUrl" :file-size="5">
+        <UploadImg v-model:image-id="ruleForm.equipImageUrl" @delete-img="deleteImg" :file-size="5">
           <template #tip> 上传图片最大为 5M </template>
         </UploadImg>
       </el-form-item>
@@ -123,7 +123,9 @@ const rules = reactive<FormRules<RuleForm>>({
   sort: [{ required: true, message: "排序字段不能为空", trigger: "blur" }]
 });
 // 方法区
-
+const deleteImg = () => {
+  submitForm(ruleFormRef.value);
+};
 const emit = defineEmits(["closeDialog", "submitForm"]);
 const submitForm = async (formEl: FormInstance | undefined) => {
   if (!formEl) return;

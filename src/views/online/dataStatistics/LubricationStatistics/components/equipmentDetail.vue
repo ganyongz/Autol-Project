@@ -166,7 +166,7 @@
 </template>
 
 <script setup lang="ts" name="equipmentDetail">
-import { ref, reactive, toRefs, onUnmounted, nextTick, onDeactivated } from "vue";
+import { ref, reactive, toRefs, onUnmounted, nextTick, onDeactivated, onActivated, onMounted } from "vue";
 import { ElMessage, type FormRules, type FormInstance } from "element-plus";
 import { equip_partRealData, pump_OperatePump } from "@/api/online/anlageuebersicht";
 import { useHandleData2 } from "@/hooks/useHandleData";
@@ -383,21 +383,32 @@ const handleClose = () => {
   ruleForm.startPoint = "";
   ruleForm.endPoint = "";
 };
-// 创建一个定时器引用
-let timer: any;
-// 设置定时器，每 5 秒请求一次数据
-timer = setInterval(getCardContent, 5000);
+onMounted(() => {
+  startTimer();
+}),
+  // 缓存页面，再次切回时执行
+  onActivated(() => {
+    startTimer();
+  });
+// 切走时执行
+onDeactivated(() => {
+  stopTimer();
+});
+let timer;
+const startTimer = () => {
+  timer = setInterval(() => {
+    getCardContent();
+  }, 5000);
+};
+const stopTimer = () => {
+  if (timer) {
+    clearInterval(timer);
+    timer = null;
+  }
+};
 // 组件卸载时清除定时器
 onUnmounted(() => {
-  if (timer) {
-    clearInterval(timer);
-  }
-});
-// 组件切换时执行
-onDeactivated(() => {
-  if (timer) {
-    clearInterval(timer);
-  }
+  stopTimer();
 });
 // 调用
 getCardContent();
@@ -406,9 +417,5 @@ getCardContent();
 <style lang="scss" scoped>
 .box {
   display: flex;
-}
-.aaa {
-  background-image: url("@/views/online/dataStatistics/LubricationStatistics/images/borderThree.png");
-  background-repeat: round;
 }
 </style>
