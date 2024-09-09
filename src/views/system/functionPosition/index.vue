@@ -1,6 +1,6 @@
 <template>
   <div>
-    <!-- 功能位置 -->
+    <!-- 功能配置 -->
     <el-container class="layout-container-demo">
       <el-aside style="margin-right: 10px; border-radius: 10px">
         <el-tree
@@ -8,7 +8,9 @@
           :data="treeData"
           :props="defaultProps"
           node-key="id"
-          highlight-current
+          :default-expanded-keys="[currentNodeId]"
+          :current-node-key="currentNodeId"
+          :highlight-current="true"
           @node-click="handleNodeClick"
         />
       </el-aside>
@@ -53,17 +55,6 @@
                     <el-input v-model="formData.sort" />
                   </el-form-item>
                 </el-col>
-
-                <!-- <el-col :span="12">
-                  <el-form-item label="使用范围" required>
-                    <el-select v-model="formData.locationPurpose" placeholder="请选择范围">
-                      <el-option label="范围1" :value="0" />
-                      <el-option label="范围2" :value="1" />
-                      <el-option label="范围3" :value="2" />
-                      <el-option label="范围4" :value="3" />
-                    </el-select>
-                  </el-form-item>
-                </el-col> -->
               </el-row>
             </el-form>
           </div>
@@ -92,8 +83,9 @@
 </template>
 
 <script lang="ts" setup name="functionPosition">
+// 功能配置
 import mittBus from "@/utils/mittBus";
-import { ref, nextTick, onUnmounted } from "vue";
+import { ref, onUnmounted } from "vue";
 import { ElMessage } from "element-plus";
 import { getLocationTree, locationAddOrUpdate, deleteById, equip_addOrUpdate } from "@/api/system/functionPosition";
 import { useHandleData } from "@/hooks/useHandleData";
@@ -101,24 +93,25 @@ import addEquipment from "@/views/system/functionPosition/components/addEquipmen
 import equipDetail from "@/views/system/functionPosition/components/equipDetail.vue";
 import unit from "@/views/system/functionPosition/components/unit.vue";
 import detailPoint from "@/views/system/functionPosition/components/detailPoint.vue";
-// 点击节点
+let currentNodeId = ref(""); //当前节点
 const setParentId = ref();
 const nodeData = ref();
+// 点击节点
 const handleNodeClick = (val: any) => {
+  localStorage.setItem("nodeDatas", JSON.stringify(val));
   nodeData.value = val;
   formData.value.id = val.id;
   formData.value.sort = val?.displayOrder;
   formData.value.name = val?.name;
   formData.value.type = val.type;
-  //formData.value.locationPurpose = val?.locationPurpose; //字段里没有
   setParentId.value = val.id;
 };
 
 const treeData = ref([]);
-
 const defaultProps = {
   children: "children",
-  label: "name"
+  label: "name",
+  id: "id"
 };
 // 表格相关
 // const tableData = ref([])
@@ -128,8 +121,19 @@ const formData = ref({
   sort: null, //层级 从1 开始
   name: "",
   type: undefined //类型
-  //locationPurpose: "" //使用范围区分系统使用
 });
+//
+if (localStorage.getItem("nodeDatas")) {
+  let nodeDatas = JSON.parse(localStorage.getItem("nodeDatas") as any);
+  currentNodeId.value = nodeDatas ? nodeDatas["id"] : "";
+  formData.value.type = nodeDatas ? nodeDatas["type"] : "";
+  formData.value.id = nodeDatas ? nodeDatas["id"] : "";
+  formData.value.parentId = nodeDatas ? nodeDatas["parentId"] : "";
+  nodeData.value = nodeDatas;
+  formData.value.sort = nodeDatas ? nodeDatas["displayOrder"] : "";
+  formData.value.name = nodeDatas ? nodeDatas["name"] : "";
+  setParentId.value = nodeDatas ? nodeDatas["id"] : "";
+}
 // 添加顶级部门
 const addRootDepart = () => {
   Object.keys(formData.value).forEach(key => {
@@ -163,14 +167,12 @@ const getLocationTreeFun = async () => {
   let res: any = await getLocationTree({ type: 4, range: 9 });
   if (res.code == "200") {
     treeData.value = res.data as any;
-    if (res.data.length > 0) {
-      //'nextTick()' 下次dom更新时触发回调函数
-      //默认点击
-      nextTick(() => {
-        const firstNode: any = document.querySelector(".el-tree-node");
-        firstNode.click();
-      });
-    }
+    // if (res.data.length > 0) {
+    //   nextTick(() => {
+    //     const firstNode: any = document.querySelector(".el-tree-node");
+    //     firstNode.click();
+    //   });
+    // }
   } else {
     ElMessage.error(res?.message);
   }

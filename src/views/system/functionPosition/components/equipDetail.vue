@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- 设备 -->
-    <el-button type="primary" @click="submitEquipment(ruleFormRef)">保存111</el-button>
+    <el-button type="primary" @click="submitEquipment(ruleFormRef)">保存</el-button>
     <el-button type="danger" @click="deleteFun">删除</el-button>
     <el-button type="success" plain @click="addUnitFun(ruleForm)">添加部件</el-button>
     <p>基础信息</p>
