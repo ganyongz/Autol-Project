@@ -88,7 +88,7 @@ const toDetail = () => {
   router.push(`/proTable/useProTable/detail/${Math.random().toFixed(3)}?params=detail-page`);
 };
 onMounted(() => {
-  proTable.value?.getTableList(); //估计没有也行
+  //proTable.value?.getTableList(); //估计没有也行
 });
 // ProTable 实例
 const proTable = ref<ProTableInstance>();
@@ -102,11 +102,10 @@ const dataCallback = (data: any) => {
   return {
     list: data.records,
     total: data.total,
-    pageNum: data.pages,
+    pageNum: data.current,
     pageSize: data.size
   };
 };
-
 // 如果你想在请求之前对当前请求参数做一些操作，可以自定义如下函数：params 为当前所有的请求参数（包括分页），最后返回请求列表接口
 // 默认不做操作就直接在 ProTable 组件上绑定	:requestApi="getThresholdList"
 const getTableList = (params: any) => {

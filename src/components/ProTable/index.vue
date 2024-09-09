@@ -49,6 +49,7 @@
           v-bind="item"
           :align="item.align ?? 'center'"
           :reserve-selection="item.type == 'selection'"
+          show-overflow-tooltip
         >
           <template #default="scope">
             <!-- expand -->

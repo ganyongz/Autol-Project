@@ -104,7 +104,7 @@ const dataCallback = (data: any) => {
   return {
     list: data.records,
     total: data.total,
-    pageNum: data.pages,
+    pageNum: data.current,
     pageSize: data.size
   };
 };
