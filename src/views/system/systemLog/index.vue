@@ -10,7 +10,7 @@
     >
       <!-- 表格 header 按钮 -->
       <template #tableHeader>
-        <el-select v-model="initParam.eventType" placeholder="Select" style="width: 240px">
+        <el-select v-model="initParam.eventType" placeholder="检索" style="width: 240px" clearable>
           <el-option v-for="item in eventTypeOptions" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
       </template>

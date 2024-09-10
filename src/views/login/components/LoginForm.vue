@@ -10,7 +10,7 @@
       </el-input>
     </el-form-item>
     <el-form-item prop="password">
-      <el-input v-model="loginForm.password" type="password" placeholder="密码：123456" show-password autocomplete="new-password">
+      <el-input v-model="loginForm.password" type="password" placeholder="密码:p123456" show-password autocomplete="new-password">
         <template #prefix>
           <el-icon class="el-input__icon">
             <lock />
@@ -58,7 +58,7 @@ const loginRules = reactive({
 const loading = ref(false);
 const loginForm = reactive<Login.ReqLoginForm>({
   userName: "",
-  password: "p123456"
+  password: ""
 });
 
 // login

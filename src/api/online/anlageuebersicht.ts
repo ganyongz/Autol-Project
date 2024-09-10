@@ -4,7 +4,7 @@ import http from "@/api";
  */
 // 设备总览页面卡片内容
 export const equip_card = (params: any) => {
-  return http.get(`Lub/equip/equipCard`, {}, { params });
+  return http.get(`Lub/equip/equipCard`, {}, { params, loading: false });
 };
 // 设备详情信息（包含设备基本信息，振动等展示数据）
 export const equip_equipInfo = (params: any) => {
