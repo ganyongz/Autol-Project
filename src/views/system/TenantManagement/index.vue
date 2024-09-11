@@ -39,6 +39,7 @@
         <el-button type="primary" link :icon="EditPen" @click="openDrawer('编辑', scope.row)">编辑</el-button>
         <el-button type="danger" link :icon="Delete" @click="deleteAccount(scope.row)">删除</el-button>
         <el-button type="primary" link :icon="Plus" @click="relevanceEquipment(scope.row)">关联设备</el-button>
+        <el-button type="primary" link :icon="Plus" @click="afterSalesFun(scope.row)">售后</el-button>
       </template>
     </ProTable>
     <UserDrawer ref="drawerRef" />
@@ -67,6 +68,12 @@
         </div>
       </template>
     </myDialog>
+    <!-- 售后 -->
+    <myDialog title="售后文件" ref="myDialog3" draggable width="500px" :before-close="beforeClose3">
+      <template #content>
+        <afterSales :key="afterSalesKey" ref="afterSalesRef" :tenant-id="userId" @close-dialog="beforeClose3"></afterSales>
+      </template>
+    </myDialog>
   </div>
 </template>
 
@@ -86,6 +93,7 @@ import { exportUserInfo, BatchAddUser } from "@/api/modules/user";
 import { Tenant_List, Tenant_delete, Tenant_saveTenantLocation } from "@/api/system/TenantManagement";
 import addEdit from "@/views/system/TenantManagement/components/addEdit.vue";
 import addEquipment from "@/views/system/TenantManagement/components/addEquipment.vue";
+import afterSales from "@/views/system/TenantManagement/components/afterSales.vue";
 const router = useRouter();
 // 跳转详情页
 const toDetail = () => {
@@ -133,6 +141,8 @@ const columns: any = reactive([
   { prop: "platformName", label: "平台名称" },
   { prop: "expirationTime", label: "租户授权过期时间" },
   { prop: "cockpitMenuUrl", label: "驾驶舱菜单路径" },
+  { prop: "afterContacts", label: "售后联系人" },
+  { prop: "contactsPhone", label: "售后联系电话" },
   { prop: "logoUrl", label: "Logo图片路径" },
   { prop: "operation", label: "操作", fixed: "right", width: 330 }
 ]);
@@ -236,5 +246,17 @@ const relevanceEquipment = (val: any) => {
   userId.value = val.id;
   myDialog2.value.open();
   equipmentKey.value++;
+};
+// 售后
+let afterSalesKey = ref(1);
+const afterSalesRef = ref();
+const myDialog3 = ref();
+const afterSalesFun = (val: any) => {
+  userId.value = val.id;
+  myDialog3.value.open();
+  afterSalesKey.value++;
+};
+const beforeClose3 = () => {
+  myDialog3.value.close();
 };
 </script>

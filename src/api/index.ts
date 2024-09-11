@@ -116,6 +116,9 @@ class RequestHttp {
   download(url: string, params?: object, _object = {}): Promise<BlobPart> {
     return this.service.post(url, params, { ..._object, responseType: "blob" });
   }
+  get2<T>(url: string, params?: object, _object = {}): Promise<ResultData<T>> {
+    return this.service.get(url, { params, ..._object, responseType: "blob" });
+  }
   viewImg(url: string, params?: object, _object = {}): Promise<BlobPart> {
     return this.service.get(url, { params, ..._object, responseType: "blob" });
   }

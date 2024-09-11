@@ -32,6 +32,14 @@
       <el-input v-model="ruleForm.cockpitMenuUrl" />
     </el-form-item>
 
+    <el-form-item label="售后联系人" prop="afterContacts">
+      <el-input v-model="ruleForm.afterContacts" />
+    </el-form-item>
+
+    <el-form-item label="售后联系电话" prop="contactsPhone">
+      <el-input v-model="ruleForm.contactsPhone" />
+    </el-form-item>
+
     <el-form-item label="Logo图片路径" prop="logoUrl">
       <UploadImg :key="uploadImgKey" v-model:image-id="ruleForm.logoUrl" :file-size="5">
         <template #tip> 上传图片最大为 5M </template>
@@ -70,6 +78,8 @@ interface RuleForm {
   expirationTime: string;
   cockpitMenuUrl: string;
   logoUrl: string;
+  afterContacts: string;
+  contactsPhone: string;
 }
 
 const formSize = ref<ComponentSize>("default");
@@ -81,7 +91,9 @@ let ruleForm = reactive<RuleForm>({
   type: 1,
   expirationTime: "",
   cockpitMenuUrl: "",
-  logoUrl: ""
+  logoUrl: "",
+  afterContacts: "",
+  contactsPhone: ""
 });
 
 const rules = reactive<FormRules<RuleForm>>({
@@ -90,7 +102,9 @@ const rules = reactive<FormRules<RuleForm>>({
   platformName: [
     { required: true, message: "请输入平台名称", trigger: "blur" },
     { min: 1, max: 20, message: "长度1 ~ 20", trigger: "blur" }
-  ]
+  ],
+  afterContacts: [{ required: true, message: "请输入售后联系人", trigger: "blur" }],
+  contactsPhone: [{ required: true, message: "请输入售后联系电话", trigger: "blur" }]
 });
 // 方法区
 onBeforeMount(() => {
