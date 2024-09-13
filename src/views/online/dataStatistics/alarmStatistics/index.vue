@@ -54,14 +54,14 @@ console.log(route, "来自父级的参数(振动报警)");
 interface Tree {
   [key: string]: any;
 }
-let nodeType = ref();
-let nodeId = ref();
+let nodeType = ref("");
+let nodeId = ref("");
 if (sessionStorage.getItem("nodeData")) {
   nodeId.value = JSON.parse(sessionStorage.getItem("nodeData") as any).id;
   nodeType.value = JSON.parse(sessionStorage.getItem("nodeData") as any).type;
-} else {
-  nodeId.value = route.query?.partId;
-  nodeType.value = route.query?.nodeType;
+} else if (route.query?.partId && !sessionStorage.getItem("nodeData")) {
+  nodeId.value = route.query ? (route.query?.partId as string) : "";
+  nodeType.value = route.query ? (route.query?.nodeType as string) : "";
 }
 onUnmounted(() => {
   sessionStorage.removeItem("nodeData"); //销毁缓存

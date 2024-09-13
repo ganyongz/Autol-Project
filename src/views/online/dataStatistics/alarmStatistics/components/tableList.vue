@@ -29,7 +29,7 @@ import { alarm_List } from "@/api/online/alarmStatistics";
 import { ElMessage } from "element-plus";
 const props = defineProps({
   nodeType: {
-    type: Number
+    type: String
   },
   nodeId: {
     type: String
