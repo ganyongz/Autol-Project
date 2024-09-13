@@ -11,7 +11,7 @@
 </template>
 <script setup lang="ts" name="afterSales">
 import { ref } from "vue";
-import { ElMessage } from "element-plus";
+// import { ElMessage } from "element-plus";
 import { afterSales_Info, afterSales_preview, afterSales_download } from "@/api/system/TenantManagement";
 let ID = ref();
 let afterContacts = ref(); //售后联系人
@@ -25,7 +25,7 @@ const getAfterSalesInfo = async () => {
     afterContacts.value = res.data.afterContacts;
     contactsPhone.value = res.data.contactsPhone;
   } else {
-    ElMessage.error(res?.message);
+    // ElMessage.error(res?.message);
   }
 };
 // 预览文件
