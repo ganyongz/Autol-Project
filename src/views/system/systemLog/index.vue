@@ -110,7 +110,14 @@ const columns: any = reactive([
   { prop: "clientIp", label: "ip" },
   // { prop: "platformName", label: "用户" },
   { prop: "userName", label: "姓名" },
-  { prop: "timestamp", label: "时间" }
+  { prop: "timestamp", label: "时间" },
+  {
+    prop: "eventType",
+    label: "日志类型",
+    tag: true,
+    enum: eventTypeOptions,
+    fieldNames: { label: "label", value: "value" }
+  }
 ]);
 
 // 表格拖拽排序
