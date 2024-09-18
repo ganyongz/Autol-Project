@@ -15,22 +15,22 @@
         style="
           padding-bottom: 20px;
           margin-bottom: 20px;
-          border: 1px solid gray;
+          border: 2px solid gray;
           border-radius: 10px;
-          box-shadow:
-            inset #009688 0 0 0 5px,
-            inset #059c8e 0 0 0 1px;
-
-          /* inset #0cab9c 0 0 0 10px,
-            inset #1fbdae 0 0 0 11px,
-            inset #8ce9ff 0 0 0 16px,
-            inset #48e4d6 0 0 0 17px,
-            inset #e5f9f7 0 0 0 21px,
-            inset #bfecf7 0 0 0 22px; */
+          box-shadow: 0 0 10px 0 gray;
         "
       >
-        <div style="display: flex; justify-content: space-between; padding: 10px 20px 0">
-          <div style="padding: 10px 20px 0; color: #009688; text-align: left">轴承振动情况：</div>
+        <div
+          style="
+            display: flex;
+            justify-content: space-between;
+            padding: 5px 25px;
+            background-color: var(--el-fill-color-light);
+            border-bottom: 1px solid #cdd0d6;
+            border-radius: 10px 10px 0 0;
+          "
+        >
+          <div style="color: #009688; text-align: left">轴承振动情况：</div>
           <el-button size="small" type="primary" @click="ZDAlarmRecord(cards)">报警记录</el-button>
         </div>
         <div style="height: 9rem; padding: 20px; overflow-y: auto">
@@ -63,31 +63,18 @@
         "
       >
         <!-- 标题头 -->
-        <div style="padding: 10px 20px 0">
+        <div
+          style="
+            padding: 5px 25px;
+            background-color: var(--el-fill-color-light);
+            border-bottom: 1px solid #cdd0d6;
+            border-radius: 10px 10px 0 0;
+          "
+        >
           <div style="color: #009688; text-align: left">润滑监控：</div>
           <div>
             <el-button size="small" type="primary" @click="FunSetParameter(cards)">参数</el-button>
             <!-- <el-button size="small" type="primary" @click="FunStatistics(cards)">数据统计</el-button> -->
-            <!-- ~~~~~~~~~此处隐藏了~~~~~~~~~~ -->
-            <el-popover placement="right" :width="320" trigger="click" v-if="false">
-              <template #reference>
-                <el-button size="small">操作</el-button>
-              </template>
-              <!-- 非ATL3000 -->
-              <!-- <div v-if="cards.PumpStationType != 3">
-                <el-button size="small" @click="kaibeng(cards)">开泵</el-button>
-                <el-button size="small" @click="guanbeng(cards)">关泵</el-button>
-                <el-button size="small" @click="dongjie(cards)">冻结</el-button>
-                <el-button size="small" @click="jiedong(cards)">解冻</el-button>
-              </div> -->
-              <!-- ATL3000操作 -->
-              <!-- <div v-if="cards.PumpStationType == 3">
-                <el-button size="small" @click="pump_handle('ziDong', cards)">自动</el-button>
-                <el-button size="small" @click="pump_handle('shouDong', cards)">手动</el-button>
-                <el-button size="small" @click="pump_handle('fuWei', cards)">复位</el-button>
-                <el-button size="small" @click="pump_handle('tingZhi', cards)">停止</el-button>
-              </div> -->
-            </el-popover>
             <el-button size="small" type="primary" @click="viewDetails()">详情</el-button>
             <el-button size="small" type="primary" @click="FunAlarmRecord(cards, 'lubrication')">润滑记录</el-button>
             <el-button size="small" type="primary" @click="FunAlarmRecord(cards, 'alarm')">报警记录</el-button>
@@ -124,9 +111,27 @@
         </div>
       </div>
       <!-- 3.油液 -->
-      <dv-border-box10 v-if="cards?.OilRealData && cards?.OilRealData.length > 0">
+      <div
+        style="
+          padding-bottom: 20px;
+          margin-bottom: 20px;
+          border: 2px solid gray;
+          border-radius: 10px;
+          box-shadow: 0 0 10px 0 gray;
+        "
+        v-if="cards?.OilRealData && cards?.OilRealData.length > 0"
+      >
         <!-- <div style="height: 9rem; padding: 20px; overflow-y: auto"> -->
-        <div style="display: flex; justify-content: space-between; padding: 10px 20px 0">
+        <div
+          style="
+            display: flex;
+            justify-content: space-between;
+            padding: 5px 25px;
+            background-color: var(--el-fill-color-light);
+            border-bottom: 1px solid #cdd0d6;
+            border-radius: 10px 10px 0 0;
+          "
+        >
           <div style="padding: 10px 20px 0; color: #009688; text-align: left">油液状态：</div>
           <el-button size="small" type="primary" @click="FunAlarmRecord(cards, 'alarm')">报警记录</el-button>
         </div>
@@ -139,7 +144,7 @@
           </div>
         </div>
         <!-- </div> -->
-      </dv-border-box10>
+      </div>
       <el-empty
         v-if="
           !(
