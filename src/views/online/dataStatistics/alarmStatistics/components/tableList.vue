@@ -1,6 +1,6 @@
 <template>
   <el-table :data="tableData" style="width: 100%" :header-cell-style="{ backgroundColor: '#bed6fb' }">
-    <el-table-column v-for="item in tableHeader" :prop="item.prop" :label="item.label" :key="item.prop" />
+    <el-table-column v-for="item in tableHeader" :prop="item.prop" :label="item.label" :key="item.prop" show-overflow-tooltip />
     <el-table-column prop="level" label="报警等级">
       <template #default="scope">
         <span>{{ scope.row.level == 1 ? "报警" : "危险" }}</span>
@@ -29,7 +29,7 @@ import { alarm_List } from "@/api/online/alarmStatistics";
 import { ElMessage } from "element-plus";
 const props = defineProps({
   nodeType: {
-    type: String
+    type: Number
   },
   nodeId: {
     type: String
@@ -78,12 +78,13 @@ const getTableList = async () => {
   if (nodeId?.value) {
     let res: any = await alarm_List(params.value);
     if (res.code == "200") {
-      console.log(res);
       tableData.value = res.data.records;
       total.value = res.data.total;
     } else {
       ElMessage.error(res?.message);
     }
+  } else {
+    ElMessage.warning("请选择菜单节点");
   }
 };
 const handleSizeChange = (val: number) => {

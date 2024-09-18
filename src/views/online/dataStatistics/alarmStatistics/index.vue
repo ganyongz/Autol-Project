@@ -56,14 +56,14 @@ console.log(route, "来自父级的参数(振动报警)");
 interface Tree {
   [key: string]: any;
 }
-let nodeType = ref("");
+let nodeType = ref();
 let nodeId = ref("");
 if (sessionStorage.getItem("nodeData")) {
   nodeId.value = JSON.parse(sessionStorage.getItem("nodeData") as any).id;
   nodeType.value = JSON.parse(sessionStorage.getItem("nodeData") as any).type;
 } else if (route.query?.partId && !sessionStorage.getItem("nodeData")) {
   nodeId.value = route.query ? (route.query?.partId as string) : "";
-  nodeType.value = route.query ? (route.query?.nodeType as string) : "";
+  nodeType.value = route.query ? route.query?.nodeType : null;
 }
 onUnmounted(() => {
   sessionStorage.removeItem("nodeData"); //销毁缓存
@@ -128,6 +128,8 @@ const nodeClick = (nodeData: any) => {
 const searchByTime = () => {
   if (startTime.value && endTime.value) {
     rushKey.value += 1;
+  } else {
+    ElMessage.warning("请选择开始时间、结束时间");
   }
 };
 // 开始11
@@ -186,18 +188,20 @@ const getTrend = async () => {
     id: nodeId?.value,
     idType: nodeType?.value
   });
-  if (res.code == "200" && res.data.length > 0) {
-    let arrs: any = res.data;
-    // 遍历 objects 数组
-    arrs.forEach(obj => {
-      dangerNums.value.push(obj?.dangerNum);
-      times.value.push(obj?.time);
-      waringNums.value.push(obj?.waringNum);
-    });
-    // trendKey.value += 1;
-    option.xAxis.data = times.value;
-    option.series[0].data = dangerNums.value;
-    option.series[1].data = waringNums.value;
+  if (res.code == "200") {
+    if (res.data.length > 0) {
+      let arrs: any = res.data;
+      // 遍历 objects 数组
+      arrs.forEach(obj => {
+        dangerNums.value.push(obj?.dangerNum);
+        times.value.push(obj?.time);
+        waringNums.value.push(obj?.waringNum);
+      });
+      // trendKey.value += 1;
+      option.xAxis.data = times.value;
+      option.series[0].data = dangerNums.value;
+      option.series[1].data = waringNums.value;
+    }
   } else {
     ElMessage.error(res?.message);
   }
