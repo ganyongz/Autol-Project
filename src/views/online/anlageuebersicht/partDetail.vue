@@ -1,7 +1,7 @@
 <template>
   <div class="table-box bg-color">
     <!-- 部件详情 - 部件级 -->
-    <el-container>
+    <el-container style="background-color: var(--el-fill-color-blank)">
       <el-aside :class="['c_card-gray', 'left-card', 'h-100', 'mr-16', zoomIcon ? 'takeBack' : 'unfold']">
         <el-tree
           v-if="caidan"
@@ -127,6 +127,8 @@ getEquipTreeList();
 </script>
 <style scoped lang="scss">
 .bg-color {
+  // 注意 （hidden 是否可用？）
+  // overflow: hidden;
   background-color: var(--el-fill-color-blank);
 }
 .demo-tabs > .el-tabs__content {

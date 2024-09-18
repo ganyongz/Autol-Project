@@ -1,5 +1,5 @@
 <template>
-  <div class="box">
+  <div class="box" style="background-color: var(--el-fill-color-blank)">
     <div style="width: 65%; height: 100%">
       <div style="width: 70%; height: 70%; margin: 0 auto">
         <!-- <el-image style="width: 100px; height: 100px" :initial-index="4" fit="cover" src="../images/equipment.png" /> -->
@@ -9,12 +9,31 @@
     <!-- 右侧卡片 -->
     <div style="flex: 1; height: 100%">
       <!-- 1.振动 -->
-      <dv-border-box10 v-if="cards?.VibRealData && cards?.VibRealData.length > 0" style="margin-bottom: 20px">
+      <div
+        id="box1"
+        v-if="cards?.VibRealData && cards?.VibRealData.length > 0"
+        style="
+          padding-bottom: 20px;
+          margin-bottom: 20px;
+          border: 1px solid gray;
+          border-radius: 10px;
+          box-shadow:
+            inset #009688 0 0 0 5px,
+            inset #059c8e 0 0 0 1px;
+
+          /* inset #0cab9c 0 0 0 10px,
+            inset #1fbdae 0 0 0 11px,
+            inset #8ce9ff 0 0 0 16px,
+            inset #48e4d6 0 0 0 17px,
+            inset #e5f9f7 0 0 0 21px,
+            inset #bfecf7 0 0 0 22px; */
+        "
+      >
         <div style="display: flex; justify-content: space-between; padding: 10px 20px 0">
           <div style="padding: 10px 20px 0; color: #009688; text-align: left">轴承振动情况：</div>
           <el-button size="small" type="primary" @click="ZDAlarmRecord(cards)">报警记录</el-button>
         </div>
-        <div style="height: 10rem; padding: 20px; overflow-y: auto">
+        <div style="height: 9rem; padding: 20px; overflow-y: auto">
           <div v-for="(item, index) in cards?.VibRealData" :key="index">
             <el-popover placement="right" :width="300" trigger="hover">
               <template #reference>
@@ -31,41 +50,71 @@
             </el-popover>
           </div>
         </div>
-      </dv-border-box10>
+      </div>
       <!-- 2.润滑监控 -->
-      <dv-border-box10 v-if="cards?.LubRealData && cards?.LubRealData.length > 0">
+      <div
+        v-if="cards?.LubRealData && cards?.LubRealData.length > 0"
+        style="
+          padding-bottom: 20px;
+          margin-bottom: 20px;
+          border: 2px solid gray;
+          border-radius: 10px;
+          box-shadow: 0 0 10px 0 gray;
+        "
+      >
         <!-- 标题头 -->
         <div style="padding: 10px 20px 0">
           <div style="color: #009688; text-align: left">润滑监控：</div>
           <div>
             <el-button size="small" type="primary" @click="FunSetParameter(cards)">参数</el-button>
             <!-- <el-button size="small" type="primary" @click="FunStatistics(cards)">数据统计</el-button> -->
-            <el-popover placement="right" :width="320" trigger="click">
+            <!-- ~~~~~~~~~此处隐藏了~~~~~~~~~~ -->
+            <el-popover placement="right" :width="320" trigger="click" v-if="false">
               <template #reference>
                 <el-button size="small">操作</el-button>
               </template>
               <!-- 非ATL3000 -->
-              <div v-if="cards.PumpStationType != 3">
+              <!-- <div v-if="cards.PumpStationType != 3">
                 <el-button size="small" @click="kaibeng(cards)">开泵</el-button>
                 <el-button size="small" @click="guanbeng(cards)">关泵</el-button>
                 <el-button size="small" @click="dongjie(cards)">冻结</el-button>
                 <el-button size="small" @click="jiedong(cards)">解冻</el-button>
-              </div>
+              </div> -->
               <!-- ATL3000操作 -->
-              <div v-if="cards.PumpStationType == 3">
+              <!-- <div v-if="cards.PumpStationType == 3">
                 <el-button size="small" @click="pump_handle('ziDong', cards)">自动</el-button>
                 <el-button size="small" @click="pump_handle('shouDong', cards)">手动</el-button>
                 <el-button size="small" @click="pump_handle('fuWei', cards)">复位</el-button>
                 <el-button size="small" @click="pump_handle('tingZhi', cards)">停止</el-button>
-              </div>
+              </div> -->
             </el-popover>
             <el-button size="small" type="primary" @click="viewDetails()">详情</el-button>
             <el-button size="small" type="primary" @click="FunAlarmRecord(cards, 'lubrication')">润滑记录</el-button>
             <el-button size="small" type="primary" @click="FunAlarmRecord(cards, 'alarm')">报警记录</el-button>
           </div>
+          <!-- 非ATL3000 -->
+          <div v-if="cards.PumpStationType != 3" style="font-size: 12px">
+            <span>操作：</span>
+            <el-button size="small" @click="kaibeng(cards)">开泵</el-button>
+            <el-button size="small" @click="guanbeng(cards)">关泵</el-button>
+            <el-button size="small" @click="dongjie(cards)">冻结</el-button>
+            <el-button size="small" @click="jiedong(cards)">解冻</el-button>
+          </div>
+          <!-- ATL3000操作 -->
+          <div v-if="cards.PumpStationType == 3" style="margin: 5px 0; font-size: 12px">
+            <span>操作：</span>
+            <el-button :class="{ active: isActive == '自动' }" size="small" @click="pump_handle('ziDong', cards)">自动</el-button>
+            <el-button :class="{ active: isActive == '手动' }" size="small" @click="pump_handle('shouDong', cards)">
+              手动
+            </el-button>
+            <el-button :class="{ active: isActive == '复位' }" size="small" @click="pump_handle('fuWei', cards)">复位</el-button>
+            <el-button :class="{ active: isActive == '停止' }" size="small" @click="pump_handle('tingZhi', cards)">
+              停止
+            </el-button>
+          </div>
         </div>
         <!-- 润滑信息 -->
-        <div style="height: 10rem; padding: 20px; overflow-y: auto">
+        <div style="height: 9rem; padding: 20px; overflow-y: auto">
           <div v-for="(item, index) in cards?.LubRealData" :key="index">
             <div style="display: flex; justify-content: space-between">
               <p style="margin: 5px 0">{{ item.name }}</p>
@@ -73,15 +122,15 @@
             </div>
           </div>
         </div>
-      </dv-border-box10>
+      </div>
       <!-- 3.油液 -->
       <dv-border-box10 v-if="cards?.OilRealData && cards?.OilRealData.length > 0">
-        <!-- <div style="height: 10rem; padding: 20px; overflow-y: auto"> -->
+        <!-- <div style="height: 9rem; padding: 20px; overflow-y: auto"> -->
         <div style="display: flex; justify-content: space-between; padding: 10px 20px 0">
           <div style="padding: 10px 20px 0; color: #009688; text-align: left">油液状态：</div>
           <el-button size="small" type="primary" @click="FunAlarmRecord(cards, 'alarm')">报警记录</el-button>
         </div>
-        <div style="height: 10rem; padding: 20px; overflow-y: auto">
+        <div style="height: 9rem; padding: 20px; overflow-y: auto">
           <div v-for="(item, index) in cards?.OilRealData" :key="index">
             <div style="display: flex; justify-content: space-between">
               <p style="margin: 5px 0">{{ item.name }}:</p>
@@ -186,13 +235,24 @@ const { partId } = toRefs(props);
 console.log(partId?.value);
 //获取页面卡片
 let cards = ref();
+let isActive = ref();
 const getCardContent = async () => {
   const res: any = await equip_partRealData({ partId: partId?.value });
   if (res.code == "200") {
     nextTick(() => {
       cards.value = res.data;
     });
-    // console.log(cards.value, "卡片");
+    if (res.data.LubRealData.length > 0) {
+      let arrData = res.data.LubRealData;
+      // 使用 find 方法查找 name 为 '状态' 的对象
+      const statusObject = arrData.find(obj => obj.name === "运行状态");
+
+      // 获取该对象的 value 值
+      isActive.value = statusObject ? statusObject.value : null;
+
+      console.log(isActive.value); // 输出: active 或 inactive，取决于数组中 '状态' 的顺序
+    }
+    console.log(cards.value, "卡片内容");
   } else {
     ElMessage.error(res?.message);
   }
@@ -417,5 +477,11 @@ getCardContent();
 <style lang="scss" scoped>
 .box {
   display: flex;
+  .active {
+    color: var(--el-button-hover-text-color);
+    background-color: var(--el-button-hover-bg-color);
+    border-color: var(--el-button-hover-border-color);
+    outline: none;
+  }
 }
 </style>
