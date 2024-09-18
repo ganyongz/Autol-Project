@@ -19,8 +19,10 @@
       </el-aside>
       <el-main style="height: 1000px; background-color: var(--el-bg-color)">
         <div style="margin-bottom: 10px">
-          开始时间:<el-date-picker v-model="startTime" type="date" placeholder="请选择" value-format="YYYY-MM-DD HH:mm:ss" />
-          结束时间:<el-date-picker v-model="endTime" type="date" placeholder="请选择" value-format="YYYY-MM-DD 23:59:59" />
+          开始时间:
+          <el-date-picker v-model="startTime" type="date" placeholder="请选择" value-format="YYYY-MM-DD HH:mm:ss" />
+          结束时间:
+          <el-date-picker v-model="endTime" type="date" placeholder="请选择" value-format="YYYY-MM-DD 23:59:59" />
           <el-button type="primary" round style="margin-left: 10px" @click="searchByTime">查询</el-button>
         </div>
         <!-- 报警及危险总数 -->
@@ -119,6 +121,7 @@ const nodeClick = (nodeData: any) => {
   sessionStorage.setItem("nodeData", JSON.stringify(nodeData));
   nodeType.value = nodeData?.type;
   nodeId.value = nodeData?.id;
+  getTrend();
   rushKey.value += 1;
 };
 // 时间查询
@@ -127,7 +130,7 @@ const searchByTime = () => {
     rushKey.value += 1;
   }
 };
-// 11111111111111111
+// 开始11
 // let trendKey = ref(1);
 let dangerNums: any = ref([]);
 let times: any = ref([]);
@@ -179,7 +182,10 @@ let option = {
 };
 // 获取报警趋势记录
 const getTrend = async () => {
-  let res: any = await alarm_Trend({});
+  let res: any = await alarm_Trend({
+    id: nodeId?.value,
+    idType: nodeType?.value
+  });
   if (res.code == "200" && res.data.length > 0) {
     let arrs: any = res.data;
     // 遍历 objects 数组
@@ -196,7 +202,7 @@ const getTrend = async () => {
     ElMessage.error(res?.message);
   }
 };
-// 22222222222222222
+// 结束22
 // 调用
 getTreeList();
 </script>

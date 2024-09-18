@@ -35,6 +35,16 @@
         </el-tree>
       </el-aside>
       <el-main style="position: relative; overflow: hidden">
+        <!-- 细化普专用 -->
+        <div style="margin-top: -15px; margin-bottom: 10px" v-if="activeName === 'fifth'">
+          <span>中心频率：</span>
+          <el-input v-model.number="fe" style="width: 200px; margin-right: 10px" placeholder="请输入" />
+          <span>细化FFT的长度：</span>
+          <el-input v-model.number="nfft" style="width: 200px; margin-right: 10px" placeholder="256~8192之间的2的幂次" />
+          <span>细化倍数：</span>
+          <el-input v-model.number="D" style="width: 200px; margin-right: 10px" placeholder="2~10之间" />
+          <el-button type="primary" @click="xihuapuSearch">查询</el-button>
+        </div>
         <div style="height: 400px; text-align: center; vertical-align: middle; border: 1px solid #dddddd; border-radius: 15px">
           <boxingtu v-if="activeName === 'first'" :key="boxingKey" ref="trendChart" :station-id="stationId" :data-obj="dataObj" />
           <spectrogram
@@ -60,6 +70,32 @@
           />
           <xihuaSpectrum
             v-if="activeName === 'fifth'"
+            :key="boxingKey"
+            ref="trendChart"
+            :station-id="stationId"
+            :fe="fe"
+            :nfft="nfft"
+            :d="D"
+            :data-obj="dataObj"
+          />
+          <zixiangguan
+            v-if="activeName === 'sixth'"
+            :key="boxingKey"
+            ref="trendChart"
+            :station-id="stationId"
+            :data-obj="dataObj"
+          />
+          <!-- 短时FFT分析 -->
+          <fft v-if="activeName === 'seventh'" :key="boxingKey" ref="trendChart" :station-id="stationId" :data-obj="dataObj" />
+          <gongLvPu
+            v-if="activeName === 'eighth'"
+            :key="boxingKey"
+            ref="trendChart"
+            :station-id="stationId"
+            :data-obj="dataObj"
+          />
+          <jieCiFenXi
+            v-if="activeName === 'ninth'"
             :key="boxingKey"
             ref="trendChart"
             :station-id="stationId"
@@ -89,6 +125,10 @@ import spectrogram from "@/views/online/expertAnalysis/comprehensiveAnalysis/com
 import envelopeSpectrum from "@/views/online/expertAnalysis/comprehensiveAnalysis/components/envelopeSpectrum.vue";
 import cepstrum from "@/views/online/expertAnalysis/comprehensiveAnalysis/components/cepstrum.vue";
 import xihuaSpectrum from "@/views/online/expertAnalysis/comprehensiveAnalysis/components/xihuaSpectrum.vue";
+import zixiangguan from "@/views/online/expertAnalysis/comprehensiveAnalysis/components/zixiangguan.vue";
+import gongLvPu from "@/views/online/expertAnalysis/comprehensiveAnalysis/components/gongLvPu.vue";
+import jieCiFenXi from "@/views/online/expertAnalysis/comprehensiveAnalysis/components/gongLvPu.vue";
+import fft from "@/views/online/expertAnalysis/comprehensiveAnalysis/components/fft.vue";
 import { getLocationTree } from "@/api/system/functionPosition";
 import { useRoute } from "vue-router";
 const route = useRoute();
@@ -101,6 +141,14 @@ const handleClick = (tab: any, event: Event) => {
   activeName.value = tab.props.name;
 };
 const trendChart = ref();
+// 细化谱参数
+const fe = ref<number>();
+const nfft = ref<number>();
+const D = ref<number>();
+const xihuapuSearch = () => {
+  boxingKey.value += 1;
+};
+
 // 左侧树
 const treeData = ref([]);
 const filterText = ref("");

@@ -18,6 +18,7 @@
         </template>
       </el-input>
     </el-form-item>
+    <el-checkbox v-model="rememberPassword" label="记住密码" />
   </el-form>
   <div class="login-btn">
     <el-button :icon="CircleClose" round size="large" @click="resetForm(loginFormRef)"> 重置 </el-button>
@@ -42,7 +43,7 @@ import { initDynamicRouter } from "@/routers/modules/dynamicRouter";
 import { CircleClose, UserFilled } from "@element-plus/icons-vue";
 import type { ElForm } from "element-plus";
 // import md5 from "md5";
-
+let rememberPassword = ref(false);
 const router = useRouter();
 const userStore = useUserStore();
 const tabsStore = useTabsStore();
@@ -67,6 +68,13 @@ const login = (formEl: FormInstance | undefined) => {
   formEl.validate(async valid => {
     if (!valid) return;
     loading.value = true;
+    if (rememberPassword.value) {
+      localStorage.setItem("userName", loginForm.userName);
+      localStorage.setItem("password", loginForm.password);
+    } else {
+      localStorage.removeItem("userName");
+      localStorage.removeItem("password");
+    }
     try {
       // 1.执行登录接口
       const { data }: { [key: string]: any } = await loginApi1({ ...loginForm });
@@ -102,6 +110,12 @@ const resetForm = (formEl: FormInstance | undefined) => {
 };
 
 onMounted(() => {
+  const storedUsername = localStorage.getItem("userName");
+  const storedPassword = localStorage.getItem("password");
+  if (storedUsername && storedPassword) {
+    loginForm.userName = storedUsername;
+    loginForm.password = storedPassword;
+  }
   // 监听 enter 事件（调用登录）
   document.onkeydown = (e: KeyboardEvent) => {
     e = (window.event as KeyboardEvent) || e;

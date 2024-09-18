@@ -5,8 +5,8 @@
   </div>
 </template>
 
-<script setup lang="ts" name="xihuaSpectrum">
-// 细化谱
+<script setup lang="ts" name="jieCiFenXi">
+// 阶次分析
 import { ref, onMounted, onUnmounted, toRefs } from "vue";
 import * as echarts from "echarts";
 import { ElMessage } from "element-plus";
@@ -18,21 +18,9 @@ const props = defineProps({
   },
   dataObj: {
     type: Object
-  },
-  fe: {
-    type: Number,
-    default: 1
-  },
-  nfft: {
-    type: Number,
-    default: 512
-  },
-  d: {
-    type: Number,
-    default: 2
   }
 });
-const { dataObj, fe, nfft, d } = toRefs(props);
+const { dataObj } = toRefs(props);
 const chartRef = ref<HTMLDivElement | null>(null);
 let chartInstance: echarts.ECharts | null = null;
 let xAxisData = ref();
@@ -91,13 +79,13 @@ onMounted(async () => {
       yAxis: {
         type: "value",
         // 隐藏y轴
-        // axisLine: {
-        //   show: true
-        // },
+        axisLine: {
+          show: true
+        },
         // 隐藏y轴刻度线
-        // axisTick: {
-        //   show: true
-        // },
+        axisTick: {
+          show: true
+        },
         // y轴网格线设置
         splitLine: {
           type: "dashed",
@@ -157,20 +145,13 @@ const getTrendChart = async () => {
   let params = {
     id: obj["id"],
     tableName: obj["tableName"],
-    fe: fe?.value,
-    D: d?.value,
-    nfft: nfft?.value,
-    type: 5
+    type: 9
   };
   let res: any = await Diagram_professionalAtlas(params);
-  if (res.code == "200") {
-    if (res.data?.frequencies) {
-      xAxisData.value = res.data?.frequencies;
-      yAxisData.value = res.data?.spectrum;
-      boxingKey.value += 1;
-    } else {
-      ElMessage.error(res.data?.error);
-    }
+  if (res.code == "200" && res.data?.frequencies) {
+    xAxisData.value = res.data?.frequencies;
+    yAxisData.value = res.data?.power_spectrum_db;
+    boxingKey.value += 1;
   } else {
     ElMessage.error(res?.message);
   }

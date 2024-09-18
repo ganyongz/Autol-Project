@@ -5,8 +5,8 @@
   </div>
 </template>
 
-<script setup lang="ts" name="xihuaSpectrum">
-// 细化谱
+<script setup lang="ts" name="zixiangguan">
+// 自相关分析
 import { ref, onMounted, onUnmounted, toRefs } from "vue";
 import * as echarts from "echarts";
 import { ElMessage } from "element-plus";
@@ -18,21 +18,9 @@ const props = defineProps({
   },
   dataObj: {
     type: Object
-  },
-  fe: {
-    type: Number,
-    default: 1
-  },
-  nfft: {
-    type: Number,
-    default: 512
-  },
-  d: {
-    type: Number,
-    default: 2
   }
 });
-const { dataObj, fe, nfft, d } = toRefs(props);
+const { dataObj } = toRefs(props);
 const chartRef = ref<HTMLDivElement | null>(null);
 let chartInstance: echarts.ECharts | null = null;
 let xAxisData = ref();
@@ -157,16 +145,13 @@ const getTrendChart = async () => {
   let params = {
     id: obj["id"],
     tableName: obj["tableName"],
-    fe: fe?.value,
-    D: d?.value,
-    nfft: nfft?.value,
-    type: 5
+    type: 6
   };
   let res: any = await Diagram_professionalAtlas(params);
   if (res.code == "200") {
-    if (res.data?.frequencies) {
-      xAxisData.value = res.data?.frequencies;
-      yAxisData.value = res.data?.spectrum;
+    if (res.data?.autocorrelation && res.data?.autocorrelation.length > 0) {
+      xAxisData.value = res.data?.autocorrelation.map((item, index) => index);
+      yAxisData.value = res.data?.autocorrelation.map(item => item);
       boxingKey.value += 1;
     } else {
       ElMessage.error(res.data?.error);

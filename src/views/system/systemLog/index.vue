@@ -111,6 +111,7 @@ const columns: any = reactive([
   // { prop: "platformName", label: "用户" },
   { prop: "userName", label: "姓名" },
   { prop: "timestamp", label: "时间" },
+  { prop: "message", label: "信息" },
   {
     prop: "eventType",
     label: "日志类型",
