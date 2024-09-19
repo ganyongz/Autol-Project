@@ -107,7 +107,7 @@ onMounted(async () => {
       graphic: [
         {
           type: "text",
-          left: "center", // 文本水平位置11
+          left: "center", // 文本水平位置
           top: "bottom", // 文本垂直位置，设置为 'bottom' 以使其位于图表底部
           style: {
             text: "频率/Hz", // 文本内容
