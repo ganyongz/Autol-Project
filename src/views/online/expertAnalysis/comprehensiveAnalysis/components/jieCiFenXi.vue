@@ -95,7 +95,7 @@ onMounted(async () => {
       },
       series: [
         {
-          name: "振幅",
+          name: "rpm",
           type: "line",
           stack: "Total",
           data: yAxisData.value ? yAxisData.value : [],
@@ -110,7 +110,7 @@ onMounted(async () => {
           left: "center", // 文本水平位置
           top: "bottom", // 文本垂直位置，设置为 'bottom' 以使其位于图表底部
           style: {
-            text: "ms", // 文本内容
+            text: "频率/Hz", // 文本内容
             textAlign: "center", // 文本水平对齐方式
             fill: "#333", // 文本颜色
             fontSize: 12 // 文本大小
@@ -125,10 +125,10 @@ onMounted(async () => {
           top: "center",
           offset: [200, 200], // 根据需要调整文本与 y 轴的距离
           style: {
-            text: "mm/s",
+            text: "rpm",
             textAlign: "right",
             writingMode: "sideways-lr",
-            transform: "rotate(180deg)",
+            // transform: "rotate(180deg)",
             fontSize: 12
           },
           z: 100
@@ -148,10 +148,12 @@ const getTrendChart = async () => {
     type: 9
   };
   let res: any = await Diagram_professionalAtlas(params);
-  if (res.code == "200" && res.data?.frequencies) {
-    xAxisData.value = res.data?.frequencies;
-    yAxisData.value = res.data?.power_spectrum_db;
-    boxingKey.value += 1;
+  if (res.code == "200") {
+    if (res.data?.amplitudes) {
+      xAxisData.value = res.data?.orders;
+      yAxisData.value = res.data?.amplitudes;
+      boxingKey.value += 1;
+    }
   } else {
     ElMessage.error(res?.message);
   }

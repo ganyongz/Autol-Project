@@ -91,13 +91,13 @@ onMounted(async () => {
       yAxis: {
         type: "value",
         // 隐藏y轴
-        // axisLine: {
-        //   show: true
-        // },
+        axisLine: {
+          show: true
+        },
         // 隐藏y轴刻度线
-        // axisTick: {
-        //   show: true
-        // },
+        axisTick: {
+          show: true
+        },
         // y轴网格线设置
         splitLine: {
           type: "dashed",
@@ -107,7 +107,7 @@ onMounted(async () => {
       },
       series: [
         {
-          name: "振幅",
+          name: "幅值",
           type: "line",
           stack: "Total",
           data: yAxisData.value ? yAxisData.value : [],
@@ -122,7 +122,7 @@ onMounted(async () => {
           left: "center", // 文本水平位置
           top: "bottom", // 文本垂直位置，设置为 'bottom' 以使其位于图表底部
           style: {
-            text: "ms", // 文本内容
+            text: "频率/Hz", // 文本内容
             textAlign: "center", // 文本水平对齐方式
             fill: "#333", // 文本颜色
             fontSize: 12 // 文本大小
@@ -137,7 +137,7 @@ onMounted(async () => {
           top: "center",
           offset: [200, 200], // 根据需要调整文本与 y 轴的距离
           style: {
-            text: "mm/s",
+            text: "振幅/mm/s",
             textAlign: "right",
             writingMode: "sideways-lr",
             transform: "rotate(180deg)",

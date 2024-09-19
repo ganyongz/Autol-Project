@@ -127,7 +127,7 @@ import cepstrum from "@/views/online/expertAnalysis/comprehensiveAnalysis/compon
 import xihuaSpectrum from "@/views/online/expertAnalysis/comprehensiveAnalysis/components/xihuaSpectrum.vue";
 import zixiangguan from "@/views/online/expertAnalysis/comprehensiveAnalysis/components/zixiangguan.vue";
 import gongLvPu from "@/views/online/expertAnalysis/comprehensiveAnalysis/components/gongLvPu.vue";
-import jieCiFenXi from "@/views/online/expertAnalysis/comprehensiveAnalysis/components/gongLvPu.vue";
+import jieCiFenXi from "@/views/online/expertAnalysis/comprehensiveAnalysis/components/jieCiFenXi.vue";
 import fft from "@/views/online/expertAnalysis/comprehensiveAnalysis/components/fft.vue";
 import { getLocationTree } from "@/api/system/functionPosition";
 import { useRoute } from "vue-router";
