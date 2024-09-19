@@ -1,9 +1,9 @@
 {
-  "name": "geeker-admin",
+  "name": "autol-admin",
   "private": true,
   "version": "1.2.0",
   "type": "module",
-  "description": "geeker-admin open source management system",
+  "description": "Autol-admin open source management system",
   "author": {
     "name": "Autol",
     "email": "848130454@qq.com",
@@ -122,5 +122,8 @@
     "commitizen": {
       "path": "node_modules/cz-git"
     }
+  },
+  "rules": {
+    "no-unused-vars": "off"
   }
 }
