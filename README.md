@@ -2,7 +2,7 @@
 
 ### 介绍 📖
 
-Admin 一款基于 Vue3.4、TypeScript、Vite5、Pinia、Element-Plus 开源的后台管理框架，使用目前最新技术栈开发。项目提供强大的 [ProTable](https://juejin.cn/post/7166068828202336263) 组件，在一定程度上提高您的开发效率。另外本项目还封装了一些常用组件、Hooks、指令、动态路由、按钮级别权限控制等功能。
+该项目时一款基于 Vue3.4、TypeScript、Vite5、Pinia、Element-Plus 开源的后台管理框架，使用目前最新技术栈开发。项目提供强大的 [ProTable](https://juejin.cn/post/7166068828202336263) 组件，在一定程度上提高您的开发效率。另外本项目还封装了一些常用组件、Hooks、指令、动态路由、按钮级别权限控制等功能。
 
 ### 在线预览 👀
 
@@ -38,8 +38,6 @@ Admin 一款基于 Vue3.4、TypeScript、Vite5、Pinia、Element-Plus 开源的�
 - **Clone：**
 
 ```text
-# Gitee
-git clone https://gitee.com/HalseySpicy/Geeker-Admin.git
 # GitHub
 git clone https://github.com/HalseySpicy/Geeker-Admin.git
 ```
@@ -89,34 +87,6 @@ pnpm lint:stylelint
 # 提交代码（提交前会自动执行 lint:lint-staged 命令）
 pnpm commit
 ```
-
-### 项目截图 📷
-
-- 登录页：
-
-![login_light](https://i.imgtg.com/2023/04/13/8tknp.png)
-
-![login_dark](https://i.imgtg.com/2023/04/13/8tmpP.png)
-
-- 首页：
-
-![home_light](https://i.imgtg.com/2023/04/13/8tl1j.png)
-
-![home_dark](https://i.imgtg.com/2023/04/13/8tpfb.png)
-
-- 表格页：
-
-![table_light](https://i.imgtg.com/2023/04/13/8tfMx.png)
-
-![table_dark](https://i.imgtg.com/2023/04/13/8tv8F.png)
-
-- 数据可视化
-
-![dashboard](https://i.imgtg.com/2023/04/14/82Grx.png)
-
-- 数据大屏：
-
-![dataScreen](https://i.imgtg.com/2023/01/16/QP8HF.png)
 
 ### 文件资源目录 📚
 
@@ -179,9 +149,9 @@ Geeker-Admin
 | :---------------------------------------------: | :-----------------------------------------------: | :--------------------------------------------------: | :-------------------------------------------------: | :-------------------------------------------------: |
 |                   not support                   |                  last 2 versions                  |                   last 2 versions                    |                   last 2 versions                   |                   last 2 versions                   |
 
-### 项目后台接口 🧩
+<!-- ### 项目后台接口 🧩
 
 项目后台接口完全采用 Mock 数据，感谢以下 Mock 平台支持：
 
 - FastMock： https://www.fastmock.site
-- EasyMock：https://mock.mengxuegu.com
+- EasyMock：https://mock.mengxuegu.com -->
