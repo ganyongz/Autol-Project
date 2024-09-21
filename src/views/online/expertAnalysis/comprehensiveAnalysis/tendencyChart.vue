@@ -157,7 +157,7 @@ const setBarChart2 = () => {
           type: "dashed",
           color: "#eeeeee"
         },
-        splitNumber: 5
+        splitNumber: 10
       },
       series: [
         {
@@ -286,7 +286,7 @@ onMounted(async () => {
             type: "dashed",
             color: "#eeeeee"
           },
-          splitNumber: 5
+          splitNumber: 10
         },
         series: [
           {

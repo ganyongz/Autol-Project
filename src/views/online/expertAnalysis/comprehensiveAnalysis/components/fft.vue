@@ -38,6 +38,7 @@ let fftData = ref({
   zoomSensitivity: false, //是否开启缩放和平移/鼠标滑动缩放禁止
   tooltip: {},
   xAxis3D: {
+    nameLocation: "center", // 坐标轴名称显示位置 'start'，'middle' 或者 'center'，'end'
     name: "频率/Hz", //x轴显示为x
     type: "value",
     // min: 'dataMin',//获取数据中的最值
@@ -62,6 +63,7 @@ let fftData = ref({
   },
   yAxis3D: {
     name: "时间/ms", //y轴显示为y
+    nameLocation: "middle",
     type: "value",
     // splitNumber: 5,
     axisTick: {
@@ -79,6 +81,7 @@ let fftData = ref({
   },
   zAxis3D: {
     name: "幅值 mm/ms", //z轴显示为z
+    nameLocation: "middle",
     type: "value",
     // min: -20,
     // max: 60,
@@ -89,7 +92,7 @@ let fftData = ref({
   },
   grid3D: {
     // viewControl: {
-    autoRotate: true, // 自动旋转
+    autoRotate: false, // 自动旋转
     zoomSensitivity: false, //取消放大缩小
     // },
     axisLine: {
@@ -97,7 +100,8 @@ let fftData = ref({
         //坐标轴样式
         color: "#070707", //轴线颜色
         opacity: 0.8, //(单个刻度不会受影响)
-        width: 1 //线条宽度
+        width: 1, //线条宽度
+        z: 1000
       }
     },
     axisPointer: {
@@ -113,7 +117,7 @@ let fftData = ref({
       distance: 1500, //与视角的距离，值越大，图离视角越远，图越小
       alpha: 7, //绕x轴旋转的角度（上下旋转），增大，视角顺时针增大（向上）
       beta: 0, //绕y轴旋转的角度（左右旋转），增大，视角逆时针增大（向右）
-      center: [-15, 100, -20] //第一个参数：增大，视角沿x轴正方向水平右移动（图向左）；第二个参数：增大，视角沿y轴正方向垂直向上移动（图向下）；第三个参数：增大，视角向z轴正方向移动（图变小）
+      center: [15, 100, -15] //第一个参数：增大，视角沿x轴正方向水平右移动（图向左）；第二个参数：增大，视角沿y轴正方向垂直向上移动（图向下）；第三个参数：增大，视角向z轴正方向移动（图变小）
     },
     boxWidth: 1000,
     boxHeight: 70,

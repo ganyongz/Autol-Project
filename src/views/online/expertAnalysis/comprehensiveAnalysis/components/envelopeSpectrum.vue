@@ -44,14 +44,18 @@ onMounted(async () => {
       },
       dataZoom: [
         {
-          // 这部分是dataZoom的配置
           type: "inside", // 表示有一个滑动条形的缩放组件
-          start: 0, // 滑动条的起始位置，表示数据窗口包含数据系列的前0%
-          end: 100 // 滑动条的结束位置，表示数据窗口包含数据系列的后100%
+          start: 10, // 滑动条的起始位置，表示数据窗口包含数据系列的前10%
+          end: 50 // 滑动条的结束位置，表示数据窗口包含数据系列的后50%
+        },
+        {
+          start: 0,
+          end: 100
         }
       ],
       xAxis: {
         type: "category",
+        name: "频率（Hz）",
         data: xAxisData.value ? xAxisData.value : [],
         axisLine: {
           show: true
@@ -60,21 +64,6 @@ onMounted(async () => {
         axisTick: {
           show: true
         }
-        // graphic: [
-        //   {
-        //     type: "text",
-        //     left: "top", // 文本水平位置，根据需求调整
-        //     top: "top", // 文本垂直位置，设置为 'bottom' 以使其位于图表底部
-        //     offset: [50, 3], // 根据需要调整文本与 y 轴的距离
-        //     style: {
-        //       text: "kg3", // 文本内容
-        //       textAlign: "center", // 文本水平对齐方式
-        //       fill: "#333", // 文本颜色
-        //       fontSize: 12 // 文本大小
-        //     },
-        //     z: 100 // 设置层级，确保文本在图表上方
-        //   }
-        // ]
       },
       yAxis: {
         type: "value",
@@ -91,7 +80,17 @@ onMounted(async () => {
           type: "dashed",
           color: "#eeeeee"
         },
-        splitNumber: 5
+        splitNumber: 10,
+        // 设置Y轴标题
+        name: "幅值/mm/s",
+        nameLocation: "end", // 坐标轴名称显示位置 'start'，'middle' 或者 'center'，'end'
+        nameTextStyle: {
+          // fontWeight: "bold",
+          fontSize: "18",
+          align: "left",
+          color: "#000"
+        },
+        nameGap: 10 //到标题轴的距离
       },
       series: [
         {
@@ -102,36 +101,6 @@ onMounted(async () => {
           markLine: {
             data: [{ xAxis: "Tue" }]
           }
-        }
-      ],
-      graphic: [
-        {
-          type: "text",
-          left: "center", // 文本水平位置
-          top: "bottom", // 文本垂直位置，设置为 'bottom' 以使其位于图表底部
-          style: {
-            text: "频率/Hz", // 文本内容
-            textAlign: "center", // 文本水平对齐方式
-            fill: "#333", // 文本颜色
-            fontSize: 12 // 文本大小
-          },
-          z: 100 // 设置层级，确保文本在图表上方
-        },
-        {
-          writingMode: "sideways-lr",
-          type: "text",
-          left: "left", // 文本水平位置，根据需求调整
-          marginRight: "0",
-          top: "center",
-          offset: [200, 200], // 根据需要调整文本与 y 轴的距离
-          style: {
-            text: "幅值/mm/s",
-            textAlign: "right",
-            writingMode: "sideways-lr",
-            transform: "rotate(180deg)",
-            fontSize: 12
-          },
-          z: 100
         }
       ]
     });
