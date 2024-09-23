@@ -110,3 +110,11 @@ export const atl_deleteAtl3000BoxConfig = (params: any) => {
 export const atl_atl3000Detail = (params: any) => {
   return http.get(`Lub/equipPart/atl3000Detail`, {}, { params });
 };
+// 下载ATL3000配置终端和点号模板
+export const atl_ConfigExcelTemplate = (params: any) => {
+  return http.get2(`Lub/equipPart/atl3000ConfigExcelTemplate`, {}, { params, type: "blobType" });
+};
+// 导入ATL
+export const atl_Import = (params: any) => {
+  return http.post(`Lub/equipPart/atl3000ConfigExcelImport`, params);
+};

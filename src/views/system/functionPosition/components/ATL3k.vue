@@ -1,6 +1,8 @@
 <template>
   <div class="box">
     <el-button type="primary" @click="dialogVisible = true">新增</el-button>
+    <el-button type="primary" :icon="Download" @click="downloadTemp"> 点击下载 </el-button>
+    <el-button type="warning" @click="importFile">导入</el-button>
     <!-- form表单 -->
     <el-dialog v-model="dialogVisible" title="ATL3000新增配置" width="700" :before-close="handleClose">
       <el-form
@@ -64,6 +66,12 @@
         </template>
       </el-table-column>
     </el-table>
+    <!-- 导入 -->
+    <myDialog title="导入文件" ref="myDialog3" draggable width="500px" :before-close="beforeClose3">
+      <template #content>
+        <ATL3kUpload :key="afterSalesKey" ref="afterSalesRef" @close-dialog="beforeClose3"></ATL3kUpload>
+      </template>
+    </myDialog>
   </div>
 </template>
 
@@ -71,8 +79,17 @@
 import { ref, reactive, toRefs } from "vue";
 import type { ComponentSize, FormInstance, FormRules } from "element-plus";
 import { useHandleData } from "@/hooks/useHandleData";
-import { atl_addAtl3000BoxConfig, atl_Atl3000BoxConfigList, atl_deleteAtl3000BoxConfig } from "@/api/system/functionPosition";
+import ATL3kUpload from "@/views/system/functionPosition/components/ATL3kUpload.vue";
+import {
+  atl_addAtl3000BoxConfig,
+  atl_Atl3000BoxConfigList,
+  atl_deleteAtl3000BoxConfig,
+  atl_ConfigExcelTemplate
+} from "@/api/system/functionPosition";
 import { ElMessage } from "element-plus";
+// import { useDownload } from "@/hooks/useDownload";
+import { Download } from "@element-plus/icons-vue";
+import myDialog from "@/components/dialog/myDialog.vue";
 const props = defineProps({
   partId: {
     type: Number
@@ -156,6 +173,30 @@ const handleEdit = (val: any) => {
 const handleDelete = async (val: any) => {
   await useHandleData(atl_deleteAtl3000BoxConfig, { id: val.id }, `删除【${val.name}】`);
   getEquipPointList();
+};
+// Excel 导入模板下载
+const downloadTemp = async () => {
+  let res: any = await atl_ConfigExcelTemplate({});
+  const blob = new Blob([res]);
+  const link = document.createElement("a");
+  link.download = "ATL配置项.xls";
+  link.style.display = "none";
+  link.href = URL.createObjectURL(blob);
+  document.body.appendChild(link);
+  link.click();
+  URL.revokeObjectURL(link.href); // 释放URL 对象
+  document.body.removeChild(link);
+};
+// 导入
+let afterSalesKey = ref(1);
+const afterSalesRef = ref();
+const myDialog3 = ref();
+const importFile = () => {
+  myDialog3.value.open();
+  afterSalesKey.value++;
+};
+const beforeClose3 = () => {
+  myDialog3.value.close();
 };
 getEquipPointList();
 </script>
