@@ -88,11 +88,22 @@ let dangerNums = ref<any>([]);
 
 // 指定图表的配置项和数据
 let option = {
-  tooltip: {
-    trigger: "axis",
-    axisPointer: {
-      type: "shadow"
+  dataZoom: [
+    {
+      type: "inside",
+      start: 0,
+      end: 50
+    },
+    {
+      start: 0,
+      end: 100
     }
+  ],
+  tooltip: {
+    trigger: "axis"
+    // axisPointer: {
+    //   type: "shadow"
+    // }
   },
   legend: {
     data: ["报警"]

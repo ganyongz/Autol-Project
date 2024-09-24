@@ -16,11 +16,11 @@
       <span>润滑点号:</span>
       <el-input
         v-model.number="lubPoint"
-        style="width: 240px; margin-right: 10px"
+        style="width: 140px; margin-right: 10px"
         onkeyup="value=value.replace(/[^\d]/g,'')"
         placeholder="请输入整数点位号"
       />
-      <el-select v-model="status" placeholder="请选择" style="width: 240px; margin-right: 10px">
+      <el-select v-model="status" placeholder="请选择" style="width: 140px; margin-right: 10px">
         <el-option v-for="item in statusOptions" :key="item.value" :label="item.label" :value="item.value" />
       </el-select>
       <el-button type="primary" @click="searchFun">查询</el-button>
@@ -289,10 +289,29 @@ onMounted(async () => {
   }
   await getlubTrend();
   let option = {
+    dataZoom: [
+      {
+        type: "inside",
+        start: 10,
+        end: 11
+      },
+      {
+        start: 0,
+        end: 100
+      }
+    ],
     tooltip: {
       trigger: "axis",
-      axisPointer: {
-        type: "shadow"
+      formatter: function (params) {
+        let result = params[0].name + "<br/>";
+        params.forEach(function (item) {
+          if (item.seriesName == "状态") {
+            result += item.marker + item.seriesName + ": " + (item.value == 1 ? "启动" : "停止") + "<br/>";
+          } else {
+            result += item.marker + item.seriesName + ": " + item.value + "<br/>";
+          }
+        });
+        return result;
       }
     },
     legend: {
@@ -332,16 +351,18 @@ onMounted(async () => {
     series: [
       {
         name: "状态",
-        type: "bar",
+        type: "line",
         yAxisIndex: 0,
-        date: data2.value
-        //data: [1, 1, 0, 1] // 这里的数据代表状态，0代表停止，1代表启用
+        smooth: false,
+        data: data2.value
+        // data: [1, 1, 0, 1] // 这里的数据代表状态，0代表停止，1代表启用
       },
       {
         name: "剩余油量",
         type: "bar",
         yAxisIndex: 1,
-        data: data1.value
+        data: data1.value,
+        barWidth: 5 //柱状条宽
         //data: [80, 70, 60, 50] // 这里的数据代表剩余油量，单位根据实际情况设置
       }
     ]

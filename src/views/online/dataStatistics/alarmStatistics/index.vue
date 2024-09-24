@@ -145,19 +145,30 @@ onMounted(async () => {
 // 准备日期数据
 // let dates = ["2024-01-01", "2024-01-02", "2024-01-03", "2024-01-04"];
 
-// 准备报警次数数据
+// 报警次数数据
 // let warningCounts = [5, 10, 15, 20];
 
-// 准备修复次数数据
+// 修复次数数据
 // let repairCounts = [8, 7, 6, 5];
 
 // 指定图表的配置项和数据
 let option = {
-  tooltip: {
-    trigger: "axis",
-    axisPointer: {
-      type: "shadow"
+  dataZoom: [
+    {
+      type: "inside",
+      start: 0,
+      end: 50
+    },
+    {
+      start: 0,
+      end: 100
     }
+  ],
+  tooltip: {
+    trigger: "axis"
+    // axisPointer: {
+    //   type: "shadow"
+    // }
   },
   legend: {
     data: ["报警", "预警"]
@@ -188,23 +199,32 @@ const getTrend = async () => {
     id: nodeId?.value,
     idType: nodeType?.value
   });
+  dangerNums.value = [];
+  times.value = [];
+  waringNums.value = [];
   if (res.code == "200") {
     if (res.data.length > 0) {
-      let arrs: any = res.data;
+      let arrs: any = [];
+      arrs = res.data;
       // 遍历 objects 数组
       arrs.forEach(obj => {
         dangerNums.value.push(obj?.dangerNum);
         times.value.push(obj?.time);
         waringNums.value.push(obj?.waringNum);
       });
-      // trendKey.value += 1;
       option.xAxis.data = times.value;
       option.series[0].data = dangerNums.value;
       option.series[1].data = waringNums.value;
+    } else {
+      option.xAxis.data = [];
+      option.series[0].data = [];
+      option.series[1].data = [];
     }
   } else {
     ElMessage.error(res?.message);
   }
+  let chartContainer = echarts.init(document.getElementById("main2"));
+  option && chartContainer.setOption(option);
 };
 // 结束22
 // 调用
