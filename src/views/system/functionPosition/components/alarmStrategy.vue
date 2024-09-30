@@ -73,14 +73,13 @@
     </el-table>
     <myDialog :title="title" ref="myDialog1" draggable width="80%" :before-close="beforeClose1">
       <template #content>
-        <Threshold
-          v-if="IsShowAdd"
-          ref="addEditRoleRef"
-          :row-data="rowData"
-          :title="title"
-          @close-dialog="closeDialog"
-          @submit-form="submitForm"
-        />
+        <Threshold v-if="IsShowAdd" ref="addEditRoleRef" :row-data="rowData" :title="title" />
+      </template>
+      <template #footer>
+        <div style="text-align: center">
+          <el-button type="primary" size="default" @click="submitForm">保存</el-button>
+          <el-button size="default" @click="closeDialog">取消</el-button>
+        </div>
       </template>
     </myDialog>
   </div>
@@ -233,8 +232,11 @@ const closeDialog = () => {
   myDialog1.value.close();
   IsShowAdd.value = false;
 };
-const submitForm = async (val: any) => {
-  let res: any = await equipPoint_bindThresholdTacticsByTemplate({ pointId: nodeData.value["id"], thresholdTemplateId: val[0] });
+const submitForm = async () => {
+  let res: any = await equipPoint_bindThresholdTacticsByTemplate({
+    pointId: nodeData.value["id"],
+    thresholdTemplateId: addEditRoleRef.value.multipleSelection
+  });
   if (res.code == "200") {
     ElMessage.success("保存成功");
     getPointThresholdTacticsList();

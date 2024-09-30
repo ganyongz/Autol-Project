@@ -2,7 +2,7 @@
   <div class="table-box bg-color">
     <!-- 润滑、报警记录 -->
     <el-container>
-      <el-aside>
+      <el-aside style="margin-right: 10px; background-color: var(--el-fill-color-blank)">
         <el-tree
           ref="treeRef"
           style="width: 200px; max-width: 600px"
@@ -15,7 +15,7 @@
           @node-click="handleNodeClick"
         />
       </el-aside>
-      <el-main>
+      <el-main style="background-color: var(--el-fill-color-blank)">
         <el-tabs v-model="activeName" class="demo-tabs" @tab-click="handleClick">
           <el-tab-pane label="润滑记录" name="first">
             <lubrication :key="publicKey" :part-id="partId" />
@@ -100,7 +100,9 @@ getEquipTreeList();
 </script>
 <style scoped lang="scss">
 .bg-color {
-  background-color: var(--el-fill-color-blank);
+  .el-main {
+    // background-color: var(--el-fill-color-blank);
+  }
 }
 .demo-tabs > .el-tabs__content {
   padding: 32px;

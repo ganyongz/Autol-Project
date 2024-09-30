@@ -96,10 +96,8 @@
             <el-button :class="{ active: isActive == '手动' }" size="small" @click="pump_handle('shouDong', cards)">
               手动
             </el-button>
-            <el-button :class="{ active: isActive == '复位' }" size="small" @click="pump_handle('fuWei', cards)">复位</el-button>
-            <el-button :class="{ active: isActive == '停止' }" size="small" @click="pump_handle('tingZhi', cards)">
-              停止
-            </el-button>
+            <el-button type="warning" size="small" @click="pump_handle('fuWei', cards)">复位</el-button>
+            <el-button type="danger" size="small" @click="pump_handle('tingZhi', cards)"> 停止 </el-button>
           </div>
         </div>
         <!-- 润滑信息 -->

@@ -14,7 +14,9 @@
         <el-button v-auth="'batchAdd'" type="primary" :icon="Upload" plain @click="batchAdd">批量添加</el-button>
         <el-button v-if="false" type="primary" :icon="Download" plain @click="downloadFile">导出数据</el-button>
         <el-button v-if="false" type="primary" plain @click="toDetail">To 子集详情页面</el-button>
-        <el-button type="danger" :icon="Delete" plain @click="batchDelete(scope.selectedListIds)"> 批量删除 </el-button>
+        <el-button v-if="false" type="danger" :icon="Delete" plain @click="batchDelete(scope.selectedListIds)">
+          批量删除
+        </el-button>
       </template>
       <!-- Expand -->
       <template #expand="scope">
@@ -35,7 +37,7 @@
       <!-- 表格操作 -->
       <template #operation="scope">
         <el-button type="primary" link :icon="EditPen" @click="openDrawer('编辑', scope.row)">编辑</el-button>
-        <el-button type="primary" link :icon="Delete" @click="deleteAccount(scope.row)">删除</el-button>
+        <el-button type="danger" link :icon="Delete" @click="deleteAccount(scope.row)">删除</el-button>
       </template>
     </ProTable>
     <UserDrawer ref="drawerRef" />
@@ -52,15 +54,11 @@
         />
       </template>
     </myDialog>
-    <div style="text-align: center">
-      <el-button type="primary" @click="submitForm2"> 保存 </el-button>
-      <el-button @click="resetForm">关闭</el-button>
-    </div>
   </div>
 </template>
 
 <script setup lang="tsx" name="useProTable">
-import { ref, reactive, onMounted } from "vue";
+import { ref, reactive, onMounted, watch } from "vue";
 import { useRouter } from "vue-router";
 import { useHandleData } from "@/hooks/useHandleData";
 import { useDownload } from "@/hooks/useDownload";
@@ -73,16 +71,9 @@ import { CirclePlus, Delete, EditPen, Download, Upload } from "@element-plus/ico
 import { exportUserInfo, BatchAddUser } from "@/api/modules/user";
 import { getThresholdList, Threshold_delete } from "@/api/system/Threshold";
 import addEditRole from "@/views/system/Threshold/addEditRole.vue";
+import myDialog from "@/components/dialog/myDialog.vue";
 
 const router = useRouter();
-const emit = defineEmits(["closeDialog", "submitForm"]);
-const resetForm = () => {
-  emit("closeDialog");
-};
-const submitForm2 = () => {
-  emit("submitForm", proTable.value?.selectedListIds);
-};
-
 // 跳转详情页
 const toDetail = () => {
   router.push(`/proTable/useProTable/detail/${Math.random().toFixed(3)}?params=detail-page`);
@@ -131,7 +122,7 @@ const getAlarmStatus = reactive([
 ]);
 // 表格配置项
 const columns: any = reactive([
-  { type: "selection", fixed: "left", width: 70 },
+  { type: "radio", fixed: "left", width: 70 },
   // { type: "sort", label: "Sort", width: 80 },
   // { type: "expand", label: "Expand", width: 85 },
   { prop: "name", label: "名称" },
@@ -199,7 +190,6 @@ const openDrawer = (title: string, row: any) => {
 };
 // 新增、编辑
 let rowData = ref();
-import myDialog from "@/components/dialog/myDialog.vue";
 const myDialog1 = ref();
 const IsShowAdd = ref(false);
 const beforeClose1 = () => {
@@ -226,4 +216,12 @@ const closeDialog = () => {
   myDialog1.value.close();
   IsShowAdd.value = false;
 };
+let multipleSelection = ref();
+watch(
+  () => proTable.value?.radio,
+  newVal => {
+    multipleSelection.value = newVal;
+  }
+);
+defineExpose({ multipleSelection });
 </script>
