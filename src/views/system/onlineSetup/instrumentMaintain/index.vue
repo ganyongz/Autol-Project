@@ -19,7 +19,7 @@
         <mqtt ref="mqttRef" v-if="type == 'MQTT'" :point-detail="rowData" />
       </el-main>
     </el-container>
-    <div style="text-align: center">
+    <div style="text-align: center" v-if="title === '绑定数据测点'">
       <el-button type="primary" @click="SubmitEvent">保存</el-button>
     </div>
   </div>
@@ -39,7 +39,7 @@ const props = defineProps({
     default: ""
   }
 });
-const { rowData } = toRefs(props);
+const { rowData, title } = toRefs(props);
 const currentKey = ref("采集器");
 interface Tree {
   label: string;
@@ -75,7 +75,7 @@ const SubmitEvent = () => {
   let obj = {
     equipPointId: rowData.value["id"],
     serverPointId:
-      type.value == "MQTT" ? mqttRef.value["multipleSelection"][0].id : collectorRef.value["multipleSelection"][0].id, //待优化
+      type.value == "MQTT" ? mqttRef.value["multipleSelection"][0].id : collectorRef.value["multipleSelection"][0].id, // 待优化
     //  switch (type.value) {
     //   case MQTT:
     //   serverPointId:mqttRef.value["multipleSelection"][0].id

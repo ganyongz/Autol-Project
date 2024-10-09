@@ -130,6 +130,9 @@ const addFun = () => {
   if (tableData.value.some(obj => obj.seen == true)) {
     ElMessage.warning("请保存后再新增");
     return;
+  } else if (tableData.value.length > 0) {
+    ElMessage.warning("已存在阈值报警");
+    return;
   } else {
     newData.value.seen = true;
     tableData.value.push(newData.value);
