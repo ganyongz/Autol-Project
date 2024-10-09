@@ -19,7 +19,7 @@ export const uploadImg = (params: FormData) => {
 };
 // 根据文件id获取图片
 export const upload_getImageByFileId = (params: any) => {
-  return http.viewImg(`File/getImageByFileId`, {}, { params });
+  return http.viewImg(`File/getImageByFileId`, {}, { params, loading: false });
 };
 // 删除文件
 export const upload_deleteFileById = (params: any) => {

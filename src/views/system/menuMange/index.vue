@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- 菜单管理 default-expand-all -->
-    <el-button type="primary" @click="addRootMenu">新增菜单</el-button>
+    <el-button type="primary" @click="addRootMenu" style="margin-bottom: 5px">新增菜单</el-button>
     <el-table :data="tableData" style="width: 100%; margin-bottom: 20px" row-key="id" border>
       <el-table-column prop="title" label="菜单名称" />
       <el-table-column prop="url" label="菜单路由" />

@@ -94,7 +94,7 @@
                           <el-button @click="pump_handle('ziDong', outItem)">自动</el-button>
                           <el-button @click="pump_handle('shouDong', outItem)">手动</el-button>
                           <el-button @click="pump_handle('fuWei', outItem)">复位</el-button>
-                          <el-button @click="pump_handle('tingZhi', outItem)">停止</el-button>
+                          <!-- <el-button @click="pump_handle('tingZhi', outItem)">停止</el-button> -->
                         </div>
                       </el-popover>
                       <el-button type="primary" @click="viewDetails(outItem)">详情</el-button>

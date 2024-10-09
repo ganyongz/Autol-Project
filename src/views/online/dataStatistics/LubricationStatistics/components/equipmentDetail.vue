@@ -3,7 +3,13 @@
     <div style="width: 65%; height: 100%">
       <div style="width: 70%; height: 70%; margin: 0 auto">
         <!-- <el-image style="width: 100px; height: 100px" :initial-index="4" fit="cover" src="../images/equipment.png" /> -->
-        <img style="width: 100%; height: 60%" src="../images/equipment.png" alt="工艺图" />
+        <img v-if="imageUrl" style="width: 100%; height: 60%" :src="imageUrl" alt="工艺图" />
+        <img
+          v-else
+          style="width: 100%; height: 60%"
+          src="@/views/online/dataStatistics/LubricationStatistics/images/equipment.png"
+          alt="工艺图"
+        />
       </div>
     </div>
     <!-- 右侧卡片 -->
@@ -74,7 +80,7 @@
           <div style="padding: 5px, 0; margin-bottom: 5px; color: #009688; text-align: left; border-bottom: 2px dotted">
             润滑监控：
           </div>
-          <div>
+          <div style="margin-bottom: 5px">
             <el-button size="small" type="primary" @click="FunSetParameter(cards)">参数</el-button>
             <!-- <el-button size="small" type="primary" @click="FunStatistics(cards)">数据统计</el-button> -->
             <el-button size="small" type="primary" @click="viewDetails()">详情</el-button>
@@ -97,7 +103,7 @@
               手动
             </el-button>
             <el-button type="warning" size="small" @click="pump_handle('fuWei', cards)">复位</el-button>
-            <el-button type="danger" size="small" @click="pump_handle('tingZhi', cards)"> 停止 </el-button>
+            <!-- <el-button type="danger" size="small" @click="pump_handle('tingZhi', cards)"> 停止</el-button> -->
           </div>
         </div>
         <!-- 润滑信息 -->
@@ -223,6 +229,7 @@
 import { ref, reactive, toRefs, onUnmounted, nextTick, onDeactivated, onActivated, onMounted } from "vue";
 import { ElMessage, type FormRules, type FormInstance } from "element-plus";
 import { equip_partRealData, pump_OperatePump } from "@/api/online/anlageuebersicht";
+import { upload_getImageByFileId } from "@/api/modules/upload";
 import { useHandleData2 } from "@/hooks/useHandleData";
 import myDialog from "@/components/dialog/myDialog.vue";
 import analyses from "@/views/online/anlageuebersicht/components/analyses.vue";
@@ -238,12 +245,28 @@ const props = defineProps({
 });
 const { partId } = toRefs(props);
 console.log(partId?.value);
+// 获取图片
+let imageUrl = ref();
+const getImgUrl = async imageFileId => {
+  if (imageFileId) {
+    const res: any = await upload_getImageByFileId({ fileId: imageFileId });
+    let blob = new Blob([res], {
+      type: "image/png"
+    });
+    let url = URL.createObjectURL(blob);
+    imageUrl.value = url;
+  } else {
+    imageUrl.value = null;
+  }
+};
+
 //获取页面卡片
 let cards = ref();
 let isActive = ref();
 const getCardContent = async () => {
   const res: any = await equip_partRealData({ partId: partId?.value });
   if (res.code == "200") {
+    getImgUrl(res.data.imageFileId);
     nextTick(() => {
       cards.value = res.data;
     });
