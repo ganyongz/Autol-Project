@@ -86,8 +86,16 @@
             <el-button size="small" type="primary" @click="viewDetails()">详情</el-button>
             <el-button size="small" type="primary" @click="FunAlarmRecord(cards, 'lubrication')">润滑记录</el-button>
             <el-button size="small" type="primary" @click="FunAlarmRecord(cards, 'alarm')">报警记录</el-button>
+            <el-button
+              size="small"
+              type="primary"
+              @click="factorySetting(cards)"
+              v-if="cards.PumpStationType == 4 || cards.PumpStationType == 5 || cards.PumpStationType == 6"
+            >
+              恢复出厂设置
+            </el-button>
           </div>
-          <!-- 非ATL3000 -->
+          <!-- 非ATL3000操作 -->
           <div v-if="cards.PumpStationType != 3" style="font-size: 12px">
             <span>操作：</span>
             <el-button size="small" @click="kaibeng(cards)">开泵</el-button>
@@ -100,7 +108,7 @@
             <span>操作：</span>
             <el-button :class="{ active: isActive == '自动' }" size="small" @click="pump_handle('ziDong', cards)">自动</el-button>
             <el-button :class="{ active: isActive == '手动' }" size="small" @click="pump_handle('shouDong', cards)">
-              手动
+              手动润滑
             </el-button>
             <el-button type="warning" size="small" @click="pump_handle('fuWei', cards)">复位</el-button>
             <!-- <el-button type="danger" size="small" @click="pump_handle('tingZhi', cards)"> 停止</el-button> -->
@@ -318,7 +326,7 @@ const ZDAlarmRecord = (val: any) => {
   });
 };
 // 振动报警记录 end
-const myDialog3 = ref();
+const myDialog3 = ref(); //ATL3000泵
 // 参数设置(普通泵)
 const myDialog2 = ref();
 const IsShowSetTpl = ref(false);
@@ -327,7 +335,7 @@ let setParameters = ref();
 const FunSetParameter = (val: any) => {
   setParameters.value = val;
   if (val?.PumpStationType == 3) {
-    // ATL3000
+    // ATL3000泵
     ShowSetAtl3k.value = true;
     myDialog3.value.open();
   } else {
@@ -356,6 +364,19 @@ const beforeClose3 = () => {
 //     }
 //   });
 // };
+
+const factorySetting = async val => {
+  await useHandleData2(
+    pump_OperatePump,
+    {
+      gatewaySn: val.GatewaySn,
+      pumpStationType: val.PumpStationType,
+      plcAddress: val.PlcAddress,
+      type: val.PumpStationType == 6 ? 10 : 15
+    },
+    `确认重置该泵`
+  );
+};
 const kaibeng = async val => {
   await useHandleData2(
     pump_OperatePump,

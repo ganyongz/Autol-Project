@@ -38,6 +38,22 @@
             <el-radio :value="1" size="large">使用</el-radio>
           </el-radio-group>
         </el-form-item>
+        <!-- 油液相关 start -->
+        <el-form-item label="油液系统型号" prop="oilDeviceType" v-if="formInline.useOil == 1">
+          <el-input v-model="formInline.oilDeviceType" placeholder="请输入油液系统型号" clearable />
+        </el-form-item>
+        <el-form-item label="油液系统通信方式" prop="oilMessageType" v-if="formInline.useOil == 1">
+          <el-select v-model="formInline.oilMessageType" class="m-2" placeholder="请选择">
+            <el-option v-for="item in oilMessageTypeOptions" :key="item.value" :label="item.label" :value="item.value" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="油液tcp通信唯一标识" prop="oilTcpSn" v-if="formInline.useOil == 1">
+          <el-input v-model="formInline.oilTcpSn" placeholder="请输入唯一标识" clearable />
+        </el-form-item>
+        <el-form-item label="油液 plc" prop="oilTcpAddress" v-if="formInline.useOil == 1">
+          <el-input v-model="formInline.oilTcpAddress" placeholder="请输入油液plc地址" clearable />
+        </el-form-item>
+        <!-- 油液相关 end -->
 
         <el-form-item label="通讯方式" prop="messageType" :required="TXRequired" v-if="TXRequired">
           <el-select v-model="formInline.messageType" class="m-2" placeholder="请选择">
@@ -192,6 +208,11 @@ const typeOptions = [
   { value: "Speed", label: "速度" },
   { value: "Displacement", label: "位移" }
 ]; //振动类型
+// 油液系统通信方式 0：MQTT，1：TCP
+const oilMessageTypeOptions = [
+  { value: 0, label: "MQTT" },
+  { value: 1, label: "TCP" }
+];
 const formInline = reactive({
   equipId: nodeData.value.id, //所属设备id
   name: "",
@@ -208,7 +229,11 @@ const formInline = reactive({
   pumpStationType: null,
   gatewaySn: "",
   plcAddress: "",
-  imageFileId: "" //部件图片id
+  imageFileId: "", //部件图片id
+  oilDeviceType: null,
+  oilMessageType: null,
+  oilTcpSn: null,
+  oilTcpAddress: null
 });
 // 获取详情
 let uploadImgKey = ref<number>(1);
@@ -231,6 +256,11 @@ const getEquipPartDetailFun = async () => {
     formInline.gatewaySn = data.gatewaySn;
     formInline.plcAddress = data.plcAddress;
     formInline.imageFileId = data.imageFileId;
+    // 油液系统相关字段
+    formInline.oilDeviceType = data.oilDeviceType;
+    formInline.oilMessageType = data.oilMessageType;
+    formInline.oilTcpSn = data.oilTcpSn;
+    formInline.oilTcpAddress = data.oilTcpAddress;
     uploadImgKey.value += 1;
     getEquipPointList();
   } else {
@@ -320,7 +350,11 @@ watchEffect(() => {
 });
 const rules = reactive<any>({
   TXRequired: [{ message: "请选择通讯方式", trigger: "change" }],
-  sort: [{ required: true, message: "排序字段不能为空", trigger: "blur" }]
+  sort: [{ required: true, message: "排序字段不能为空", trigger: "blur" }],
+  oilDeviceType: [{ required: true, message: "请输入油液系统型号", trigger: "blur" }],
+  oilMessageType: [{ required: true, message: "请选择油液系统通信方式", trigger: "change" }],
+  oilTcpSn: [{ required: true, message: "请输入唯一标识", trigger: "blur" }],
+  oilTcpAddress: [{ required: true, message: "请输入油液plc地址", trigger: "blur" }]
 });
 
 //  ATL3000配置

@@ -13,17 +13,17 @@
           <div>
             <div class="mb-16 fs-14">
               休止时间 (P1)：
-              <el-input v-model="parameterOfApparatus.cycH" class="parameter-box mr-8" type="text" />时
-              <el-input v-model="parameterOfApparatus.cycM" class="parameter-box mx-8" type="text" />分
+              <el-input v-model="parameterOfApparatus.cycH" class="parameter-box mr-8" type="text" /> 时
+              <el-input v-model="parameterOfApparatus.cycM" class="parameter-box mx-8" type="text" /> 分
             </div>
 
             <div class="mb-16 fs-14">
               润滑时间 (P3)：
-              <el-input v-model="parameterOfApparatus.runM" class="parameter-box mr-8" type="text" />分
-              <el-input v-model="parameterOfApparatus.runS" class="parameter-box mx-8" type="text" />秒
+              <el-input v-model="parameterOfApparatus.runM" class="parameter-box mr-8" type="text" /> 分
+              <el-input v-model="parameterOfApparatus.runS" class="parameter-box mx-8" type="text" /> 秒
             </div>
             <div class="mb-16 fs-14">
-              温控 (P4)：<el-input v-model="parameterOfApparatus.temperature" class="parameter-box mr-12" type="text" />℃
+              温控 (P4)：<el-input v-model="parameterOfApparatus.temperature" class="parameter-box mr-12" type="text" /> ℃
             </div>
             <div class="mb-8 fs-14">
               信号检测 (P2)：<el-input v-model="parameterOfApparatus.signal" class="parameter-box mr-12" type="text" />
@@ -69,6 +69,21 @@
           </div>
         </div>
       </el-tab-pane>
+      <el-tab-pane
+        v-if="setParameters.PumpStationType == 4 || setParameters.PumpStationType == 5 || setParameters.PumpStationType == 6"
+        label="设置上传频次"
+        :name="3"
+      >
+        <div class="mb-16 fs-14">
+          频次设置：
+          <el-input v-model.number="Hour" class="parameter-box mr-8" type="text" /> 时
+          <el-input v-model.number="Min" class="parameter-box mr-8" type="text" /> 分
+          <el-input v-model.number="second" class="parameter-box mx-8" type="text" /> 秒
+        </div>
+        <div style="text-align: right">
+          <el-button color="#095C98" type="primary" @click="settingFrequency()"> 设置 </el-button>
+        </div>
+      </el-tab-pane>
     </el-tabs>
   </div>
 </template>
@@ -76,7 +91,7 @@
 <script lang="ts" setup name="setParameter">
 // 参数设置(普通泵)
 import { ref, toRefs } from "vue";
-import { pump_OperatePump, pump_getPumpParams, pump_setPumpParams } from "@/api/online/anlageuebersicht";
+import { pump_OperatePump, pump_getPumpParams } from "@/api/online/anlageuebersicht";
 import { ElMessage } from "element-plus";
 const props = defineProps({
   setParameters: {
@@ -84,11 +99,13 @@ const props = defineProps({
   }
 });
 const { setParameters }: any = toRefs(props);
-// console.log(setParameters, "--setParameters==");
+console.log(setParameters, "--setParameters==");
 const activeName = ref(1);
 const handleClick = tab => {
   activeName.value = tab;
-  getPumpParams();
+  if (activeName.value !== 3) {
+    getPumpParams();
+  }
   // console.log(activeName.value);
 };
 
@@ -141,7 +158,27 @@ const getPumpParams = async () => {
     ElMessage.error(res?.message);
   }
 };
-
+// 频次设置
+let Hour = ref();
+let Min = ref();
+let second = ref();
+const settingFrequency = async () => {
+  let result = {
+    gatewaySn: setParameters.value["GatewaySn"],
+    pumpStationType: setParameters?.value.PumpStationType,
+    plcAddress: setParameters?.value.PlcAddress,
+    type: 9,
+    Hour: Hour.value,
+    Min: Min.value,
+    second: second.value
+  };
+  const res: any = await pump_OperatePump(result);
+  if (res.code == "200") {
+    ElMessage.success(res?.message);
+  } else {
+    ElMessage.error(res?.message);
+  }
+};
 // 设置
 const settingUpFun = async () => {
   let result = {};
@@ -158,7 +195,7 @@ const settingUpFun = async () => {
   } else {
     result = { ...parameters, ...backgroundParameter.value };
   }
-  const res: any = await pump_setPumpParams(result);
+  const res: any = await pump_OperatePump(result);
   if (res.code == "200") {
     ElMessage.success(res?.message);
   } else {

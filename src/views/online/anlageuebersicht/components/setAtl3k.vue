@@ -63,7 +63,7 @@
 <script lang="ts" setup name="setParameterAtl3k">
 // 参数设置(ATL3000)
 import { ref, toRefs } from "vue";
-import { pump_OperatePump, pump_getPumpParams, pump_setPumpParams } from "@/api/online/anlageuebersicht";
+import { pump_OperatePump, pump_getPumpParams } from "@/api/online/anlageuebersicht";
 import { ElMessage, ElMessageBox } from "element-plus";
 const props = defineProps({
   setParameters: {
@@ -109,7 +109,7 @@ const open = async val => {
     gatewaySn: setParameters.value["GatewaySn"],
     pumpStationType: setParameters?.value.PumpStationType,
     plcAddress: setParameters?.value.PlcAddress,
-    type: 7, //ATL3000 操作
+    type: 5, //ATL3000 操作
     group: val
   });
   if (res.code == "200") {
@@ -146,14 +146,14 @@ const settingUpFun = async () => {
     gatewaySn: setParameters.value["GatewaySn"],
     pumpStationType: setParameters?.value.PumpStationType,
     plcAddress: setParameters?.value.PlcAddress,
-    type: 1 //普通参数设置
+    type: 4 //ATL3000普通参数设置
   };
   // let variableData = parameterOfApparatus.value;
   // delete variableData["DataTime"];
   let variableData = JSON.parse(JSON.stringify(parameterOfApparatus.value));
   delete variableData["DataTime"];
   result = { ...parameters, ...variableData };
-  const res: any = await pump_setPumpParams(result);
+  const res: any = await pump_OperatePump(result);
   if (res.code == "200") {
     ElMessage.success(res?.message);
   } else {

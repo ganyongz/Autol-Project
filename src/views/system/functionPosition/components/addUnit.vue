@@ -45,6 +45,24 @@
           <el-radio :value="1" size="large">使用</el-radio>
         </el-radio-group>
       </el-form-item>
+      <!-- 油液相关 start -->
+      <div>{{ ruleForm.useOil }}</div>
+      <el-form-item label="油液系统型号" prop="oilDeviceType" v-if="ruleForm.useOil == 1">
+        <el-input v-model="ruleForm.oilDeviceType" placeholder="请输入油液系统型号" clearable />
+      </el-form-item>
+      <el-form-item label="油液系统通信方式" prop="oilMessageType" v-if="ruleForm.useOil == 1">
+        <el-select v-model="ruleForm.oilMessageType" class="m-2" placeholder="请选择">
+          <el-option v-for="item in oilMessageTypeOptions" :key="item.value" :label="item.label" :value="item.value" />
+        </el-select>
+      </el-form-item>
+
+      <el-form-item label="油液tcp通信唯一标识" prop="oilTcpSn" v-if="ruleForm.useOil == 1">
+        <el-input v-model="ruleForm.oilTcpSn" placeholder="请输入唯一标识" clearable />
+      </el-form-item>
+      <el-form-item label="油液 plc" prop="oilTcpAddress" v-if="ruleForm.useOil == 1">
+        <el-input v-model="ruleForm.oilTcpAddress" placeholder="请输入油液plc地址" clearable />
+      </el-form-item>
+      <!-- 油液相关 end -->
 
       <el-form-item label="通讯方式" prop="messageType" :required="TXRequired" v-if="TXRequired">
         <el-select v-model="ruleForm.messageType" class="m-2" placeholder="请选择">
@@ -105,6 +123,11 @@ const messageTypeOptions = [
   { value: 2, label: "TCP" },
   { value: 3, label: "舍弗勒接口 " }
 ];
+// 油液系统通信方式 0：MQTT，1：TCP
+const oilMessageTypeOptions = [
+  { value: 0, label: "MQTT" },
+  { value: 1, label: "TCP" }
+];
 interface RuleForm {
   equipId: string; //所属设备id
   name: string;
@@ -120,6 +143,10 @@ interface RuleForm {
   schaefflerDeviceId: string;
   gatewaySn: string;
   plcAddress: string;
+  oilDeviceType: string | null;
+  oilMessageType: string | null;
+  oilTcpSn: string | null;
+  oilTcpAddress: string | null;
 }
 
 const formSize = ref<ComponentSize>("default");
@@ -138,12 +165,20 @@ let ruleForm = reactive<RuleForm>({
   pumpStationType: null,
   schaefflerDeviceId: "",
   gatewaySn: "",
-  plcAddress: ""
+  plcAddress: "",
+  oilDeviceType: "",
+  oilMessageType: "",
+  oilTcpSn: "",
+  oilTcpAddress: ""
 });
 
 const rules = reactive<FormRules<RuleForm>>({
   name: [{ required: true, message: "请输入名称", trigger: "blur" }],
-  sort: [{ required: true, message: "排序字段不能为空", trigger: "blur" }]
+  sort: [{ required: true, message: "排序字段不能为空", trigger: "blur" }],
+  oilDeviceType: [{ required: true, message: "请输入油液系统型号", trigger: "blur" }],
+  oilMessageType: [{ required: true, message: "请选择油液系统通信方式", trigger: "change" }],
+  oilTcpSn: [{ required: true, message: "请输入唯一标识", trigger: "blur" }],
+  oilTcpAddress: [{ required: true, message: "请输入油液plc地址", trigger: "blur" }]
 });
 // 方法区
 // 数据监听
