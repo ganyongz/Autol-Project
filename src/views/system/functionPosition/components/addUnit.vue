@@ -95,7 +95,10 @@ const { rowData, title } = toRefs(props);
 const pumpStationTypeOptions = [
   { value: 1, label: "递进单线" },
   { value: 2, label: "递进双线" },
-  { value: 3, label: "ATL3000" }
+  { value: 3, label: "ATL3000" },
+  { value: 4, label: "递进(AK09)" },
+  { value: 5, label: "递进(AK21)" },
+  { value: 6, label: "4g单点泵(Ak18)" }
 ];
 const messageTypeOptions = [
   { value: 1, label: "MQTT" },

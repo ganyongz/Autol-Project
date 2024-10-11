@@ -45,7 +45,16 @@
           <el-input v-model.number="D" style="width: 200px; margin-right: 10px" placeholder="2~10之间" />
           <el-button type="primary" @click="xihuapuSearch">查询</el-button>
         </div>
-        <div style="height: 400px; text-align: center; vertical-align: middle; border: 1px solid #dddddd; border-radius: 15px">
+        <div
+          style="
+            height: 250px;
+            margin-bottom: 5px;
+            text-align: center;
+            vertical-align: middle;
+            border: 1px solid #dddddd;
+            border-radius: 15px;
+          "
+        >
           <boxingtu v-if="activeName === 'first'" :key="boxingKey" ref="trendChart" :station-id="stationId" :data-obj="dataObj" />
           <spectrogram
             v-if="activeName === 'second'"
@@ -105,7 +114,7 @@
 
         <div
           :key="tplKey"
-          style="height: 400px; text-align: center; vertical-align: middle; border: 1px solid #dddddd; border-radius: 15px"
+          style="height: 300px; text-align: center; vertical-align: middle; border: 1px solid #dddddd; border-radius: 15px"
         >
           <!-- 趋势图 -->
           <tendencyChart @search-result="searchResult" :station-id="stationId" />

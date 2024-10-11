@@ -17,7 +17,7 @@
     </div>
 
     <div style="margin: 10px 25px; text-align: left">[趋势图]</div>
-    <div v-if="chartData.length > 0" ref="chartRef" style="width: 100%; height: 400px"></div>
+    <div v-if="chartData.length > 0" ref="chartRef" style="width: 100%; height: 260px"></div>
     <el-empty v-else description="暂无分析数据" />
   </div>
 </template>

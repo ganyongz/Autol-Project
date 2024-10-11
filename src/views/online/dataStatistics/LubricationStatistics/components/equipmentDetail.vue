@@ -80,7 +80,7 @@
           <div style="padding: 5px, 0; margin-bottom: 5px; color: #009688; text-align: left; border-bottom: 2px dotted">
             润滑监控：
           </div>
-          <div style="margin-bottom: 5px">
+          <div style="display: inline-flex; margin-bottom: 5px">
             <el-button size="small" type="primary" @click="FunSetParameter(cards)">参数</el-button>
             <!-- <el-button size="small" type="primary" @click="FunStatistics(cards)">数据统计</el-button> -->
             <el-button size="small" type="primary" @click="viewDetails()">详情</el-button>
