@@ -147,7 +147,10 @@
           "
         >
           <div style="padding: 10px 20px 0; color: #009688; text-align: left">油液状态：</div>
-          <el-button size="small" type="primary" @click="FunAlarmRecord(cards, 'alarm')">报警记录</el-button>
+          <div>
+            <el-button size="small" type="warning" @click="FunToOil(cards)">油液记录</el-button>
+            <el-button size="small" type="primary" @click="FunAlarmRecord(cards, 'alarm')">报警记录</el-button>
+          </div>
         </div>
         <div style="height: 9rem; padding: 20px; overflow-y: auto">
           <div v-for="(item, index) in cards?.OilRealData" :key="index">
@@ -278,7 +281,7 @@ const getCardContent = async () => {
     nextTick(() => {
       cards.value = res.data;
     });
-    if (res.data.LubRealData.length > 0) {
+    if (res.data.LubRealData && res.data.LubRealData.length > 0) {
       let arrData = res.data.LubRealData;
       // 使用 find 方法查找 name 为 '状态' 的对象
       const statusObject = arrData.find(obj => obj.name === "运行状态");
@@ -318,6 +321,14 @@ const FunAlarmRecord = (val: any, type: string) => {
   });
 };
 // 报警记录 end
+// 跳转至油液
+const FunToOil = (val: any) => {
+  console.log(val.partId, "部件id");
+  router.push({
+    path: "/online/expertAnalysis/oilCorrelation/oilAnalyse",
+    query: { partId: val.partId }
+  });
+};
 // 2 振动报警记录 start
 const ZDAlarmRecord = (val: any) => {
   router.push({

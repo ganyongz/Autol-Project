@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="xAxisData" ref="chartRef" style="width: 100%; height: auto"></div>
+    <div v-if="xAxisData" ref="chartRef" style="width: 100%; height: 300px"></div>
     <el-empty v-else description="暂无分析数据" />
   </div>
 </template>

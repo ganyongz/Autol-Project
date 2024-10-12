@@ -6,7 +6,7 @@ import http from "@/api";
 export const oil_pageList = (params: any) => {
   return http.get(`Lub/OilDataRecord/page`, {}, { params });
 };
-// 油液趋势
-export const oil_Trend = (params: any) => {
-  return http.get(`Lub/HisAlarmEvent/Trend`, {}, { params });
+// 油液趋势相关（历史数据）
+export const oil_hisData = (params: any) => {
+  return http.get(`Lub/OilDataRecord/hisData`, {}, { params });
 };

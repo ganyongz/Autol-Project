@@ -47,7 +47,7 @@
         </div>
         <div
           style="
-            height: 250px;
+            height: 400px;
             margin-bottom: 5px;
             text-align: center;
             vertical-align: middle;

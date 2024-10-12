@@ -93,7 +93,7 @@
         </el-form-item>
       </el-form>
     </el-card>
-    <el-card>
+    <el-card v-if="formInline.useVib == 1">
       <el-tabs v-model="activeName" class="demo-tabs" @tab-click="tabHandleClick">
         <el-tab-pane label="测点" name="first">
           <!-- 部件id -> formInline.id -->

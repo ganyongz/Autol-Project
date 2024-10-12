@@ -279,7 +279,7 @@ const getlubTrend = async () => {
 // 基于准备好的dom，初始化echarts实例
 onMounted(async () => {
   startOfWeek.value = dayjs().format("YYYY-MM-DD 00:00:00");
-  endOfWeek.value = dayjs().format("YYYY-MM-DD HH:MM:ss");
+  endOfWeek.value = dayjs().format("YYYY-MM-DD HH:mm:ss");
   dateRange.value[0] = startOfWeek.value;
   dateRange.value[1] = endOfWeek.value;
   if (partId?.value) {
