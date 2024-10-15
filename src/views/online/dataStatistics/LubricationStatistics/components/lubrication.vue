@@ -91,7 +91,7 @@
               <div class="date-card data-card-yellow mr-1">月</div>
               {{ month.runS }}
             </div>
-            <div class="mt-2 content-text">本月润滑次数(次)</div>
+            <div class="mt-2 content-text">本月润滑时长(秒)</div>
           </div>
 
           <div class="grid-cell">
@@ -99,7 +99,7 @@
               <div class="date-card data-card-yellow mr-1">月</div>
               {{ month.flowCount }}
             </div>
-            <div class="mt-2 content-text">本月润滑次数(次)</div>
+            <div class="mt-2 content-text">本月润滑油量(ml)</div>
           </div>
           <!-- end -->
         </div>

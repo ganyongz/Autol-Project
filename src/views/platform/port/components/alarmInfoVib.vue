@@ -21,7 +21,7 @@ const config = ref({
   index: false,
   // columnWidth: [50],
   align: ["center"],
-  headerBGC: "#205f76"
+  headerBGC: "rgb(10, 39, 50)"
 });
 config.value.data = dataArray as any;
 const mouseoverHandler = (e: any) => {

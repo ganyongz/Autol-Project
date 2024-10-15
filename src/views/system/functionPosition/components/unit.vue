@@ -53,6 +53,9 @@
         <el-form-item label="油液 plc" prop="oilTcpAddress" v-if="formInline.useOil == 1">
           <el-input v-model="formInline.oilTcpAddress" placeholder="请输入油液plc地址" clearable />
         </el-form-item>
+        <el-form-item label="设置油液展示字段" v-if="formInline.useOil == 1">
+          <el-button type="primary" :icon="Plus" @click="openDialog3" />
+        </el-form-item>
         <!-- 油液相关 end -->
 
         <el-form-item label="通讯方式" prop="messageType" :required="TXRequired" v-if="TXRequired">
@@ -156,6 +159,17 @@
         />
       </template>
     </myDialog>
+    <!-- 设置油液展示字段 -->
+    <myDialog title="设置油液展示字段" ref="myDialog3" draggable width="700px" :before-close="closeDialog3">
+      <template #content>
+        <fieldSetting
+          ref="fieldSettingRef"
+          :selected-val="formInline.oilShowConfig"
+          @close-dialog="closeDialog3"
+          @submit-form="saveField"
+        />
+      </template>
+    </myDialog>
   </div>
 </template>
 
@@ -171,9 +185,11 @@ import {
   equipPoint_deleteById
 } from "@/api/system/functionPosition";
 import { ElMessage } from "element-plus";
+import { Plus } from "@element-plus/icons-vue";
 import myDialog from "@/components/dialog/myDialog.vue";
 import addPoint from "@/views/system/functionPosition/components/addPoint.vue";
 import ATL3k from "@/views/system/functionPosition/components/ATL3k.vue";
+import fieldSetting from "@/views/system/functionPosition/components/fieldSetting.vue";
 import mittBus from "@/utils/mittBus";
 import UploadImg from "@/components/Upload/Img.vue";
 let props = defineProps({
@@ -213,7 +229,7 @@ const oilMessageTypeOptions = [
   { value: 0, label: "MQTT" },
   { value: 1, label: "TCP" }
 ];
-const formInline = reactive({
+const formInline: any = reactive({
   equipId: nodeData.value.id, //所属设备id
   name: "",
   description: "",
@@ -233,7 +249,8 @@ const formInline = reactive({
   oilDeviceType: null,
   oilMessageType: null,
   oilTcpSn: null,
-  oilTcpAddress: null
+  oilTcpAddress: null,
+  oilShowConfig: ""
 });
 // 获取详情
 let uploadImgKey = ref<number>(1);
@@ -261,6 +278,7 @@ const getEquipPartDetailFun = async () => {
     formInline.oilMessageType = data.oilMessageType;
     formInline.oilTcpSn = data.oilTcpSn;
     formInline.oilTcpAddress = data.oilTcpAddress;
+    formInline.oilShowConfig = data.oilShowConfig;
     uploadImgKey.value += 1;
     getEquipPointList();
   } else {
@@ -272,6 +290,14 @@ const deleteFun = async () => {
   await useHandleData(equipPart_deleteById, { id: formInline?.id }, `删除【${formInline.name}】`);
 };
 const saveUnit = async () => {
+  if (fieldSettingRef.value && fieldSettingRef.value.selectedValues) {
+    formInline.oilShowConfig = JSON.stringify(fieldSettingRef.value.selectedValues);
+  } else {
+    formInline.oilShowConfig = formInline.oilShowConfig ? JSON.stringify(JSON.parse(formInline.oilShowConfig)) : "";
+  }
+  if (formInline.useOil != 1) {
+    delete formInline.oilShowConfig;
+  }
   let res: any = await equipPart_addOrUpdate(formInline);
   if (res.code == "200") {
     ElMessage.success("保存成功");
@@ -294,6 +320,18 @@ const getEquipPointList = async () => {
 };
 const tabHandleClick = (tab: any, event: Event) => {
   console.log(tab, event);
+};
+// 设置油液展示字段
+let myDialog3 = ref();
+let fieldSettingRef = ref();
+const closeDialog3 = () => {
+  myDialog3.value.close();
+};
+const saveField = () => {
+  console.log("aaa");
+};
+const openDialog3 = () => {
+  myDialog3.value.open();
 };
 // 新增测点
 const Ttitle = ref("新增测点");

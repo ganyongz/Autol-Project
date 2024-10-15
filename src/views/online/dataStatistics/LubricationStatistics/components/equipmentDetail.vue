@@ -31,7 +31,7 @@
             display: flex;
             justify-content: space-between;
             padding: 5px 25px;
-            background-color: var(--el-fill-color-light);
+            background-color: #0000001f;
             border-bottom: 1px solid #cdd0d6;
             border-radius: 10px 10px 0 0;
           "
@@ -70,20 +70,23 @@
       >
         <!-- 标题头 -->
         <div
+          style="padding: 5px 25px; background-color: #0000001f; border-bottom: 1px solid #cdd0d6; border-radius: 10px 10px 0 0"
+        >
+          <div style="padding: 5px, 0; margin-bottom: 5px; color: #009688; text-align: left">润滑监控：</div>
+        </div>
+        <div
           style="
-            padding: 5px 25px;
+            padding: 10px 25px;
             background-color: var(--el-fill-color-light);
             border-bottom: 1px solid #cdd0d6;
             border-radius: 10px 10px 0 0;
           "
         >
-          <div style="padding: 5px, 0; margin-bottom: 5px; color: #009688; text-align: left; border-bottom: 2px dotted">
-            润滑监控：
-          </div>
-          <div style="display: inline-flex; margin-bottom: 5px">
+          <div style="display: inline-flex; margin-bottom: 10px">
             <el-button size="small" type="primary" @click="FunSetParameter(cards)">参数</el-button>
             <!-- <el-button size="small" type="primary" @click="FunStatistics(cards)">数据统计</el-button> -->
-            <el-button size="small" type="primary" @click="viewDetails()">详情</el-button>
+            <!-- 只有Atl3000才有详情 -->
+            <el-button size="small" type="primary" @click="viewDetails()" v-if="cards.PumpStationType == 3">详情</el-button>
             <el-button size="small" type="primary" @click="FunAlarmRecord(cards, 'lubrication')">润滑记录</el-button>
             <el-button size="small" type="primary" @click="FunAlarmRecord(cards, 'alarm')">报警记录</el-button>
             <el-button
@@ -114,6 +117,7 @@
             <!-- <el-button type="danger" size="small" @click="pump_handle('tingZhi', cards)"> 停止</el-button> -->
           </div>
         </div>
+
         <!-- 润滑信息 -->
         <div style="height: 9rem; padding: 20px; overflow-y: auto">
           <div v-for="(item, index) in cards?.LubRealData" :key="index">
@@ -141,7 +145,7 @@
             display: flex;
             justify-content: space-between;
             padding: 5px 25px;
-            background-color: var(--el-fill-color-light);
+            background-color: #0000001f;
             border-bottom: 1px solid #cdd0d6;
             border-radius: 10px 10px 0 0;
           "
@@ -432,13 +436,13 @@ const pump_handle = async (type, val) => {
   if (type === "ziDong") {
     await useHandleData2(
       pump_OperatePump,
-      { gatewaySn: val.GatewaySn, pumpStationType: val.PumpStationType, plcAddress: val.PlcAddress, type: 8 },
+      { gatewaySn: val.GatewaySn, pumpStationType: val.PumpStationType, plcAddress: val.PlcAddress, type: 1 },
       `确认此操作`
     );
   } else if (type === "fuWei") {
     await useHandleData2(
       pump_OperatePump,
-      { gatewaySn: val.GatewaySn, pumpStationType: val.PumpStationType, plcAddress: val.PlcAddress, type: 10 },
+      { gatewaySn: val.GatewaySn, pumpStationType: val.PumpStationType, plcAddress: val.PlcAddress, type: 3 },
       `确认此操作`
     );
   } else if (type === "tingZhi") {
@@ -483,7 +487,7 @@ const ToSet = async (formEl: FormInstance) => {
           gatewaySn: paramsDatas.value.GatewaySn,
           pumpStationType: paramsDatas.value.PumpStationType,
           plcAddress: paramsDatas.value.PlcAddress,
-          type: 9
+          type: 6
         },
         `确认此操作`
       );

@@ -10,7 +10,15 @@
       :current-node-key="partId"
       :highlight-current="true"
       @node-click="handleNodeClick"
-    />
+    >
+      <template #slot-scope="{ node }">
+        <el-tooltip :disabled="showTitle" effect="dark" :content="tooltipTitle" placement="top">
+          <span class="span-ellipsis" @mouseover="onShowNameTipsMouseenter">
+            {{ node.label }}
+          </span>
+        </el-tooltip>
+      </template>
+    </el-tree>
     <div class="table-box">
       <div class="card mb10 pt0 pb0">
         <div style="margin: 5px 0">
@@ -196,12 +204,33 @@ const getTrendChart = async () => {
   }
   show1.value += 1;
 };
+// 菜单过长处理
+let tooltipTitle = ref("");
+let showTitle = ref(true);
+const onShowNameTipsMouseenter = e => {
+  let target = e.target;
+  let textLength = target.clientWidth;
+  let containerLength = target.scrollWidth;
+  if (textLength < containerLength) {
+    tooltipTitle.value = e.target.innerText;
+    showTitle.value = false;
+  } else {
+    showTitle.value = true;
+  }
+};
 // 调用
 getTrendChart(); //获取趋势图
 getEquipTreeList();
 </script>
-<style scoped>
+<style lang="scss" scoped>
 .custom-tree-node {
+  display: block;
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+:v-deep(.el-tree-node__content) {
   display: block;
   width: 100%;
   overflow: hidden;

@@ -1,7 +1,7 @@
 <template>
   <div class="table-box bg-color">
     <!-- 部件详情 - 部件级 -->
-    <el-container style="background-color: var(--el-fill-color-blank)">
+    <el-container>
       <el-aside :class="['c_card-gray', 'left-card', 'h-100', 'mr-16', zoomIcon ? 'takeBack' : 'unfold']">
         <el-tree
           v-if="caidan"
@@ -16,7 +16,7 @@
           @node-click="handleNodeClick"
         />
       </el-aside>
-      <el-main>
+      <el-main style="background-color: var(--el-fill-color-blank)">
         <div style="display: flex">
           <div
             class="mt-16 mr-24 cursor-pointer"
@@ -129,7 +129,7 @@ getEquipTreeList();
 .bg-color {
   // 注意 （hidden 是否可用？）
   // overflow: hidden;
-  background-color: var(--el-fill-color-blank);
+  // background-color: var(--el-fill-color-blank);
 }
 .demo-tabs > .el-tabs__content {
   padding: 32px;
@@ -149,6 +149,7 @@ getEquipTreeList();
 .takeBack {
   width: 240px !important;
   margin-right: 16px;
+  background-color: var(--el-fill-color-blank);
   transition: all 0.3s;
 }
 .unfold {

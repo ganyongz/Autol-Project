@@ -18,6 +18,8 @@
         </div>
         <div class="portOutLine">
           <el-tree-select
+            class="my-tree-select"
+            popper-class="yc"
             v-model="selectValue"
             :data="selectData"
             :render-after-expand="false"
@@ -284,16 +286,28 @@ const getIndustryCockpitAlarmPart = async (type: any) => {
     tenantId: selectValue.value //租户id
   });
   if (res.code == "200") {
+    // -> 数据处理 <- 0正常，1预警 2危险
+    const levelMap = {
+      1: "预警",
+      2: "危险"
+    };
+    let transformedAlarmLevels = [];
+    if (res.data.data) {
+      transformedAlarmLevels = res.data.data.map(item => ({
+        ...item,
+        alarmLevel: levelMap[item.alarmLevel] || "未知" // 如果没有匹配的映射，则使用 '未知'
+      }));
+    }
     if (type == 1) {
-      alarmLub.value = res.data.data;
+      alarmLub.value = transformedAlarmLevels;
       nub_alarmLub.value = res.data.num;
     }
     if (type == 2) {
-      alarmOil.value = res.data.data;
+      alarmOil.value = transformedAlarmLevels;
       nub_alarmOil.value = res.data.num;
     }
     if (type == 3) {
-      alarmVib.value = res.data.data;
+      alarmVib.value = transformedAlarmLevels;
       nub_alarmVib.value = res.data.num;
     }
     tplKey.value += 1;
@@ -442,4 +456,31 @@ getDatas(); //下拉列表
 //     margin-bottom: 10px;
 //   }
 // }
+</style>
+<style>
+/* 租户切换样式 */
+.yc .el-popper.is-light {
+  background-color: #000000;
+}
+.my-tree-select {
+  background: #000000;
+}
+.yc {
+  background-color: #000000;
+}
+.yc .el-tree-node__content:hover {
+  background-color: #2c2a2a;
+}
+.yc .el-select-dropdown__item {
+  color: #ded6d6 !important;
+}
+.portOutLine .el-select__wrapper {
+  background-color: #000000 !important;
+}
+.yc .el-select__placeholder {
+  color: #ffffff !important;
+}
+.yc .el-popper__arrow::before {
+  background: #231818 !important;
+}
 </style>
