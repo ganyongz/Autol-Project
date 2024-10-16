@@ -94,20 +94,22 @@ defaultCheckedKeys.value = partId?.value ? [partId?.value] : [];
 // ProTable 实例
 const proTable = ref<ProTableInstance>();
 // 初始化的请求参数
-let initParam = ref({ partId: "134", startTime: "", endTime: "" });
-initParam.value.startTime = dayjs().subtract(1, "day").format("YYYY-MM-DD");
-initParam.value.endTime = dayjs().format("YYYY-MM-DD");
+let initParam = ref({ partId: "", startTime: "", endTime: "" });
+initParam.value.startTime = dayjs().subtract(1, "day").format("YYYY-MM-DD 00:00:00");
+initParam.value.endTime = dayjs().format("YYYY-MM-DD 23:59:59");
+initParam.value.partId = route.query?.partId ? route.query?.partId : (sessionStorage.getItem("partID") as any);
 let keyTable = ref(1);
 // 设置默认日期段为昨天到今天
-const defaultDateRange = ref([dayjs().subtract(1, "day").format("YYYY-MM-DD"), dayjs().format("YYYY-MM-DD")]);
+const defaultDateRange = ref([dayjs().subtract(1, "day").format("YYYY-MM-DD 00:00:00"), dayjs().format("YYYY-MM-DD 23:59:59")]);
 // 绑定的日期范围模型
 const dateRange = ref(defaultDateRange.value);
 // 改变日期
 const changeDate = (val: any) => {
-  initParam.value.startTime = dayjs(val[0]).format("YYYY-MM-DD");
-  initParam.value.endTime = dayjs(val[1]).format("YYYY-MM-DD");
+  initParam.value.startTime = dayjs(val[0]).format("YYYY-MM-DD 00:00:00");
+  initParam.value.endTime = dayjs(val[1]).format("YYYY-MM-DD 23:59:59");
   chartData.value = {};
   keyTable.value += 1;
+  getTrendChart(); //获取趋势图
 };
 // 表格配置项
 const columns: any = reactive([
