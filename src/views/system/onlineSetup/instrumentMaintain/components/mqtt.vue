@@ -2,25 +2,20 @@
   <div>
     <span>MQTT管理 </span>
     <el-divider />
-    <div>
+    <div style="margin-bottom: 10px">
       <el-button type="primary" @click="addCollectorFun('新增MQTT', {})">新增MQTT</el-button>
       <el-button type="primary" @click="refreshMqtt">刷新连接</el-button>
     </div>
-    <el-table
-      :data="tableData"
-      :default-sort="{ prop: 'date', order: 'descending' }"
-      height="400px"
-      style="width: 100%"
-      @row-click="handleRow"
-    >
-      <el-table-column prop="userName" label="用户名" sortable />
-      <!-- <el-table-column prop="password" label="密码" sortable /> -->
-      <el-table-column prop="ip" label="ip地址" sortable />
-      <el-table-column prop="ip" label="采集器ip" sortable />
-      <el-table-column prop="prot" label="端口" sortable />
-      <el-table-column prop="clientId" label="客户端id" sortable />
-      <!-- <el-table-column prop="source" label="数据来源" sortable /> -->
-      <el-table-column prop="remark" label="备注" sortable />
+    <el-table :data="tableData" height="400px" style="width: 100%" @row-click="handleRow">
+      <el-table-column type="index" label="#"></el-table-column>
+      <el-table-column prop="clientId" label="客户端ID" />
+      <el-table-column prop="ip" label="MQTT服务地址" />
+      <el-table-column prop="prot" label="端口" />
+      <el-table-column prop="userName" label="用户名" />
+      <el-table-column prop="password" label="密码" />
+      <!-- <el-table-column prop="ip" label="采集器ip" /> -->
+      <!-- <el-table-column prop="source" label="数据来源" /> -->
+      <el-table-column prop="remark" label="备注" />
       <el-table-column fixed="right" label="操作">
         <template #default="scope">
           <el-button link type="primary" @click="addCollectorFun('编辑MQTT', scope.row)"> 编辑 </el-button>

@@ -2,23 +2,18 @@
   <div>
     <span>仪器管理 </span>
     <el-divider />
-    <div>
+    <div style="margin-bottom: 10px">
       <el-button type="primary" @click="addCollectorFun('新增采集器', {})">新增仪器</el-button>
       <!-- <el-button type="danger">删除仪器</el-button> -->
     </div>
-    <el-table
-      :data="tableData"
-      :default-sort="{ prop: 'date', order: 'descending' }"
-      height="400px"
-      style="width: 100%"
-      @row-click="handleRow"
-    >
-      <el-table-column prop="name" label="采集器名称" sortable />
-      <el-table-column prop="code" label="采集器编码" sortable />
-      <el-table-column prop="collectorModel" label="采集器型号" sortable />
-      <el-table-column prop="ip" label="采集器ip" sortable />
-      <el-table-column prop="configJson" label="采集器配置字符串" sortable />
-      <el-table-column prop="description" label="采集器描述" sortable />
+    <el-table :data="tableData" height="400px" style="width: 100%" @row-click="handleRow">
+      <el-table-column type="index" label="#"></el-table-column>
+      <el-table-column prop="name" label="采集器名称" />
+      <el-table-column prop="code" label="采集器编码" />
+      <el-table-column prop="collectorModel" label="采集器型号" />
+      <el-table-column prop="ip" label="采集器ip" />
+      <el-table-column prop="configJson" label="采集器配置字符串" />
+      <el-table-column prop="description" label="采集器描述" />
       <el-table-column fixed="right" label="操作">
         <template #default="scope">
           <el-button link type="primary" @click="addCollectorFun('编辑采集器', scope.row)"> 编辑 </el-button>
@@ -32,18 +27,17 @@
       <el-table
         ref="taskTableRef"
         :data="cgq_tableData"
-        :default-sort="{ prop: 'date', order: 'descending' }"
         height="400px"
         style="width: 100%"
         @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" width="55" />
-        <el-table-column prop="name" label="传感器名称" sortable />
-        <el-table-column prop="code" label="传感器编码" sortable />
-        <el-table-column prop="collectorChannelNum" label="对应采集器通道号" sortable />
-        <el-table-column prop="vibAxis" label="振动采集方向" sortable />
-        <el-table-column prop="sensitivity" label="灵敏度" sortable />
-        <el-table-column prop="description" label="传感器描述" sortable />
+        <el-table-column prop="name" label="传感器名称" />
+        <el-table-column prop="code" label="传感器编码" />
+        <el-table-column prop="collectorChannelNum" label="对应采集器通道号" />
+        <el-table-column prop="vibAxis" label="振动采集方向" />
+        <el-table-column prop="sensitivity" label="灵敏度" />
+        <el-table-column prop="description" label="传感器描述" />
         <el-table-column fixed="right" label="操作">
           <template #default="scope">
             <el-button link type="primary" @click="addSensorFun('编辑传感器', scope.row)"> 编辑 </el-button>

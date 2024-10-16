@@ -68,18 +68,34 @@ const tabChange = (val: any) => {
     initParam.type = 1;
   } else {
     columns = [
-      { prop: "alarmStandard", label: "报警范围" },
-      { prop: "alarmDuration", label: "报警持续时间（分钟）" },
-      { prop: "unit", label: "单位" },
       { prop: "locationName", label: "报警位置" },
-      { prop: "level", label: "报警等级" },
       { prop: "alarmMsg", label: "报警名称" },
+      { prop: "alarmStandard", label: "报警范围" },
+      {
+        prop: "level",
+        label: "报警等级",
+        tag: true,
+        enum: eventTypeOptions,
+        fieldNames: { label: "label", value: "value" }
+      },
+      { prop: "value", label: "报警值" },
+      { prop: "unit", label: "报警单位" },
       { prop: "startTime", label: "报警开始时间" },
-      { prop: "value", label: "报警位置" }
+      { prop: "alarmDuration", label: "报警持续时间（分钟）" }
     ];
     initParam.type = 2;
   }
   keyTable.value += 1;
 };
+const eventTypeOptions = [
+  {
+    value: 1,
+    label: "预警"
+  },
+  {
+    value: 2,
+    label: "危险"
+  }
+];
 </script>
 <style scoped lang="scss"></style>

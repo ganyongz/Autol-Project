@@ -98,13 +98,14 @@ const setParentId = ref();
 const nodeData = ref();
 // 点击节点
 const handleNodeClick = (val: any) => {
-  localStorage.setItem("nodeDatas", JSON.stringify(val));
+  sessionStorage.setItem("nodeDatas", JSON.stringify(val));
   nodeData.value = val;
   formData.value.id = val.id;
   formData.value.sort = val?.displayOrder;
   formData.value.name = val?.name;
   formData.value.type = val.type;
   setParentId.value = val.id;
+  currentNodeId.value = val.id;
 };
 
 const treeData = ref([]);
@@ -123,8 +124,8 @@ const formData = ref({
   type: undefined //类型
 });
 //
-if (localStorage.getItem("nodeDatas")) {
-  let nodeDatas = JSON.parse(localStorage.getItem("nodeDatas") as any);
+if (sessionStorage.getItem("nodeDatas")) {
+  let nodeDatas = JSON.parse(sessionStorage.getItem("nodeDatas") as any);
   currentNodeId.value = nodeDatas ? nodeDatas["id"] : "";
   formData.value.type = nodeDatas ? nodeDatas["type"] : "";
   formData.value.id = nodeDatas ? nodeDatas["id"] : "";
@@ -167,6 +168,7 @@ const getLocationTreeFun = async () => {
   let res: any = await getLocationTree({ type: 4, range: 9 });
   if (res.code == "200") {
     treeData.value = res.data as any;
+    handleNodeClick(nodeData.value);
     // if (res.data.length > 0) {
     //   nextTick(() => {
     //     const firstNode: any = document.querySelector(".el-tree-node");
@@ -180,6 +182,8 @@ const getLocationTreeFun = async () => {
 // 删除
 const deleteFun = async () => {
   await useHandleData(deleteById, { id: formData.value?.id, type: formData.value.type }, `删除【${formData.value.name}】节点`);
+  // nodeData.value = {};
+  // formData.value = {};
   getLocationTreeFun();
 };
 // 新增、编辑（设备）

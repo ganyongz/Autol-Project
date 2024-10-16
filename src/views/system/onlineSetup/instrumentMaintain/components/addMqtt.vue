@@ -11,12 +11,15 @@
       :size="formSize"
       status-icon
     >
-      <el-form-item label="端口" prop="prot">
-        <el-input v-model="ruleForm.prot" />
+      <el-form-item label="客户端ID" prop="clientId">
+        <el-input v-model="ruleForm.clientId" />
+      </el-form-item>
+      <el-form-item label="MQTT服务地址" prop="ip">
+        <el-input v-model="ruleForm.ip" />
       </el-form-item>
 
-      <el-form-item label="ip地址" prop="ip">
-        <el-input v-model="ruleForm.ip" />
+      <el-form-item label="端口" prop="prot">
+        <el-input v-model="ruleForm.prot" />
       </el-form-item>
 
       <el-form-item label="用户名" prop="userName">
@@ -78,7 +81,11 @@ let ruleForm = ref<RuleForm>({
 });
 
 const rules = reactive<FormRules<RuleForm>>({
-  prot: [{ required: true, message: "请输入端口", trigger: "blur" }]
+  clientId: [{ required: true, message: "请输入客户端ID", trigger: "blur" }],
+  ip: [{ required: true, message: "请输入MQTT服务地址", trigger: "blur" }],
+  prot: [{ required: true, message: "请输入端口", trigger: "blur" }],
+  userName: [{ required: true, message: "请输入用户名", trigger: "blur" }],
+  password: [{ required: true, message: "请输入密码", trigger: "blur" }]
 });
 // 方法区
 
@@ -103,7 +110,6 @@ const resetForm = (formEl: FormInstance | undefined) => {
 onBeforeMount(() => {
   ruleForm.value.id = rowData.value.id;
   if (rowData?.value && rowData.value.id) {
-    console.log(rowData?.value, "数据呢----");
     ruleForm.value = rowData.value as any;
   }
 });

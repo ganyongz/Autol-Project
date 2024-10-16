@@ -2,9 +2,9 @@
   <div>
     <!-- 仪器维护 -->
     <el-container>
-      <el-aside>
+      <el-aside style="width: 200px">
         <el-tree
-          style="width: 200px; max-width: 300px; height: 100%"
+          style="width: 100%; height: 100%; padding: 10px"
           :data="data"
           node-key="label"
           :default-checked-keys="['采集器']"
@@ -89,4 +89,11 @@ const SubmitEvent = () => {
   emit("submitForm", obj);
 };
 </script>
-<style scoped lang=""></style>
+<style scoped lang="scss">
+:deep(.el-divider--horizontal) {
+  margin: 10px 0;
+}
+.el-main {
+  --el-main-padding: 10px;
+}
+</style>
