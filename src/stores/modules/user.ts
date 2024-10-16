@@ -15,6 +15,10 @@ export const useUserStore = defineStore({
     setToken(token: string) {
       this.token = token;
     },
+    // 移除token
+    removeToken() {
+      this.token = "";
+    },
     setUserType(userType: any) {
       this.userType = userType;
     },

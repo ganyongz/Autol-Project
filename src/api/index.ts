@@ -64,13 +64,13 @@ class RequestHttp {
     this.service.interceptors.response.use(
       (response: AxiosResponse & { config: CustomAxiosRequestConfig }) => {
         const { data, config } = response;
-
         const userStore = useUserStore();
         axiosCanceler.removePending(config);
         config.loading && tryHideFullScreenLoading();
         // 登录失效
         if (data.code == ResultEnum.OVERDUE) {
           userStore.setToken("");
+          userStore.removeToken();
           router.replace(LOGIN_URL);
           ElMessage.error(data.msg ? data.msg : data.message);
           return Promise.reject(data);
