@@ -1,5 +1,5 @@
 <template>
-  <div style="width: 100%">
+  <div style="width: 100%; padding: 10px">
     <!-- 测点 -->
     <el-tabs v-model="activeName" class="demo-tabs" @tab-click="handleClick">
       <el-tab-pane label="基本信息" name="first">
@@ -31,11 +31,11 @@
             <el-input v-model="ruleForm.sort" />
           </el-form-item>
 
-          <el-form-item label="振动类型" prop="vibType">
+          <!-- <el-form-item label="振动类型" prop="vibType">
             <el-select v-model="ruleForm.vibType" placeholder="请选择" style="width: 100%">
               <el-option v-for="item in typeOptions" :key="item.value" :label="item.label" :value="item.value" />
             </el-select>
-          </el-form-item>
+          </el-form-item> -->
 
           <el-form-item label="测点类型" prop="pointType">
             <el-select v-model="ruleForm.pointType" placeholder="请选择" style="width: 100%">
@@ -100,11 +100,13 @@ const props = defineProps({
   }
 });
 const { nodeData } = toRefs(props);
+/**
 const typeOptions = [
   { value: "Acceleration", label: "加速度" },
   { value: "Speed", label: "速度" },
   { value: "Displacement", label: "位移" }
 ]; //振动类型
+*/
 const pointTypeOptions = [
   { value: "Vib", label: "振动" },
   { value: "StartStop", label: "启停" },
@@ -123,7 +125,7 @@ interface RuleForm {
   partId: string; //部件id
   sort: number | undefined;
   pointType: string;
-  vibType: string;
+  // vibType: string;
   pointUnit: string;
   bindServerPointName: string;
   serverPointType: string;
@@ -138,7 +140,7 @@ let ruleForm = ref({
   partId: "",
   sort: undefined,
   pointType: "",
-  vibType: "",
+  // vibType: "",
   pointUnit: "",
   bindServerPointName: "",
   serverPointType: ""

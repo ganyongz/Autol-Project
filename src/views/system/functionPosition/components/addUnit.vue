@@ -46,7 +46,6 @@
         </el-radio-group>
       </el-form-item>
       <!-- 油液相关 start -->
-      <div>{{ ruleForm.useOil }}</div>
       <el-form-item label="油液系统型号" prop="oilDeviceType" v-if="ruleForm.useOil == 1">
         <el-input v-model="ruleForm.oilDeviceType" placeholder="请输入油液系统型号" clearable />
       </el-form-item>

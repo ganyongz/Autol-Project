@@ -26,11 +26,11 @@
       <el-form-item label="测点排序" prop="sort">
         <el-input v-model="ruleForm.sort" />
       </el-form-item>
-      <el-form-item label="振动类型" prop="vibType">
+      <!-- <el-form-item label="振动类型" prop="vibType">
         <el-select v-model="ruleForm.vibType" placeholder="请选择" style="width: 100%">
           <el-option v-for="item in typeOptions" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item label="测点类型" prop="pointType">
         <el-select v-model="ruleForm.pointType" placeholder="请选择" style="width: 100%">
           <el-option v-for="item in pointTypeOptions" :key="item.value" :label="item.label" :value="item.value" />
@@ -60,12 +60,13 @@ const props = defineProps({
   }
 });
 const { rowData, title } = toRefs(props);
-
+/**
 const typeOptions = [
   { value: "Acceleration", label: "加速度" },
   { value: "Speed", label: "速度" },
   { value: "Displacement", label: "位移" }
 ]; //振动类型
+*/
 const pointTypeOptions = [
   { value: "Vib", label: "振动" },
   { value: "StartStop", label: "启停" },
@@ -80,7 +81,7 @@ interface RuleForm {
   partId: string; //部件id
   sort: number | undefined;
   pointType: string;
-  vibType: string;
+  // vibType: string;
   pointUnit: string;
 }
 
@@ -93,12 +94,17 @@ let ruleForm = ref<RuleForm>({
   partId: "",
   sort: undefined,
   pointType: "",
-  vibType: "",
+  // vibType: "",
   pointUnit: ""
 });
 
 const rules = reactive<FormRules<RuleForm>>({
-  name: [{ required: true, message: "请输入名称", trigger: "blur" }]
+  name: [{ required: true, message: "请输入测点名称", trigger: "blur" }],
+  code: [{ required: true, message: "请输入测点编码", trigger: "blur" }],
+  pointUnit: [{ required: true, message: "请输入测点单位", trigger: "blur" }],
+  sort: [{ required: true, message: "请输入振动类型", trigger: "blur" }],
+  // vibType: [{ required: true, message: "请选择振动类型", trigger: "change" }],
+  pointType: [{ required: true, message: "请选择测点类型", trigger: "change" }]
 });
 // 方法区
 

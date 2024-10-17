@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="padding: 10px">
     <!-- 设备 -->
     <el-button type="primary" @click="submitEquipment(ruleFormRef)">保存</el-button>
     <el-button type="danger" @click="deleteFun">删除</el-button>
