@@ -83,8 +83,6 @@ const getTableList = async () => {
     } else {
       ElMessage.error(res?.message);
     }
-  } else {
-    ElMessage.warning("请选择菜单节点");
   }
 };
 const handleSizeChange = (val: number) => {

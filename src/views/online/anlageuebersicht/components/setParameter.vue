@@ -141,6 +141,7 @@ const getDeviceParam = async () => {
       getPumpParams();
     }, 3000);
   } else {
+    loading.value = false;
     ElMessage.error(res?.message);
   }
 };

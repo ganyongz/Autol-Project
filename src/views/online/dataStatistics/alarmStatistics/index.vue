@@ -4,6 +4,7 @@
       <el-aside width="240px" style="height: 1000px; margin-right: 10px; background-color: var(--el-bg-color)">
         <el-input v-model="filterText" style="width: 240px" placeholder="关键字搜索" />
         <el-tree
+          :key="rushKey"
           ref="treeRef"
           style="max-width: 600px"
           class="filter-tree"
@@ -48,7 +49,7 @@ import * as echarts from "echarts";
 import tableList from "@/views/online/dataStatistics/alarmStatistics/components/tableList.vue";
 import { getLocationTree } from "@/api/system/functionPosition";
 import { alarm_Trend } from "@/api/online/alarmStatistics";
-import { ref, watch, onMounted, onUnmounted, onDeactivated } from "vue";
+import { ref, watch, onMounted, onUnmounted, onDeactivated, onBeforeMount } from "vue";
 import { ElTree, ElMessage } from "element-plus";
 import { useRoute } from "vue-router";
 const route = useRoute();
@@ -56,15 +57,9 @@ console.log(route, "来自父级的参数(振动报警)");
 interface Tree {
   [key: string]: any;
 }
+let treeData = ref();
 let nodeType = ref();
 let nodeId = ref("");
-if (sessionStorage.getItem("nodeData")) {
-  nodeId.value = JSON.parse(sessionStorage.getItem("nodeData") as any).id;
-  nodeType.value = JSON.parse(sessionStorage.getItem("nodeData") as any).type;
-} else if (route.query?.partId && !sessionStorage.getItem("nodeData")) {
-  nodeId.value = route.query ? (route.query?.partId as string) : "";
-  nodeType.value = route.query ? route.query?.nodeType : null;
-}
 onUnmounted(() => {
   sessionStorage.removeItem("nodeData"); //销毁缓存
 });
@@ -89,11 +84,16 @@ const filterNode = (value: string, data: Tree) => {
   return data.label.includes(value);
 };
 // 左侧树
-let treeData = ref();
 const getTreeList = async () => {
   let res: any = await getLocationTree({ type: 4, range: 9, isFiltration: false });
   if (res.code == "200") {
     treeData.value = res.data as any;
+    if (treeData.value && treeData.value.length > 0 && !sessionStorage.getItem("nodeData")) {
+      nodeType.value = treeData.value[0].type;
+      nodeId.value = treeData.value[0].id;
+    }
+    await getTrend();
+    rushKey.value += 1;
   } else {
     ElMessage.error(res?.message);
   }
@@ -138,8 +138,17 @@ const searchByTime = () => {
 let dangerNums: any = ref([]);
 let times: any = ref([]);
 let waringNums: any = ref([]);
+onBeforeMount(async () => {
+  if (sessionStorage.getItem("nodeData")) {
+    nodeId.value = JSON.parse(sessionStorage.getItem("nodeData") as any).id;
+    nodeType.value = JSON.parse(sessionStorage.getItem("nodeData") as any).type;
+  } else if (route.query?.partId && !sessionStorage.getItem("nodeData")) {
+    nodeId.value = route.query ? (route.query?.partId as string) : "";
+    nodeType.value = route.query ? route.query?.nodeType : null;
+  }
+  await getTreeList();
+});
 onMounted(async () => {
-  await getTrend();
   let chartContainer = echarts.init(document.getElementById("main2"));
   option && chartContainer.setOption(option);
 });
@@ -224,12 +233,10 @@ const getTrend = async () => {
   } else {
     ElMessage.error(res?.message);
   }
-  let chartContainer = echarts.init(document.getElementById("main2"));
-  option && chartContainer.setOption(option);
+  // let chartContainer = echarts.init(document.getElementById("main2"));
+  // option && chartContainer.setOption(option);
 };
 // 结束22
-// 调用
-getTreeList();
 </script>
 <style scoped lang="scss">
 .outDiv {

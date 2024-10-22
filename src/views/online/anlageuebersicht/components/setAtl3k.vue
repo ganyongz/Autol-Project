@@ -119,6 +119,7 @@ const open = async val => {
     }, 3000);
   } else {
     ElMessage.error(res?.message);
+    loading.value = false;
   }
 };
 // 获取(实时)数据
