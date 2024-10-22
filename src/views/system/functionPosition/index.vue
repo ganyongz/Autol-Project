@@ -4,6 +4,7 @@
     <el-container class="layout-container-demo">
       <el-aside style="margin-right: 10px; border-radius: 10px">
         <el-tree
+          :key="treeKey"
           style="width: 240px; max-width: 240px"
           :data="treeData"
           :props="defaultProps"
@@ -17,7 +18,7 @@
       <el-container>
         <el-main
           class="departHeader"
-          style="margin-bottom: 10px; font-size: 12px; border-radius: 10px"
+          style="padding: 10px; margin-bottom: 10px; font-size: 12px; border-radius: 10px"
           v-if="formData.type == '1' || formData.type === undefined"
         >
           <div style="margin: 10px">
@@ -60,11 +61,11 @@
           </div>
         </el-main>
         <!-- 设备 -->
-        <equipDetail :node-data="nodeData" :key="nodeData.id" v-if="formData.type == '2'" />
+        <equipDetail :node-data="nodeData" :key="keyNum" v-if="formData.type == '2'" />
         <!-- 部件 -->
-        <unit :node-data="nodeData" :key="nodeData.id" v-if="formData.type == '3'" />
+        <unit :current-node-id="currentNodeId" :key="keyNum" v-if="formData.type == '3'" />
         <!-- 测点 -->
-        <detailPoint :node-data="nodeData" :key="nodeData.id" v-if="formData.type == '4'" />
+        <detailPoint :node-data="nodeData" :key="keyNum" v-if="formData.type == '4'" />
       </el-container>
     </el-container>
     <myDialog :title="detailParams.title" ref="myDialog1" draggable width="700px" :before-close="beforeClose1">
@@ -96,6 +97,7 @@ import detailPoint from "@/views/system/functionPosition/components/detailPoint.
 let currentNodeId = ref(""); //当前节点
 const setParentId = ref();
 const nodeData = ref();
+let keyNum = ref(1);
 // 点击节点
 const handleNodeClick = (val: any) => {
   sessionStorage.setItem("nodeDatas", JSON.stringify(val));
@@ -103,9 +105,11 @@ const handleNodeClick = (val: any) => {
   formData.value.id = val.id;
   formData.value.sort = val?.displayOrder;
   formData.value.name = val?.name;
-  formData.value.type = val.type;
+  formData.value.type = val?.type;
+  formData.value.parentId = val?.parentId;
   setParentId.value = val.id;
   currentNodeId.value = val.id;
+  keyNum.value += 1;
 };
 
 const treeData = ref([]);
@@ -124,17 +128,18 @@ const formData = ref({
   type: undefined //类型
 });
 //
-if (sessionStorage.getItem("nodeDatas")) {
-  let nodeDatas = JSON.parse(sessionStorage.getItem("nodeDatas") as any);
-  currentNodeId.value = nodeDatas ? nodeDatas["id"] : "";
-  formData.value.type = nodeDatas ? nodeDatas["type"] : "";
-  formData.value.id = nodeDatas ? nodeDatas["id"] : "";
-  formData.value.parentId = nodeDatas ? nodeDatas["parentId"] : "";
-  nodeData.value = nodeDatas;
-  formData.value.sort = nodeDatas ? nodeDatas["displayOrder"] : "";
-  formData.value.name = nodeDatas ? nodeDatas["name"] : "";
-  setParentId.value = nodeDatas ? nodeDatas["id"] : "";
-}
+// if (sessionStorage.getItem("nodeDatas")) {
+//   debugger;
+//   let nodeDatas = JSON.parse(sessionStorage.getItem("nodeDatas") as any);
+//   currentNodeId.value = nodeDatas ? nodeDatas["id"] : "";
+//   formData.value.type = nodeDatas ? nodeDatas["type"] : "";
+//   formData.value.id = nodeDatas ? nodeDatas["id"] : "";
+//   formData.value.parentId = nodeDatas ? nodeDatas["parentId"] : "";
+//   nodeData.value = nodeDatas;
+//   formData.value.sort = nodeDatas ? nodeDatas["displayOrder"] : "";
+//   formData.value.name = nodeDatas ? nodeDatas["name"] : "";
+//   setParentId.value = nodeDatas ? nodeDatas["id"] : "";
+// }
 // 添加顶级部门
 const addRootDepart = () => {
   Object.keys(formData.value).forEach(key => {
@@ -158,23 +163,62 @@ const submitFun = async () => {
   let res: any = await locationAddOrUpdate(formData.value);
   if (res.code == "200") {
     ElMessage.success("保存成功");
+    editOrDelete.value = "edit";
+    // setTimeout(()=>{},500)
     getLocationTreeFun();
   } else {
     ElMessage.error(res?.message);
   }
 };
+// 数组扁平化
+let flatData = ref();
+let assembleTreeData = datas => {
+  let newMenuList = JSON.parse(JSON.stringify(datas));
+  return newMenuList.flatMap(item => [item, ...(item.children ? assembleTreeData(item.children) : [])]);
+};
 // 获取位置安装树
+let treeKey = ref(1);
 const getLocationTreeFun = async () => {
+  // debugger;
   let res: any = await getLocationTree({ type: 4, range: 9 });
   if (res.code == "200") {
     treeData.value = res.data as any;
+    flatData.value = assembleTreeData(treeData.value);
+    console.log(assembleTreeData(treeData.value));
+    if (sessionStorage.getItem("nodeDatas")) {
+      let nodeDatas = JSON.parse(sessionStorage.getItem("nodeDatas") as any);
+      if (editOrDelete.value == "delete") {
+        // 如果是删除
+        const targetId = nodeDatas ? nodeDatas["parentId"] : ""; // 要查找的目标 ID
+        let findObject = flatData.value.find(item => item.id === targetId);
+        console.log(findObject);
+
+        currentNodeId.value = findObject ? findObject["id"] : "";
+        formData.value.type = findObject ? findObject["type"] : "";
+        formData.value.id = findObject ? findObject["id"] : "";
+        formData.value.parentId = findObject ? findObject["parentId"] : "";
+        nodeData.value = findObject;
+        formData.value.sort = findObject ? findObject["displayOrder"] : "";
+        formData.value.name = findObject ? findObject["name"] : "";
+        setParentId.value = findObject ? findObject["id"] : "";
+      } else {
+        // 其他 (新建，编辑)
+        const targetId = nodeDatas ? nodeDatas["id"] : ""; // 要查找的目标 ID
+        let findObject = flatData.value.find(item => item.id === targetId);
+        currentNodeId.value = findObject ? findObject["id"] : "";
+        formData.value.type = findObject ? findObject["type"] : "";
+        formData.value.id = findObject ? findObject["id"] : "";
+        formData.value.parentId = findObject ? findObject["parentId"] : "";
+        nodeData.value = findObject;
+        console.log(findObject);
+
+        formData.value.sort = findObject ? findObject["displayOrder"] : "";
+        formData.value.name = findObject ? findObject["name"] : "";
+        setParentId.value = findObject ? findObject["id"] : ""; //区分新建  和 编辑 ??
+      }
+    }
+    treeKey.value += 1;
     handleNodeClick(nodeData.value);
-    // if (res.data.length > 0) {
-    //   nextTick(() => {
-    //     const firstNode: any = document.querySelector(".el-tree-node");
-    //     firstNode.click();
-    //   });
-    // }
   } else {
     ElMessage.error(res?.message);
   }
@@ -184,6 +228,7 @@ const deleteFun = async () => {
   await useHandleData(deleteById, { id: formData.value?.id, type: formData.value.type }, `删除【${formData.value.name}】节点`);
   // nodeData.value = {};
   // formData.value = {};
+  editOrDelete.value = "delete";
   getLocationTreeFun();
 };
 // 新增、编辑（设备）
@@ -214,6 +259,7 @@ const submitForm = async () => {
   let res: any = await equip_addOrUpdate(addEditRoleRef.value.ruleForm);
   if (res.code == "200") {
     ElMessage.success("保存成功");
+    editOrDelete.value = "edit";
     getLocationTreeFun();
   } else {
     ElMessage.error(res?.message);
@@ -226,7 +272,10 @@ const closeDialog = () => {
   myDialog1.value.close();
   IsShowAdd.value = false;
 };
-mittBus.on("refreshLocationTree", () => {
+let editOrDelete = ref("edit");
+mittBus.on("refreshLocationTree", (type: any) => {
+  // console.log(type);
+  editOrDelete.value = type;
   getLocationTreeFun();
 });
 onUnmounted(() => {

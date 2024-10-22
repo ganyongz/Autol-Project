@@ -101,7 +101,6 @@
         <el-tab-pane label="测点" name="first">
           <!-- 部件id -> formInline.id -->
           <el-button type="primary" @click="openEquipPoint('新增测点', { id: formInline.id })">新增测点</el-button>
-          <el-button>删除</el-button>
           <el-table :data="tableData" style="width: 100%">
             <el-table-column prop="name" label="测点名称" />
             <el-table-column prop="code" label="测点编码" />
@@ -193,13 +192,13 @@ import fieldSetting from "@/views/system/functionPosition/components/fieldSettin
 import mittBus from "@/utils/mittBus";
 import UploadImg from "@/components/Upload/Img.vue";
 let props = defineProps({
-  nodeData: {
-    type: Object,
+  currentNodeId: {
+    type: String,
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     default: () => {}
   }
 });
-const { nodeData } = toRefs(props);
+const { currentNodeId } = toRefs(props);
 const pumpStationTypeOptions = [
   { value: 1, label: "递进单线" },
   { value: 2, label: "递进双线" },
@@ -230,7 +229,7 @@ const oilMessageTypeOptions = [
   { value: 1, label: "TCP" }
 ];
 const formInline: any = reactive({
-  equipId: nodeData.value.id, //所属设备id
+  equipId: currentNodeId.value, //所属设备id
   name: "",
   description: "",
   remark: "",
@@ -255,7 +254,7 @@ const formInline: any = reactive({
 // 获取详情
 let uploadImgKey = ref<number>(1);
 const getEquipPartDetailFun = async () => {
-  let res: any = await equipPart_findById({ id: nodeData.value["id"] });
+  let res: any = await equipPart_findById({ id: currentNodeId.value });
   if (res.code == "200") {
     let data = res.data as any;
     formInline.equipId = data.equipId;
@@ -288,7 +287,9 @@ const getEquipPartDetailFun = async () => {
 // 删除部件
 const deleteFun = async () => {
   await useHandleData(equipPart_deleteById, { id: formInline?.id }, `删除【${formInline.name}】`);
+  mittBus.emit("refreshLocationTree", "delete");
 };
+// 部件编辑
 const saveUnit = async () => {
   if (fieldSettingRef.value && fieldSettingRef.value.selectedValues) {
     formInline.oilShowConfig = JSON.stringify(fieldSettingRef.value.selectedValues);
@@ -301,7 +302,7 @@ const saveUnit = async () => {
   let res: any = await equipPart_addOrUpdate(formInline);
   if (res.code == "200") {
     ElMessage.success("保存成功");
-    mittBus.emit("refreshLocationTree");
+    mittBus.emit("refreshLocationTree", "edit");
   } else {
     ElMessage.error(res?.message);
   }
@@ -349,11 +350,12 @@ const closeDialog = () => {
   myDialog1.value.close();
   IsShowAdd.value = false;
 };
+// 新增测点 && ATL3000配置 保存
 const saveEquipPoint = async () => {
   let res: any = await equipPoint_addOrUpdate(addEditPointRef.value.ruleForm);
   if (res.code == "200") {
     ElMessage.success("保存成功");
-    mittBus.emit("refreshLocationTree");
+    mittBus.emit("refreshLocationTree", "edit");
     closeDialog();
     getEquipPointList();
   } else {
@@ -362,7 +364,7 @@ const saveEquipPoint = async () => {
 };
 // 删除测点
 const deleteEquipPoint = async (rowData: Object) => {
-  await useHandleData(equipPoint_deleteById, { id: rowData["id"] }, `删除【${nodeData.value.name}】测点`);
+  await useHandleData(equipPoint_deleteById, { id: rowData["id"] }, `删除【${rowData["name"]}】测点`);
   getEquipPointList();
 };
 // 数据监听

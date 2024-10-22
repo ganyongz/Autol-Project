@@ -155,7 +155,7 @@ const saveForm = async () => {
   let res: any = await equip_addOrUpdate(ruleForm);
   if (res.code == "200") {
     ElMessage.success("保存成功");
-    mittBus.emit("refreshLocationTree");
+    mittBus.emit("refreshLocationTree", "edit");
   } else {
     ElMessage.error(res?.message);
   }
@@ -218,7 +218,7 @@ const getEquipDetailFun = async () => {
 // 删除设备
 const deleteFun = async () => {
   await useHandleData(equip_deleteById, { id: nodeData.value?.id }, `删除【${nodeData.value.name}】设备`);
-  mittBus.emit("refreshLocationTree");
+  mittBus.emit("refreshLocationTree", "delete");
 };
 // 添加部件
 const addUnitFun = (row: any) => {
@@ -250,7 +250,7 @@ const submitForm = async () => {
   let res: any = await equipPart_addOrUpdate(addEditRoleRef.value.ruleForm);
   if (res.code == "200") {
     ElMessage.success("保存成功");
-    mittBus.emit("refreshLocationTree");
+    mittBus.emit("refreshLocationTree", "edit");
   } else {
     ElMessage.error(res?.message);
   }

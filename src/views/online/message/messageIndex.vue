@@ -1,8 +1,8 @@
 <template>
   <div class="table-box">
     <el-tabs v-model="activeName" @tab-change="tabChange">
-      <el-tab-pane label="润滑报警" name="1"> </el-tab-pane>
-      <el-tab-pane label="振动报警" name="2"> </el-tab-pane>
+      <el-tab-pane label="振动报警" name="1"> </el-tab-pane>
+      <el-tab-pane label="润滑报警" name="2"> </el-tab-pane>
       <!-- <el-tab-pane label="油液" name="third"> </el-tab-pane> -->
     </el-tabs>
     <ProTable
@@ -43,10 +43,30 @@ const getTableList = (params: any) => {
   let newParams = JSON.parse(JSON.stringify(params));
   return message_getRealTimeAlarm(newParams);
 };
+const eventTypeOptions = [
+  {
+    value: 1,
+    label: "预警"
+  },
+  {
+    value: 2,
+    label: "危险"
+  }
+];
 // 表格配置项
 let columns: any = reactive([
   { prop: "locationName", label: "报警位置" },
-  { prop: "name", label: "报警信息" },
+  { prop: "name", label: "报警名称" },
+  { prop: "alarmStandard", label: "报警范围" },
+  {
+    prop: "level",
+    label: "报警等级",
+    tag: true,
+    enum: eventTypeOptions,
+    fieldNames: { label: "label", value: "value" }
+  },
+  { prop: "value", label: "报警值" },
+  { prop: "unit", label: "报警单位" },
   { prop: "startTime", label: "报警开始时间" },
   { prop: "alarmDuration", label: "报警持续时间（分钟）" }
 ]);
@@ -61,15 +81,7 @@ const tabChange = (val: any) => {
   if (val == 1) {
     columns = [
       { prop: "locationName", label: "报警位置" },
-      { prop: "name", label: "报警信息" },
-      { prop: "startTime", label: "报警开始时间" },
-      { prop: "alarmDuration", label: "报警持续时间（分钟）" }
-    ];
-    initParam.type = 1;
-  } else {
-    columns = [
-      { prop: "locationName", label: "报警位置" },
-      { prop: "alarmMsg", label: "报警名称" },
+      { prop: "name", label: "报警名称" },
       { prop: "alarmStandard", label: "报警范围" },
       {
         prop: "level",
@@ -83,19 +95,18 @@ const tabChange = (val: any) => {
       { prop: "startTime", label: "报警开始时间" },
       { prop: "alarmDuration", label: "报警持续时间（分钟）" }
     ];
+
+    initParam.type = 1;
+  } else {
+    columns = [
+      { prop: "locationName", label: "报警位置" },
+      { prop: "alarmMsg", label: "报警信息" },
+      { prop: "startTime", label: "报警开始时间" },
+      { prop: "alarmDuration", label: "报警持续时间（分钟）" }
+    ];
     initParam.type = 2;
   }
   keyTable.value += 1;
 };
-const eventTypeOptions = [
-  {
-    value: 1,
-    label: "预警"
-  },
-  {
-    value: 2,
-    label: "危险"
-  }
-];
 </script>
 <style scoped lang="scss"></style>

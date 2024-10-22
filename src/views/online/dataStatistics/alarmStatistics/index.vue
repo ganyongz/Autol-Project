@@ -127,6 +127,7 @@ const nodeClick = (nodeData: any) => {
 // 时间查询
 const searchByTime = () => {
   if (startTime.value && endTime.value) {
+    getTrend();
     rushKey.value += 1;
   } else {
     ElMessage.warning("请选择开始时间、结束时间");

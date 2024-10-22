@@ -186,7 +186,7 @@ const settingUpFun = async () => {
     gatewaySn: setParameters.value["GatewaySn"],
     pumpStationType: setParameters?.value.PumpStationType,
     plcAddress: setParameters?.value.PlcAddress,
-    type: activeName.value == 1 ? 5 : 6
+    type: activeName.value == 1 ? 7 : 8
   };
   if (activeName.value == 1) {
     delete parameterOfApparatus.value["DataTime"];

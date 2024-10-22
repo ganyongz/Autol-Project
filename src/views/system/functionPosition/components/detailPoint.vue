@@ -167,13 +167,13 @@ const submitEquipment = async (formEl: FormInstance | undefined) => {
     }
   });
 };
-
+// 编辑测点
 const saveForm = async () => {
-  // 编辑测点
   let res: any = await equipPoint_addOrUpdate(ruleForm.value);
   if (res.code == "200") {
+    // debugger;
     ElMessage.success("保存成功");
-    mittBus.emit("refreshLocationTree");
+    mittBus.emit("refreshLocationTree", "edit");
   } else {
     ElMessage.error(res?.message);
   }
@@ -187,6 +187,7 @@ const getPointDetailFun = async () => {
     ruleForm.value = data;
     Object.assign(ruleForm.value, data);
     // ruleForm.name = data.name;
+    // console.log(ruleForm.value, "看看数据----111");
   } else {
     ElMessage.error(res?.message);
   }
@@ -194,7 +195,7 @@ const getPointDetailFun = async () => {
 // 删除测点
 const deleteFun = async () => {
   await useHandleData(equipPoint_deleteById, { id: nodeData.value?.id }, `删除【${nodeData.value.name}】测点`);
-  mittBus.emit("refreshLocationTree");
+  mittBus.emit("refreshLocationTree", "delete");
 };
 // 解绑数据测点
 const unBind = async () => {
