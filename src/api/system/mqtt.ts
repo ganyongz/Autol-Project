@@ -31,5 +31,5 @@ export const MqttServer_deleteTopicIds = (params: any) => {
 };
 // 重置mqtt连接
 export const MqttServer_resetConnect = (params: any) => {
-  return http.get(`DataParsing/MQTT/resetConnect`, params);
+  return http.get(`DataParsing/MQTT/resetConnect`, {}, { params });
 };
