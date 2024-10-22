@@ -2,7 +2,7 @@
   <div>
     <el-tabs v-model="activeName" class="demo-tabs" @tab-change="handleClick">
       <el-tab-pane label="普通参数" :name="1">
-        <div class="realTimeData-box p-20 my-12">
+        <div class="realTimeData-box p-20 my-12" v-loading="loading" element-loading-text="读取中...">
           <div class="mb-12" style="display: flex; align-items: center; justify-content: space-between">
             <div>
               <!-- <img src="../../../assets/images/icons/ic_cs.png" class="mr-1" alt=""> -->
@@ -37,7 +37,7 @@
       </el-tab-pane>
       <!-- 2 -->
       <el-tab-pane label="高级参数" :name="2">
-        <div class="realTimeData-box p-20 my-12">
+        <div class="realTimeData-box p-20 my-12" v-loading="loading" element-loading-text="读取中...">
           <div class="mb-12" style="display: flex; align-items: center; justify-content: space-between">
             <div>
               <!-- <img src="../../../assets/images/icons/ic_cs.png" class="mr-1" alt=""> -->
@@ -47,19 +47,19 @@
           </div>
           <div>
             <div class="mb-16 fs-14">
-              0H油压信号输入形式：<el-input v-model="backgroundParameter.h0" class="parameter-box mr-12" type="text" />
+              0H油压信号输入形式：<el-input v-model="backgroundParameter.H0" class="parameter-box mr-12" type="text" />
             </div>
 
             <div class="mb-8 fs-14">
-              1H故障状态：<el-input v-model="backgroundParameter.h1" class="parameter-box mr-12" type="text" />
+              1H故障状态：<el-input v-model="backgroundParameter.H1" class="parameter-box mr-12" type="text" />
             </div>
 
             <div class="mb-8 fs-14">
-              2H报警检测：<el-input v-model="backgroundParameter.h2" class="parameter-box mr-12" type="text" />
+              2H报警检测：<el-input v-model="backgroundParameter.H2" class="parameter-box mr-12" type="text" />
             </div>
 
             <div class="mb-8 fs-14">
-              3H报警检测：<el-input v-model="backgroundParameter.h3" class="parameter-box mr-12" type="text" />
+              3H报警检测：<el-input v-model="backgroundParameter.H3" class="parameter-box mr-12" type="text" />
             </div>
 
             <div style="text-align: right">
@@ -99,7 +99,8 @@ const props = defineProps({
   }
 });
 const { setParameters }: any = toRefs(props);
-console.log(setParameters, "--setParameters==");
+// console.log(setParameters, "--setParameters==");
+let loading = ref(false);
 const activeName = ref(1);
 const handleClick = tab => {
   activeName.value = tab;
@@ -128,6 +129,7 @@ const backgroundParameter: any = ref({
 });
 // 读取(下发指令)
 const getDeviceParam = async () => {
+  loading.value = true;
   const res: any = await pump_OperatePump({
     gatewaySn: setParameters.value["GatewaySn"],
     pumpStationType: setParameters?.value.PumpStationType,
@@ -157,6 +159,7 @@ const getPumpParams = async () => {
   } else {
     ElMessage.error(res?.message);
   }
+  loading.value = false;
 };
 // 频次设置
 let Hour = ref();

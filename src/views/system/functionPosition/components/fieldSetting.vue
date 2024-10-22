@@ -12,7 +12,7 @@
   </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import { ref, watch, toRefs } from "vue";
 const emit = defineEmits(["closeDialog"]);
 const props = defineProps({

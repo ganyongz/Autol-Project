@@ -294,7 +294,7 @@ const saveUnit = async () => {
   if (fieldSettingRef.value && fieldSettingRef.value.selectedValues) {
     formInline.oilShowConfig = JSON.stringify(fieldSettingRef.value.selectedValues);
   } else {
-    formInline.oilShowConfig = formInline.oilShowConfig ? JSON.stringify(JSON.parse(formInline.oilShowConfig)) : "";
+    formInline.oilShowConfig = formInline.oilShowConfig ? JSON.stringify(JSON.parse(formInline.oilShowConfig)) : null;
   }
   if (formInline.useOil != 1) {
     delete formInline.oilShowConfig;
