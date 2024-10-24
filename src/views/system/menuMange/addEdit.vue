@@ -28,7 +28,7 @@
         <el-input v-model.trim="ruleForm.url" autocomplete="off" />
       </el-form-item>
 
-      <el-form-item label="等级" :label-width="formLabelWidth">
+      <el-form-item label="排序" :label-width="formLabelWidth">
         <el-input v-model.trim="ruleForm.sort" autocomplete="off" />
       </el-form-item>
       <!-- isHide -->
@@ -47,15 +47,15 @@
         <el-input v-model.trim="ruleForm.icon" autocomplete="off" />
       </el-form-item>
 
-      <el-form-item label="父级id" :label-width="formLabelWidth" readonly>
+      <!-- <el-form-item label="父级id" :label-width="formLabelWidth" readonly>
         <el-input v-model.trim="ruleForm.parentId" autocomplete="off" />
-      </el-form-item>
+      </el-form-item> -->
 
       <el-form-item label="描述" :label-width="formLabelWidth">
         <el-input v-model.trim="ruleForm.description" autocomplete="off" />
       </el-form-item>
 
-      <el-form-item label="状态" :label-width="formLabelWidth">
+      <!-- <el-form-item label="状态" :label-width="formLabelWidth">
         <el-switch
           v-model="ruleForm.isActive"
           inline-prompt
@@ -64,7 +64,7 @@
           active-text="启用"
           inactive-text="停用"
         />
-      </el-form-item>
+      </el-form-item> -->
     </el-form>
     <template #footer>
       <div class="dialog-footer">

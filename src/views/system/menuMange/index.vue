@@ -12,9 +12,9 @@
           <span v-else>菜单</span>
         </template>
       </el-table-column>
-      <el-table-column prop="isActive" label="状态">
+      <el-table-column prop="isHide" label="状态">
         <template #default="scope">
-          <span v-if="scope.row.isActive == '0'"> 禁用 </span>
+          <span v-if="scope.row.isHide == true"> 禁用 </span>
           <span v-else>启用</span>
         </template>
       </el-table-column>
