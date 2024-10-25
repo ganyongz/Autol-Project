@@ -1,6 +1,7 @@
 <template>
   <div class="d-flex flex-column">
     <!-- 1 -->
+    <!-- {{ pumpStationType }} -->
     <div class="mb-5" style="margin-bottom: 10px">
       <span>日期:</span>
       <el-date-picker
@@ -13,14 +14,20 @@
         end-placeholder="结束日期"
         value-format="YYYY-MM-DD HH:mm:ss"
       ></el-date-picker>
-      <span>润滑点号:</span>
+      <span v-if="!(pumpStationType == 1 || pumpStationType == 4 || pumpStationType == 5)">润滑点号:</span>
       <el-input
+        v-if="!(pumpStationType == 1 || pumpStationType == 4 || pumpStationType == 5)"
         v-model.number="lubPoint"
         style="width: 140px; margin-right: 10px"
         onkeyup="value=value.replace(/[^\d]/g,'')"
         placeholder="请输入整数点位号"
       />
-      <el-select v-model="status" placeholder="请选择" style="width: 140px; margin-right: 10px">
+      <el-select
+        v-model="status"
+        placeholder="请选择状态"
+        style="width: 140px; margin-right: 10px"
+        v-if="!(pumpStationType == 1 || pumpStationType == 4 || pumpStationType == 5)"
+      >
         <el-option v-for="item in statusOptions" :key="item.value" :label="item.label" :value="item.value" />
       </el-select>
       <el-button type="primary" @click="searchFun">查询</el-button>
@@ -118,13 +125,46 @@
         empty-text="暂无数据"
       >
         <el-table-column type="index" label="#" width="55" />
-        <el-table-column prop="startTime" label="开泵时间" />
-        <el-table-column prop="endTime" label="关泵时间" />
-        <el-table-column prop="lubCount" label="润滑次数" />
-        <el-table-column prop="lubPoint" label="润滑点号" />
-        <el-table-column prop="runTime" label="润滑时长" />
-        <el-table-column prop="lubFlow" label="润滑油量(ml)" />
-        <el-table-column prop="status" label="润滑状态">
+        <el-table-column prop="startTime" show-overflow-tooltip label="开泵时间" />
+        <el-table-column prop="endTime" show-overflow-tooltip label="关泵时间" />
+
+        <el-table-column
+          prop="pulse_1"
+          show-overflow-tooltip
+          label="1#分配器脉冲"
+          v-if="pumpStationType == 1 || pumpStationType == 4 || pumpStationType == 5"
+        />
+        <el-table-column
+          prop="pulse_2"
+          show-overflow-tooltip
+          label="2#分配器脉冲"
+          v-if="pumpStationType == 1 || pumpStationType == 4 || pumpStationType == 5"
+        />
+        <el-table-column
+          prop="pulse_3"
+          show-overflow-tooltip
+          label="3#分配器脉冲"
+          v-if="pumpStationType == 1 || pumpStationType == 4 || pumpStationType == 5"
+        />
+        <el-table-column
+          prop="pulse_4"
+          show-overflow-tooltip
+          label="4#分配器脉冲"
+          v-if="pumpStationType == 1 || pumpStationType == 4 || pumpStationType == 5"
+        />
+
+        <el-table-column prop="lubCount" show-overflow-tooltip label="润滑次数" />
+        <el-table-column
+          prop="lubPoint"
+          show-overflow-tooltip
+          label="润滑点号"
+          v-if="!(pumpStationType == 1 || pumpStationType == 4 || pumpStationType == 5)"
+        />
+        <el-table-column prop="runTime" show-overflow-tooltip label="润滑时长(s)" />
+        <el-table-column prop="lubFlow" show-overflow-tooltip label="润滑油量(ml)" />
+        <el-table-column prop="forewardTime" show-overflow-tooltip label="正传时间" v-if="pumpStationType == 2" />
+        <el-table-column prop="reversalTime" show-overflow-tooltip label="反转时间" v-if="pumpStationType == 2" />
+        <el-table-column prop="status" show-overflow-tooltip label="润滑状态">
           <template #default="scope">
             <!-- 0 正常 1故障  2堵塞  4油量不足  8通信失败 -->
             <el-tag v-if="scope.row.status == 1" type="danger" disable-transitions>故障</el-tag>
@@ -135,7 +175,6 @@
           </template>
         </el-table-column>
       </el-table>
-      <!-- <el-empty v-if="tableData.length === 0" description="暂无数据"></el-empty> -->
       <el-pagination
         v-model:current-page="pageNum"
         v-model:page-size="pageSize"
@@ -159,9 +198,13 @@ import dayjs from "dayjs";
 const props = defineProps({
   partId: {
     type: String
+  },
+  pumpStationType: {
+    type: Number
   }
 });
-const { partId } = toRefs(props);
+const { partId, pumpStationType } = toRefs(props);
+// console.log(pumpStationType?.value, "pumpStationType---");
 // 状态筛选
 let status = ref("");
 let statusOptions = [

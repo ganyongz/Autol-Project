@@ -37,7 +37,8 @@
   </div>
 </template>
 
-<script setup lang="tsx" name="useProTable">
+<script setup lang="tsx" name="configurationIndex">
+// 巡检项配置
 import { ref, reactive, watch } from "vue";
 import { useHandleData } from "@/hooks/useHandleData";
 import { ElMessage } from "element-plus";

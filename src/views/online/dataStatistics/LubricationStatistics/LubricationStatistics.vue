@@ -18,7 +18,7 @@
       <el-main style="background-color: var(--el-fill-color-blank)">
         <el-tabs v-model="activeName" class="demo-tabs" @tab-click="handleClick">
           <el-tab-pane label="润滑记录" name="first">
-            <lubrication :key="publicKey" :part-id="partId" />
+            <lubrication :key="publicKey" :pump-station-type="pumpStationType" :part-id="partId" />
           </el-tab-pane>
           <el-tab-pane label="报警记录" name="second">
             <alarm :key="publicKey" v-if="activeName == 'second'" :part-id="partId" />
@@ -29,6 +29,7 @@
   </div>
 </template>
 <script lang="ts" setup name="LubricationStatistics">
+// 润滑统计
 import { ref, onMounted, onActivated } from "vue";
 import { type TabsPaneContext, ElMessage } from "element-plus";
 import lubrication from "@/views/online/dataStatistics/LubricationStatistics/components/lubrication.vue";
@@ -70,15 +71,17 @@ interface Tree {
   label: string;
   type: Number;
   id: String;
+  pumpStationType: Number;
   children?: Tree[];
 }
-
+let pumpStationType: any = ref(null); //泵类型
 const handleNodeClick = (data: Tree) => {
   // console.log(data, "节点数据");
   // 只有当type为3时才查询
   if (data?.type == 3) {
     partId.value = data.id;
     publicKey.value += 1;
+    pumpStationType.value = data?.pumpStationType;
   }
 };
 const defaultProps = {
