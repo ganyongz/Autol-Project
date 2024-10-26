@@ -20,8 +20,6 @@
         <el-button type="danger" link :icon="Delete" @click="deleteAccount(scope.row)">删除</el-button>
       </template>
     </ProTable>
-    <UserDrawer ref="drawerRef" />
-    <ImportExcel ref="dialogRef" />
     <myDialog :title="detailParams.title" ref="myDialog1" draggable width="700px" :before-close="beforeClose1">
       <template #content>
         <addEdit
@@ -115,7 +113,6 @@ const deleteAccount = async (params: any) => {
 };
 
 // 打开(新增、查看、编辑)
-const drawerRef = ref(null);
 const openDrawer = (title: string, row: any) => {
   debugger;
   detailParams.value.title = title;

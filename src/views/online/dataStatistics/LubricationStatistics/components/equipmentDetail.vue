@@ -4,12 +4,13 @@
       <div style="width: 70%; height: 70%; margin: 0 auto">
         <!-- <el-image style="width: 100px; height: 100px" :initial-index="4" fit="cover" src="../images/equipment.png" /> -->
         <img v-if="imageUrl" style="width: 100%; height: 60%" :src="imageUrl" alt="工艺图" />
-        <img
+        <el-empty v-else description="暂无图片" />
+        <!-- <img
           v-else
           style="width: 100%; height: 60%"
           src="@/views/online/dataStatistics/LubricationStatistics/images/equipment.png"
           alt="工艺图"
-        />
+        /> -->
       </div>
     </div>
     <!-- 右侧卡片 -->

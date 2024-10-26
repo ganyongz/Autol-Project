@@ -253,6 +253,7 @@ let day = ref({
 // 数据统计
 const getlubStatistics = async () => {
   let params = {
+    lubPoint: lubPoint.value,
     partId: partId?.value
   };
   const res: any = await lub_lubStatistics(params);
@@ -291,6 +292,7 @@ let dateRange: any = ref([]);
 const searchFun = () => {
   getLubRecord();
   getlubStatistics();
+  getlubTrend();
 };
 // 趋势图数据
 let data1 = ref();
@@ -301,7 +303,9 @@ const getlubTrend = async () => {
     // partId: 130,
     partId: partId?.value,
     startTime: dateRange.value[0],
-    endTime: dateRange.value[1]
+    endTime: dateRange.value[1],
+    lubPoint: lubPoint.value,
+    status: status.value
   };
   const res: any = await lub_lubTrend(params);
   if (res.code === 200) {
@@ -358,7 +362,7 @@ onMounted(async () => {
       }
     },
     legend: {
-      data: ["状态", "剩余油量"]
+      data: ["状态", "润滑油量"]
     },
     xAxis: {
       type: "category",
@@ -384,7 +388,7 @@ onMounted(async () => {
       },
       {
         type: "value",
-        name: "剩余油量:ml",
+        name: "润滑油量:ml",
         position: "right",
         axisLabel: {
           formatter: "{value}"
@@ -401,12 +405,12 @@ onMounted(async () => {
         // data: [1, 1, 0, 1] // 这里的数据代表状态，0代表停止，1代表启用
       },
       {
-        name: "剩余油量",
+        name: "润滑油量",
         type: "bar",
         yAxisIndex: 1,
         data: data1.value,
         barWidth: 5 //柱状条宽
-        //data: [80, 70, 60, 50] // 这里的数据代表剩余油量，单位根据实际情况设置
+        //data: [80, 70, 60, 50] // 这里的数据代表润滑油量，单位根据实际情况设置
       }
     ]
   };

@@ -28,8 +28,8 @@
   </div>
 </template>
 
-<script setup lang="tsx" name="taskIndex">
-// 点检任务
+<script setup lang="tsx" name="spotCheckCycleIndex">
+// 点检巡检周期
 import { ref, reactive, watch } from "vue";
 import { useHandleData } from "@/hooks/useHandleData";
 import ProTable from "@/components/ProTable/index.vue";
