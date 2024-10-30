@@ -35,19 +35,27 @@
         style="width: 100%"
       >
         <el-table-column type="selection" width="55" />
-        <el-table-column prop="name" label="名称" sortable />
-        <el-table-column prop="topic" label="主题" sortable />
+        <el-table-column prop="name" label="名称" />
+        <el-table-column prop="topic" label="主题" />
         <!-- <el-table-column prop="mqttServerId" label="mqtt服务id" sortable /> -->
         <!-- 主题类型，1特征值 2波形 3 特征值+波形 -->
-        <el-table-column prop="topicType" label="主题类型" sortable>
+        <el-table-column prop="topicType" label="主题类型">
           <template #default="scope">
-            <span v-if="scope.row.topicType == 1">特征值</span>
-            <span v-if="scope.row.topicType == 2">波形</span>
-            <span v-if="scope.row.topicType == 3">特征值+波形</span>
+            <span v-if="scope.row.topicType == '1'">特征值</span>
+            <span v-if="scope.row.topicType == '2'">波形</span>
+            <span v-if="scope.row.topicType == '3'">特征值+波形</span>
           </template>
         </el-table-column>
-        <el-table-column prop="featureType" label="特征值类型" sortable />
-        <el-table-column prop="remark" label="备注" sortable />
+        <el-table-column prop="featureType" label="特征值类型">
+          <template #default="scope">
+            <span v-if="scope.row.topicType == 0">峰值</span>
+            <span v-if="scope.row.topicType == 1">速度有效值</span>
+            <span v-if="scope.row.topicType == 2">峰峰值</span>
+            <span v-if="scope.row.topicType == 201">转速</span>
+            <span v-if="scope.row.topicType == 205">温度</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="remark" label="备注" />
         <el-table-column fixed="right" label="操作">
           <template #default="scope">
             <el-button link type="primary" @click="addSensorFun('编辑', scope.row)"> 编辑 </el-button>
@@ -198,7 +206,7 @@ const getSensorList = async (rowData: any) => {
 // 删除topic
 const deleteSensorFun = async (rowData: any) => {
   await useHandleData(MqttServer_deleteTopicIds, [rowData.id], `删除【${rowData.topic}】`);
-  getSensorList({ id: rowData.collectorId });
+  getSensorList({ id: rowData.mqttServerId });
 };
 // 新增、编辑（topic）
 let addEditSensorRef = ref();
@@ -217,7 +225,12 @@ const addSensorFun = (title: string, row: any) => {
 const submitForm2 = async () => {
   let res: any = await MqttServer_addOrUpdateTopic(addEditSensorRef.value.ruleForm);
   if (res.code == "200") {
-    getCollectorList();
+    if (Ttitle.value == "新增") {
+      getSensorList({ id: rowData.value.id });
+    } else {
+      // 编辑
+      getSensorList({ id: addEditSensorRef.value.ruleForm.mqttServerId });
+    }
     ElMessage.success("保存成功");
   } else {
     ElMessage.error(res?.message);

@@ -70,8 +70,8 @@ const props = defineProps({
 const { rowData } = toRefs(props);
 // 采集器类型枚举值
 const collectorTypeOptions = [
-  { value: "0", label: "无线" },
-  { value: "1", label: "有线" }
+  { value: 0, label: "无线" },
+  { value: 1, label: "有线" }
 ];
 // 采集器状态枚举值
 const statusOptions = [

@@ -178,7 +178,7 @@ const getSensorList = async (rowData: any) => {
 };
 // 删除传感器
 const deleteSensorFun = async (rowData: any) => {
-  await useHandleData(sensor_deleteBySensorIds, { sensorIds: rowData.id }, `删除【${rowData.name}】`);
+  await useHandleData(sensor_deleteBySensorIds, [rowData.id], `删除【${rowData.name}】`);
   getSensorList({ id: rowData.collectorId });
 };
 // 新增、编辑（传感器）
@@ -198,7 +198,12 @@ const addSensorFun = (title: string, row: any) => {
 const submitForm2 = async () => {
   let res: any = await sensor_addOrUpdate(addEditSensorRef.value.ruleForm);
   if (res.code == "200") {
-    getSensorList({ id: rowData.value.id });
+    if (Ttitle.value == "新增传感器") {
+      getSensorList({ id: rowData.value.id });
+    } else {
+      // 编辑
+      getSensorList({ id: addEditSensorRef.value.ruleForm.collectorId });
+    }
     ElMessage.success("保存成功");
   } else {
     ElMessage.error(res?.message);
