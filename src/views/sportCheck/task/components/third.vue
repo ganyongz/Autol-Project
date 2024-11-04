@@ -5,7 +5,7 @@
   </div>
 </template>
 <script setup lang="ts" name="equipList">
-// 设备
+// 设备与点检任务绑定
 import { ref, toRefs, nextTick } from "vue";
 import { getLocationTree } from "@/api/system/functionPosition";
 import { ElMessage } from "element-plus";
@@ -66,7 +66,6 @@ let checkedArrIds = ref();
 const handleSelectionChange = (a, b) => {
   checkedArrIds.value = [...b["checkedKeys"], ...b["halfCheckedKeys"]];
 };
-
 getEquipListFun();
 defineExpose({ checkedArrIds });
 </script>

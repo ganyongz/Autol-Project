@@ -90,7 +90,7 @@
         </el-form-item>
 
         <el-form-item label="部件图片" prop="imageFileId">
-          <UploadImg :key="uploadImgKey" v-model:image-id="formInline.imageFileId" :file-size="5">
+          <UploadImg :key="uploadImgKey" @delete-img="deleteImg" v-model:image-id="formInline.imageFileId" :file-size="5">
             <template #tip> 上传图片最大为 5M </template>
           </UploadImg>
         </el-form-item>
@@ -288,6 +288,10 @@ const getEquipPartDetailFun = async () => {
 const deleteFun = async () => {
   await useHandleData(equipPart_deleteById, { id: formInline?.id }, `删除【${formInline.name}】`);
   mittBus.emit("refreshLocationTree", "delete");
+};
+// 图片删除后 调用保存
+const deleteImg = () => {
+  saveUnit();
 };
 // 部件编辑
 const saveUnit = async () => {

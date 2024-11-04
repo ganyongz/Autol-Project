@@ -27,5 +27,5 @@ export const sensor_addOrUpdate = (params: any) => {
 };
 // 根据id删除传感器
 export const sensor_deleteBySensorIds = (params: any) => {
-  return http.post(`Lub/Collector/deleteBySensorIds`, {}, { params });
+  return http.post(`Lub/Collector/deleteBySensorIds`, params);
 };

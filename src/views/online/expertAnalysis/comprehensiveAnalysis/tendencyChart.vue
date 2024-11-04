@@ -8,10 +8,12 @@
         v-if="timeSelect == '7'"
         v-model="customValue"
         type="datetimerange"
-        range-separator="To"
+        range-separator="~"
         start-placeholder="开始时间"
         end-placeholder="结束时间"
-        style="width: 300px"
+        value-format="YYYY-MM-DD HH:mm:ss"
+        style="width: 340px"
+        @change="changeVal"
       />
       <!-- <el-button type="primary">查询</el-button> -->
     </div>
@@ -92,6 +94,12 @@ const handleSelect = (val: any) => {
     default:
       break;
   }
+};
+// 自定义时间
+const changeVal = (val: any) => {
+  timeScreen.value[0] = val[0];
+  timeScreen.value[1] = val[1];
+  getTrendChart();
 };
 const setBarChart2 = () => {
   if (chartRef.value) {

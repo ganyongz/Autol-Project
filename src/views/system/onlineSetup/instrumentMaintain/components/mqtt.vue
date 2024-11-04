@@ -48,11 +48,11 @@
         </el-table-column>
         <el-table-column prop="featureType" label="特征值类型">
           <template #default="scope">
-            <span v-if="scope.row.topicType == 0">峰值</span>
-            <span v-if="scope.row.topicType == 1">速度有效值</span>
-            <span v-if="scope.row.topicType == 2">峰峰值</span>
-            <span v-if="scope.row.topicType == 201">转速</span>
-            <span v-if="scope.row.topicType == 205">温度</span>
+            <span v-if="scope.row.featureType == 0">峰值</span>
+            <span v-if="scope.row.featureType == 1">速度有效值</span>
+            <span v-if="scope.row.featureType == 2">峰峰值</span>
+            <span v-if="scope.row.featureType == 201">转速</span>
+            <span v-if="scope.row.featureType == 205">温度</span>
           </template>
         </el-table-column>
         <el-table-column prop="remark" label="备注" />

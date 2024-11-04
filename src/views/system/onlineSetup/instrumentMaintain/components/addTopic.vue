@@ -73,7 +73,7 @@ interface RuleForm {
   id: string;
   name: string;
   mqttServerId: string;
-  featureType: Number | null;
+  featureType: number | null;
   topic: string;
   topicType: string;
   qos: number | null;

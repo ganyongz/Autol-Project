@@ -41,7 +41,7 @@ const getEquipList = async () => {
   if (res.code == "200") {
     alarmNum.value = res.data.alarmNum;
   } else {
-    ElMessage.error(res?.message);
+    ElMessage.error(res?.message ? res.message : res.error);
   }
 };
 getEquipList();

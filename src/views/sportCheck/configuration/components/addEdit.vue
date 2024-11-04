@@ -88,11 +88,11 @@ let ruleForm = ref<RuleForm>({
 watch(
   () => ruleForm.value.needValue,
   newVal => {
-    debugger;
     if (newVal == 1) {
       isRequired.value = true;
     } else {
       isRequired.value = false;
+      ruleForm.value.valueUnit = "";
     }
   },
   { deep: true, immediate: true }
@@ -103,7 +103,6 @@ const rules1 = reactive<FormRules<RuleForm>>({
 });
 // 方法区
 const getInfoById = async () => {
-  debugger;
   let res: any = await configuration_getInfoById({ id: rowId.value });
   if (res.code == "200") {
     ruleForm.value = res.data;

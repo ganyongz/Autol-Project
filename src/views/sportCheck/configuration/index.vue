@@ -114,7 +114,6 @@ const deleteAccount = async (params: any) => {
 
 // 打开(新增、查看、编辑)
 const openDrawer = (title: string, row: any) => {
-  debugger;
   detailParams.value.title = title;
   rowId.value = row?.id;
   IsShowAdd.value = true;
