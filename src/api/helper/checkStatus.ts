@@ -25,6 +25,9 @@ export const checkStatus = (status: number) => {
     case 408:
       ElMessage.error("请求超时！请您稍后重试");
       break;
+    case 413:
+      ElMessage.error("图片过大，请压缩后再上传");
+      break;
     case 500:
       ElMessage.error("服务异常！");
       break;
