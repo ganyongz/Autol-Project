@@ -6,7 +6,7 @@
       <SearchMenu id="searchMenu" />
       <ThemeSetting id="themeSetting" />
       <!-- <Message id="message" /> -->
-      <el-badge :value="alarmNum" class="item" @click="ToMessage">
+      <el-badge :value="alarmNum" class="item" @click="ToMessage" :style="{ opacity }">
         <i :class="'iconfont icon-xiaoxi'" class="toolBar-icon" style="color: red"></i>
       </el-badge>
       <Fullscreen id="fullscreen" />
@@ -44,6 +44,21 @@ const getEquipList = async () => {
     ElMessage.error(res?.message ? res.message : res.error);
   }
 };
+// 铃铛闪烁
+let opacity = ref(1);
+const startTimer = () => {
+  // 定义一个定时器，并开启
+  let timerId1 = setInterval(() => {
+    opacity.value -= 0.1;
+    if (opacity.value <= 0) opacity.value = 1;
+  }, 30);
+  // 3秒后关闭定时器
+  setTimeout(() => {
+    clearInterval(timerId1);
+    opacity.value = 1;
+  }, 3000);
+};
+startTimer();
 getEquipList();
 </script>
 <style scoped lang="scss">
