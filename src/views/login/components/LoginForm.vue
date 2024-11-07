@@ -41,7 +41,7 @@ import { useTabsStore } from "@/stores/modules/tabs";
 import { useKeepAliveStore } from "@/stores/modules/keepAlive";
 import { initDynamicRouter } from "@/routers/modules/dynamicRouter";
 import { CircleClose, UserFilled } from "@element-plus/icons-vue";
-import type { ElForm } from "element-plus";
+import { ElForm, ElMessage } from "element-plus";
 // import md5 from "md5";
 let rememberPassword = ref(true);
 const router = useRouter();
@@ -77,26 +77,30 @@ const login = (formEl: FormInstance | undefined) => {
     }
     try {
       // 1.执行登录接口
-      const { data }: { [key: string]: any } = await loginApi1({ ...loginForm });
-      userStore.setToken(data.token);
-      userStore.setUserType(data.userType);
-      userStore.setUserInfo(data.userInfo);
-      // 2.添加动态路由
-      await initDynamicRouter();
-      // 3.清空 tabs、keepAlive 数据
-      await tabsStore.setTabs([]);
-      await keepAliveStore.setKeepAliveName([]);
+      const data: any = await loginApi1({ ...loginForm });
+      if (data.code == 200) {
+        userStore.setToken(data.data.token);
+        userStore.setUserType(data.data.userType);
+        userStore.setUserInfo(data.data.userInfo);
+        // 2.添加动态路由
+        await initDynamicRouter();
+        // 3.清空 tabs、keepAlive 数据
+        await tabsStore.setTabs([]);
+        await keepAliveStore.setKeepAliveName([]);
 
-      // 4.跳转到首页
-      setTimeout(() => {
-        router.push(HOME_URL);
-        ElNotification({
-          title: getTimeState(),
-          message: "欢迎登录 Autol 管理系统",
-          type: "success",
-          duration: 2000
-        });
-      }, 100);
+        // 4.跳转到首页
+        setTimeout(() => {
+          router.push(HOME_URL);
+          ElNotification({
+            title: getTimeState(),
+            message: "欢迎登录 Autol 管理系统",
+            type: "success",
+            duration: 2000
+          });
+        }, 100);
+      } else {
+        ElMessage.error(data.message);
+      }
     } finally {
       loading.value = false;
     }
