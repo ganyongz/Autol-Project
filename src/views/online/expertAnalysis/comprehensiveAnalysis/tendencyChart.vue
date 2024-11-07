@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="table-box">
     <div class="screenBox" style="margin: 10px; text-align: left">
       <el-select v-model="timeSelect" class="m-2" placeholder="时间筛选" style="width: 200px" @change="handleSelect">
         <el-option v-for="item in timeOPtions" :key="item.value" :label="item.label" :value="item.value" />
@@ -335,7 +335,7 @@ const getTrendChart = async () => {
     endTime: timeScreen.value[1]
   };
   let res: any = await Diagram_trendChart(params);
-  if (res.code == "200") {
+  if (res.code == "200" && res.data.realData) {
     chartData.value = res.data.realData;
     tableName.value = res.data.tableName;
     dangerValue.value = res.data.dangerValue;

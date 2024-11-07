@@ -5,7 +5,7 @@
       <el-aside style="margin-right: 10px; background-color: var(--el-fill-color-blank)">
         <el-tree
           ref="treeRef"
-          style="width: 200px; max-width: 600px"
+          style="width: 200px"
           :data="treeData"
           :props="defaultProps"
           node-key="id"

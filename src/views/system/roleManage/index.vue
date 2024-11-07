@@ -19,7 +19,7 @@
         >
           <template #default="{ node, data }">
             <span class="custom-tree-node">
-              <span style="display: inline-block; width: 170px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap">{{
+              <span style="display: inline-block; width: 160px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap">{{
                 node.label
               }}</span>
               <span>

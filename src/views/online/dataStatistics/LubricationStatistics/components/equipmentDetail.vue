@@ -1,20 +1,24 @@
 <template>
   <div class="box" style="background-color: var(--el-fill-color-blank)">
-    <div style="width: 65%; height: 100%">
-      <div style="width: 70%; height: 70%; margin: 0 auto">
-        <!-- <el-image style="width: 100px; height: 100px" :initial-index="4" fit="cover" src="../images/equipment.png" /> -->
-        <img v-if="imageUrl" style="width: 100%; height: 60%" :src="imageUrl" alt="工艺图" />
-        <el-empty v-else description="暂无图片" />
-        <!-- <img
-          v-else
-          style="width: 100%; height: 60%"
-          src="@/views/online/dataStatistics/LubricationStatistics/images/equipment.png"
-          alt="工艺图"
-        /> -->
-      </div>
+    <div
+      style="
+        display: flex;
+        flex: 1;
+        align-items: center;
+        justify-content: center;
+        height: calc(100vh - 240px);
+        margin-right: 10px;
+        overflow: hidden;
+        border-image: linear-gradient(to right, #ff33cc, #ffcc33) 30 30 round;
+        box-shadow: 5px 5px 10px rgb(1 10 0 / 50%);
+      "
+      class="box3"
+    >
+      <img v-if="imageUrl" style="width: 100%; height: 100%" :src="imageUrl" alt="工艺图" />
+      <el-empty v-else description="暂无图片" />
     </div>
     <!-- 右侧卡片 -->
-    <div style="flex: 1; height: 100%">
+    <div style="min-width: 360px; height: 100%">
       <!-- 1.振动 -->
       <div
         id="box1"
@@ -37,10 +41,10 @@
             border-radius: 10px 10px 0 0;
           "
         >
-          <div style="color: #009688; text-align: left">轴承振动情况：</div>
+          <div style="color: #009688; text-align: left">振动情况：</div>
           <el-button size="small" type="primary" @click="ZDAlarmRecord(cards)">报警记录</el-button>
         </div>
-        <div style="height: 9rem; padding: 20px; overflow-y: auto">
+        <div :style="{ height: computedHeight, padding: '20px', 'overflow-y': 'auto' }">
           <div v-for="(item, index) in cards?.VibRealData" :key="index">
             <el-popover placement="right" :width="300" trigger="hover">
               <template #reference>
@@ -120,7 +124,7 @@
         </div>
 
         <!-- 润滑信息 -->
-        <div style="height: 9rem; padding: 20px; overflow-y: auto">
+        <div :style="{ height: computedHeight, padding: '20px', 'overflow-y': 'auto' }">
           <div v-for="(item, index) in cards?.LubRealData" :key="index">
             <div style="display: flex; justify-content: space-between">
               <p style="margin: 5px 0">{{ item.name }}</p>
@@ -140,24 +144,23 @@
         "
         v-if="cards?.OilRealData && cards?.OilRealData.length > 0"
       >
-        <!-- <div style="height: 9rem; padding: 20px; overflow-y: auto"> -->
         <div
           style="
             display: flex;
             justify-content: space-between;
-            padding: 5px 25px;
+            padding: 7px 25px;
             background-color: #0000001f;
             border-bottom: 1px solid #cdd0d6;
             border-radius: 10px 10px 0 0;
           "
         >
-          <div style="padding: 10px 20px 0; color: #009688; text-align: left">油液状态：</div>
+          <div style="color: #009688; text-align: left">油液状态：</div>
           <div>
             <el-button size="small" type="warning" @click="FunToOil(cards)">油液记录</el-button>
             <el-button size="small" type="primary" @click="FunAlarmRecord(cards, 'alarm')">报警记录</el-button>
           </div>
         </div>
-        <div style="height: 9rem; padding: 20px; overflow-y: auto">
+        <div :style="{ height: computedHeight, padding: '20px', 'overflow-y': 'auto' }">
           <div v-for="(item, index) in cards?.OilRealData" :key="index">
             <div style="display: flex; justify-content: space-between">
               <p style="margin: 5px 0">{{ item.name }}:</p>
@@ -165,7 +168,6 @@
             </div>
           </div>
         </div>
-        <!-- </div> -->
       </div>
       <el-empty
         v-if="
@@ -260,7 +262,6 @@ const props = defineProps({
   }
 });
 const { partId } = toRefs(props);
-console.log(partId?.value);
 // 获取图片
 let imageUrl = ref();
 const getImgUrl = async imageFileId => {
@@ -275,7 +276,7 @@ const getImgUrl = async imageFileId => {
     imageUrl.value = null;
   }
 };
-
+let computedHeight: any = ref("9rem");
 //获取页面卡片
 let cards = ref();
 let isActive = ref();
@@ -285,18 +286,38 @@ const getCardContent = async () => {
     getImgUrl(res.data.imageFileId);
     nextTick(() => {
       cards.value = res.data;
+      const hasA = cards.value?.VibRealData && Array.isArray(cards.value.VibRealData) && cards.value.VibRealData.length > 0;
+      const hasB = cards.value?.LubRealData && Array.isArray(cards.value.LubRealData) && cards.value.LubRealData.length > 0;
+      const hasC = cards.value?.OilRealData && Array.isArray(cards.value.OilRealData) && cards.value.OilRealData.length > 0;
+
+      const isAOnly =
+        hasA &&
+        !(cards.value.LubRealData && cards.value.LubRealData.length > 0) &&
+        !(cards.value.OilRealData && cards.value.OilRealData.length > 0);
+      const isBOnly =
+        hasB &&
+        !(cards.value.VibRealData && cards.value.VibRealData.length > 0) &&
+        !(cards.value.OilRealData && cards.value.OilRealData.length > 0);
+      const isCOnly =
+        hasC &&
+        !(cards.value.VibRealData && cards.value.VibRealData.length > 0) &&
+        !(cards.value.LubRealData && cards.value.LubRealData.length > 0);
+      // computedHeight.value = isAOnly || isBOnly || isCOnly ? "calc(100vh - 330px)" : "9rem";
+      if (isAOnly || isCOnly) {
+        computedHeight.value = "calc(100vh - 330px)";
+      } else if (isBOnly) {
+        computedHeight.value = "calc(100vh - 410px)";
+      } else {
+        computedHeight.value = "calc(50vh - 267px)";
+      }
     });
     if (res.data.LubRealData && res.data.LubRealData.length > 0) {
       let arrData = res.data.LubRealData;
       // 使用 find 方法查找 name 为 '状态' 的对象
       const statusObject = arrData.find(obj => obj.name === "运行状态");
-
       // 获取该对象的 value 值
       isActive.value = statusObject ? statusObject.value : null;
-
-      console.log(isActive.value); // 输出: active 或 inactive，取决于数组中 '状态' 的顺序
     }
-    console.log(cards.value, "卡片内容");
   } else {
     ElMessage.error(res?.message);
   }
@@ -526,10 +547,10 @@ const startTimer = () => {
   }, 5000);
 };
 const stopTimer = () => {
-  if (timer) {
-    clearInterval(timer);
-    timer = null;
-  }
+  // if (timer) {
+  clearInterval(timer);
+  timer = null;
+  // }
 };
 // 组件卸载时清除定时器
 onUnmounted(() => {
@@ -548,5 +569,12 @@ getCardContent();
     border-color: var(--el-button-hover-border-color);
     outline: none;
   }
+}
+.box3 {
+  background-image: linear-gradient(to right, #ffffff, #ffffff), linear-gradient(to right, red, #578aef);
+  background-clip: padding-box, border-box;
+  background-origin: padding-box, border-box;
+  border: 5px solid transparent;
+  border-radius: 10px;
 }
 </style>
