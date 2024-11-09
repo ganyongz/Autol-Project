@@ -5,6 +5,7 @@ import { LOGIN_URL, ROUTER_WHITE_LIST } from "@/config";
 import { initDynamicRouter } from "@/routers/modules/dynamicRouter";
 import { staticRouter, errorRouter } from "@/routers/modules/staticRouter";
 import NProgress from "@/config/nprogress";
+import { Auth_getTenantInfo } from "@/api/system/user";
 
 const mode = import.meta.env.VITE_ROUTER_MODE;
 
@@ -29,6 +30,16 @@ const routerMode = {
  * @param meta.isAffix ==> 菜单是否固定在标签页中 (首页通常是固定项)
  * @param meta.isKeepAlive ==> 当前路由是否缓存
  * */
+const extractTenantId = (url: any) => {
+  if (url.includes("tenantId=")) {
+    const parts = url.split("tenantId=");
+    if (parts.length > 1) {
+      return parts[1].split("&")[0];
+    }
+  }
+  return null;
+};
+
 const router = createRouter({
   history: routerMode[mode](),
   routes: [...staticRouter, ...errorRouter],
@@ -42,12 +53,24 @@ const router = createRouter({
 router.beforeEach(async (to, from, next) => {
   const userStore = useUserStore();
   const authStore = useAuthStore();
-
+  // 存储登录信息 start
+  let typeId = await extractTenantId(to.fullPath);
+  if (typeId) {
+    // userStore.setLoginUrl(to.fullPath);
+    localStorage.setItem("loginUrl", to.fullPath);
+    userStore.setTenant(typeId);
+    let res: any = await Auth_getTenantInfo({ tenantId: typeId });
+    if (res.code == 200) {
+      console.log(res);
+      userStore.setBgImage(res.data.loginBackgroundImage);
+      userStore.setPlatformName(res.data.platformName);
+    }
+  }
+  // 存储登录信息 end
   // 1.NProgress 开始
   NProgress.start();
-
   // 2.动态设置标题
-  const title = import.meta.env.VITE_GLOB_APP_TITLE;
+  const title = userStore.platformName ? userStore.platformName : import.meta.env.VITE_GLOB_APP_TITLE;
   document.title = to.meta.title ? `${to.meta.title} - ${title}` : title;
 
   // 3.判断是访问登陆页，有 Token 就在当前页面，没有 Token 重置路由到登陆页

@@ -1,5 +1,5 @@
 <template>
-  <div class="login-container flx-center">
+  <div class="login-container flx-center" :style="backgroundImageStyle">
     <div class="login-box">
       <SwitchDark class="dark" />
       <!-- <div class="login-left">
@@ -8,7 +8,7 @@
       <div class="login-form">
         <div class="login-logo">
           <!-- <img class="login-icon" src="@/assets/images/logo.svg" alt="" /> -->
-          <h2 class="logo-text">智慧润滑系统</h2>
+          <h2 class="logo-text">{{ logoText }}</h2>
         </div>
         <LoginForm />
       </div>
@@ -17,8 +17,20 @@
 </template>
 
 <script setup lang="ts" name="login">
+import { onBeforeMount, ref } from "vue";
 import LoginForm from "./components/LoginForm.vue";
 import SwitchDark from "@/components/SwitchDark/index.vue";
+import { useUserStore } from "@/stores/modules/user";
+import imgSrc from "@/views/login/login.gif";
+const userStore = useUserStore();
+const backgroundImageStyle = ref({
+  backgroundImage: `url(${imgSrc})`
+});
+let logoText = ref("智慧润滑系统");
+onBeforeMount(() => {
+  backgroundImageStyle.value.backgroundImage = `url(${userStore.loginBackgroundImage != "" && userStore.loginBackgroundImage != undefined ? userStore.loginBackgroundImage : imgSrc})`;
+  logoText.value = userStore.platformName != "" ? userStore.platformName : "智慧润滑系统";
+});
 </script>
 
 <style scoped lang="scss">

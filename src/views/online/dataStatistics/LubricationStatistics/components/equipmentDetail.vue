@@ -571,7 +571,7 @@ getCardContent();
   }
 }
 .box3 {
-  background-image: linear-gradient(to right, #ffffff, #ffffff), linear-gradient(to right, red, #578aef);
+  // background-image: linear-gradient(to right, #ffffff, #ffffff), linear-gradient(to right, red, #578aef);
   background-clip: padding-box, border-box;
   background-origin: padding-box, border-box;
   border: 5px solid transparent;

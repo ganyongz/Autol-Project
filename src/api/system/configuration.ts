@@ -14,3 +14,7 @@ export const config_setConfig = (params: any) => {
 export const config_getValue = (params: any) => {
   return http.get(`Lub/SystemConfig/getValue`, params);
 };
+// 刷新 Redis 缓存
+export const Redis_flushRedisCache = (params: any) => {
+  return http.get(`Lub/RedisCacheController/flushRedisCache`, params);
+};

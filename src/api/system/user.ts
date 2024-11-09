@@ -15,3 +15,10 @@ export const deleteUserByIds = (params: any) => {
 export const addOrUpdateUser = (params: any) => {
   return http.post(`Lub/UserController/addOrUpdateUser`, params);
 };
+/**
+ * @name 登录模块
+ */
+// 背景图更换
+export const Auth_getTenantInfo = (params: any) => {
+  return http.get(`Auth/getTenantInfo`, {}, { params });
+};

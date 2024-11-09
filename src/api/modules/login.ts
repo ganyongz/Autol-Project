@@ -39,6 +39,7 @@ export const getAuthButtonListApi = () => {
 // 用户退出登录
 export const logoutApi = () => {
   // return http.get(PORT3 + `/loginOut`);
+  return http.get(`/Auth/loginOut`);
 };
 // 获取分页数据
 export const getListApi = (params: any) => {

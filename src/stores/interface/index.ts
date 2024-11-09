@@ -28,8 +28,12 @@ export interface GlobalState {
 /* UserState */
 export interface UserState {
   token: string;
+  Tenant: string;
   userType: number;
   userInfo: { realName: string; [key: string]: any };
+  loginBackgroundImage: string;
+  platformName: string;
+  loginUrl: string;
 }
 
 /* tabsMenuProps */

@@ -38,7 +38,8 @@
       <template #operation="scope">
         <el-button type="primary" link :icon="EditPen" @click="openDrawer('编辑', scope.row)">编辑</el-button>
         <el-button type="danger" link :icon="Delete" @click="deleteAccount(scope.row)">删除</el-button>
-        <el-button type="primary" link :icon="Plus" @click="relevanceEquipment(scope.row)">关联设备</el-button>
+        <!-- 关联设备(弃用) -->
+        <el-button v-if="false" type="primary" link :icon="Plus" @click="relevanceEquipment(scope.row)">关联设备</el-button>
         <el-button type="primary" link :icon="Plus" @click="afterSalesFun(scope.row)">售后</el-button>
       </template>
     </ProTable>

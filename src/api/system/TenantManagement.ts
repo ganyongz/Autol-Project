@@ -22,6 +22,14 @@ export const Tenant_saveTenantLocation = (params: any) => {
 export const Tenant_getLocationListByTenantId = (params: any) => {
   return http.get(`Lub/Tenant/getLocationListByTenantId`, {}, { params });
 };
+// 创建数据库
+export const Tenant_createDB = (params: any) => {
+  return http.post(`Lub/Tenant/createDB`, params);
+};
+// 测试连接数据库
+export const Tenant_testDBConnect = (params: any) => {
+  return http.post(`Lub/Tenant/testDBConnect`, params);
+};
 /**
  * @name 售后服务
  */

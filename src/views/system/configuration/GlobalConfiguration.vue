@@ -1,7 +1,8 @@
 <template>
   <div class="box">
-    <div style="text-align: right">
+    <div style="text-align: center">
       <el-button type="primary" @click="submit">保存</el-button>
+      <el-button type="warning" @click="refreshRedis">刷新Redis缓存</el-button>
     </div>
     <el-row class="row-bg" :gutter="20" justify="left">
       <el-col :span="4"> 文件默认保存路径:<el-input v-model="formInline1.value" placeholder="请输入" clearable /> </el-col>
@@ -12,7 +13,7 @@
 
 <script setup lang="ts" name="GlobalConfiguration">
 // 系统配置
-import { config_setConfig, config_getConfig } from "@/api/system/configuration";
+import { config_setConfig, config_getConfig, Redis_flushRedisCache } from "@/api/system/configuration";
 import { ref } from "vue";
 import { ElMessage } from "element-plus";
 let formInline1 = ref({
@@ -30,6 +31,15 @@ const submit = async () => {
   const res: any = await config_setConfig(formArray.value);
   if (res.code == "200") {
     getConfig();
+  } else {
+    ElMessage.error(res?.message);
+  }
+};
+// 刷新 redis
+const refreshRedis = async () => {
+  const res: any = await Redis_flushRedisCache({});
+  if (res.code == "200") {
+    ElMessage.success(res?.message);
   } else {
     ElMessage.error(res?.message);
   }

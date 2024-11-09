@@ -25,7 +25,6 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
-import { LOGIN_URL } from "@/config";
 import { useRouter } from "vue-router";
 import { logoutApi } from "@/api/modules/login";
 import { useUserStore } from "@/stores/modules/user";
@@ -35,7 +34,7 @@ import PasswordDialog from "./PasswordDialog.vue";
 
 const router = useRouter();
 const userStore = useUserStore();
-
+let loginUrl: any = localStorage.getItem("loginUrl") ? localStorage.getItem("loginUrl") : "/login";
 // 退出登录
 const logout = () => {
   ElMessageBox.confirm("您是否确认退出登录?", "温馨提示", {
@@ -47,11 +46,12 @@ const logout = () => {
     await logoutApi();
 
     // 2.清除 Token, 重置用户类型
+    userStore.removeToken();
     userStore.setToken("");
     userStore.setUserType(0);
 
     // 3.重定向到登陆页
-    router.replace(LOGIN_URL);
+    router.replace(loginUrl);
     ElMessage.success("退出登录成功！");
   });
 };
