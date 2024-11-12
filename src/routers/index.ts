@@ -6,14 +6,11 @@ import { initDynamicRouter } from "@/routers/modules/dynamicRouter";
 import { staticRouter, errorRouter } from "@/routers/modules/staticRouter";
 import NProgress from "@/config/nprogress";
 import { Auth_getTenantInfo } from "@/api/system/user";
-
 const mode = import.meta.env.VITE_ROUTER_MODE;
-
 const routerMode = {
   hash: () => createWebHashHistory(),
   history: () => createWebHistory()
 };
-
 /**
  * @description 📚 路由参数配置简介
  * @param path ==> 路由菜单访问路径
@@ -61,7 +58,6 @@ router.beforeEach(async (to, from, next) => {
     userStore.setTenant(typeId);
     let res: any = await Auth_getTenantInfo({ tenantId: typeId });
     if (res.code == 200) {
-      console.log(res);
       userStore.setBgImage(res.data.loginBackgroundImage);
       userStore.setPlatformName(res.data.platformName);
     }

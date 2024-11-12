@@ -35,6 +35,8 @@ import PasswordDialog from "./PasswordDialog.vue";
 const router = useRouter();
 const userStore = useUserStore();
 let loginUrl: any = localStorage.getItem("loginUrl") ? localStorage.getItem("loginUrl") : "/login";
+// pinia 存储
+// let loginUrl: any = userStore.loginUrl ? userStore.loginUrl : "/login";
 // 退出登录
 const logout = () => {
   ElMessageBox.confirm("您是否确认退出登录?", "温馨提示", {

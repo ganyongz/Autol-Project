@@ -30,7 +30,7 @@ export const useUserStore = defineStore({
     setUserInfo(userInfo: UserState["userInfo"]) {
       this.userInfo = userInfo;
     },
-    // set Tenant
+    // set Tenant 租户Id
     setTenant(Tenant: string) {
       this.Tenant = Tenant;
     },
@@ -38,7 +38,7 @@ export const useUserStore = defineStore({
     removeTenant() {
       this.Tenant = "";
     },
-    // set loginBackgroundImage
+    // set loginBackgroundImage 登录背景图
     setBgImage(loginBackgroundImage: string) {
       this.loginBackgroundImage = loginBackgroundImage;
     },
@@ -46,7 +46,7 @@ export const useUserStore = defineStore({
     removeBgImage() {
       this.loginBackgroundImage = "";
     },
-    // set platformName
+    // set platformName 租户平台名称
     setPlatformName(platformName: string) {
       this.platformName = platformName;
     },
@@ -54,7 +54,7 @@ export const useUserStore = defineStore({
     removePlatformName() {
       this.platformName = "";
     },
-    // set loginUrl
+    // set loginUrl 租户登录地址
     setLoginUrl(loginUrl: string) {
       this.loginUrl = loginUrl;
     },

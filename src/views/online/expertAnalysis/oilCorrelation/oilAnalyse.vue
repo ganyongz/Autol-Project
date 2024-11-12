@@ -25,6 +25,7 @@
           日期：<el-date-picker
             v-model="dateRange"
             type="daterange"
+            unlink-panels
             range-separator="To"
             start-placeholder="开始日期"
             end-placeholder="结束日期"

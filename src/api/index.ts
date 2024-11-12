@@ -1,6 +1,6 @@
 import axios, { AxiosInstance, AxiosError, AxiosRequestConfig, InternalAxiosRequestConfig, AxiosResponse } from "axios";
 import { showFullScreenLoading, tryHideFullScreenLoading } from "@/components/Loading/fullScreen";
-import { LOGIN_URL } from "@/config";
+// import { LOGIN_URL } from "@/config";
 import { ElMessage } from "element-plus";
 import { ResultData } from "@/api/interface";
 import { ResultEnum } from "@/enums/httpEnum";
@@ -49,6 +49,7 @@ class RequestHttp {
         if (config.headers && typeof config.headers.set === "function") {
           config.headers.set("token", userStore.token);
           config.headers.set("userType", userStore.userType);
+          config.headers.set("Tenant", userStore.Tenant);
         }
         return config;
       },
@@ -61,6 +62,7 @@ class RequestHttp {
      * @description 响应拦截器
      *  服务器换返回信息 -> [拦截统一处理] -> 客户端JS获取到信息
      */
+    let loginUrl: any = localStorage.getItem("loginUrl") ? localStorage.getItem("loginUrl") : "/login";
     this.service.interceptors.response.use(
       (response: AxiosResponse & { config: CustomAxiosRequestConfig }) => {
         const { data, config } = response;
@@ -71,7 +73,7 @@ class RequestHttp {
         if (data.code == ResultEnum.OVERDUE) {
           userStore.setToken("");
           userStore.removeToken();
-          router.replace(LOGIN_URL);
+          router.replace(loginUrl);
           ElMessage.error(data.msg ? data.msg : data.message);
           return Promise.reject(data);
         }
