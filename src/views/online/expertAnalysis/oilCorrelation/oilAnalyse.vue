@@ -34,7 +34,7 @@
           />
         </div>
 
-        <div style="display: flex; height: 350px">
+        <div style="display: flex; height: calc(38vh); overflow-y: auto">
           <div style="flex: 1; margin-right: 10px">
             <qualityChart
               :chart-data="chartData"

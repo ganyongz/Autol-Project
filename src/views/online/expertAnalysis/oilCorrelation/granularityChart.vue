@@ -1,10 +1,10 @@
 <template>
   <div>
-    <div v-if="showChart" ref="chartRef1" style="width: 100%; height: 300px"></div>
+    <div v-if="showChart" ref="chartRef1" style="width: 100%; height: calc(33vh)"></div>
     <el-empty v-else description="暂无分析数据" />
   </div>
-  <div style="margin-bottom: 10px; text-align: center">
-    颗粒等级：
+  <div style="margin-bottom: 20px; text-align: center">
+    <!-- <span>颗粒等级：</span> -->
     <el-radio-group v-model="radio" @change="handleRadio">
       <el-radio-button label=">1um" value="particles1" />
       <el-radio-button label=">2um" value="particles2" />
