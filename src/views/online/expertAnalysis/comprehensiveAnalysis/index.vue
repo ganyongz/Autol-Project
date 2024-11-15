@@ -14,7 +14,7 @@
     </el-tabs>
     <el-container>
       <!-- 树选择器 -->
-      <el-aside width="240px">
+      <el-aside width="240px" style="height: calc(100vh - 210px); background-color: var(--el-bg-color)">
         <el-input v-model="filterText" style="width: 240px" placeholder="关键字搜索" />
         <el-tree
           v-if="showTRee"
@@ -34,7 +34,7 @@
         >
         </el-tree>
       </el-aside>
-      <el-main style="position: relative; overflow: hidden">
+      <el-main style="position: relative; height: calc(100vh - 210px); margin-left: 10px; background-color: var(--el-bg-color)">
         <!-- 细化普专用 -->
         <div style="margin-top: -15px; margin-bottom: 10px" v-if="activeName === 'fifth'">
           <span>中心频率：</span>
@@ -48,7 +48,7 @@
         <div
           style="
             height: 400px;
-            margin-bottom: 5px;
+            margin-bottom: 10px;
             text-align: center;
             vertical-align: middle;
             border: 1px solid #dddddd;
@@ -114,7 +114,7 @@
 
         <div
           :key="tplKey"
-          style="height: 300px; text-align: center; vertical-align: middle; border: 1px solid #dddddd; border-radius: 15px"
+          style="height: 400px; text-align: center; vertical-align: middle; border: 1px solid #dddddd; border-radius: 15px"
         >
           <!-- 趋势图 -->
           <tendencyChart @search-result="searchResult" :station-id="stationId" />
@@ -308,10 +308,9 @@ function getFirstType4Node(nodes: TreeNode[]): any {
 .contentBox {
   // box-sizing: border-box;
   width: 100%;
-  padding: 20px;
+  height: 100%;
+  padding: 0 20px;
   overflow-x: hidden;
-  background-color: var(--el-bg-color);
-  border: 1px solid var(--el-border-color-light);
   border-radius: 6px;
   box-shadow: 0 0 12px rgb(0 0 0 / 5%);
   :deep(.el-tree-node__content .is-disabled) {

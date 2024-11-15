@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="xAxisData" ref="chartRef" style="width: 100%; height: 300px"></div>
+    <div v-if="xAxisData" ref="chartRef" style="width: 100%; height: 400px"></div>
     <el-empty v-else description="暂无分析数据" />
   </div>
 </template>
@@ -25,7 +25,6 @@ let chartInstance: echarts.ECharts | null = null;
 let xAxisData = ref();
 let yAxisData = ref();
 let boxingKey = ref(1);
-
 onMounted(async () => {
   if (dataObj?.value) {
     await getTrendChart();

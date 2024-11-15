@@ -5,7 +5,7 @@
         <el-option v-for="item in timeOPtions" :key="item.value" :label="item.label" :value="item.value" />
       </el-select>
       <el-date-picker
-        v-if="timeSelect == '7'"
+        v-if="timeSelect == '0'"
         v-model="customValue"
         type="datetimerange"
         range-separator="~"
@@ -15,22 +15,25 @@
         style="width: 340px"
         @change="changeVal"
       />
+      <el-button v-if="timeSelect == '1'" @click="toggleTimer" type="primary">{{
+        timerActive ? "关闭刷新" : "开启刷新"
+      }}</el-button>
       <!-- <el-button type="primary">查询</el-button> -->
+      <!-- <span>{{ timerActive }}</span> -->
     </div>
 
     <div style="margin: 10px 25px; text-align: left">[趋势图]</div>
-    <div v-if="chartData.length > 0" ref="chartRef" style="width: 100%; height: 260px"></div>
+    <div v-if="chartData.length > 0" ref="chartRef" style="width: 100%; height: 300px"></div>
     <el-empty v-else description="暂无分析数据" />
   </div>
 </template>
 
 <script setup lang="ts" name="boxingtu">
-import { ref, onMounted, onUnmounted, toRefs } from "vue";
+import { watch, ref, onMounted, onUnmounted, toRefs, nextTick, onBeforeUnmount, onActivated } from "vue";
 import * as echarts from "echarts";
 import { ElMessage } from "element-plus";
 import { Diagram_trendChart } from "@/api/online/comprehensiveAnalysis";
 import dayjs from "dayjs";
-import { nextTick } from "vue";
 const props = defineProps({
   stationId: {
     type: String,
@@ -49,46 +52,41 @@ let timeScreen: any = ref([]);
 let timeSelect = ref("1");
 const timeOPtions = [
   { value: "1", label: "实时数据" },
-  { value: "2", label: "最近一天" },
-  { value: "3", label: "最近一周" },
-  { value: "4", label: "最近一月" },
-  { value: "5", label: "最近三月" },
-  { value: "6", label: "最近半年" },
-  { value: "7", label: "自定义" }
+  { value: "2", label: "最近三天" },
+  { value: "3", label: "最近一月" },
+  { value: "4", label: "最近三月" },
+  { value: "5", label: "最近半年" },
+  { value: "6", label: "最近一年" },
+  { value: "0", label: "自定义" }
 ];
+const timerActive = ref(false);
 // 自定义时间
 let customValue = ref();
 const handleSelect = (val: any) => {
   switch (val) {
-    case "1": //实时数据（最近5分钟）
-      timeScreen.value[0] = dayjs().subtract(5, "minute").format("YYYY-MM-DD HH:mm:ss");
-      timeScreen.value[1] = dayjs().format("YYYY-MM-DD HH:mm:ss");
-      getTrendChart();
+    case "1": //实时数据（10s刷新一次）
+      getTrendChart(1);
+      // timerActive.value = true;
       break;
-    case "2": //最近一天
-      timeScreen.value[0] = dayjs().startOf("day").format("YYYY-MM-DD HH:mm:ss");
-      timeScreen.value[1] = dayjs().endOf("day").format("YYYY-MM-DD HH:mm:ss");
-      getTrendChart();
+    case "2": //最近三天
+      timerActive.value = false;
+      getTrendChart(2);
       break;
-    case "3": //最近一周
-      timeScreen.value[0] = dayjs().startOf("week").format("YYYY-MM-DD HH:mm:ss");
-      timeScreen.value[1] = dayjs().endOf("week").format("YYYY-MM-DD HH:mm:ss");
-      getTrendChart();
+    case "3": //最近一月
+      timerActive.value = false;
+      getTrendChart(3);
       break;
-    case "4": //最近一月
-      timeScreen.value[0] = dayjs().startOf("month").format("YYYY-MM-DD HH:mm:ss");
-      timeScreen.value[1] = dayjs().endOf("month").format("YYYY-MM-DD HH:mm:ss");
-      getTrendChart();
+    case "4": //最近三月
+      timerActive.value = false;
+      getTrendChart(4);
       break;
-    case "5": //最近三月
-      timeScreen.value[0] = dayjs().subtract(90, "day").format("YYYY-MM-DD HH:mm:ss");
-      timeScreen.value[1] = dayjs().format("YYYY-MM-DD HH:mm:ss");
-      getTrendChart();
+    case "5": //最近半年
+      timerActive.value = false;
+      getTrendChart(5);
       break;
-    case "6": // 最近半年
-      timeScreen.value[0] = dayjs().subtract(180, "day").format("YYYY-MM-DD HH:mm:ss");
-      timeScreen.value[1] = dayjs().format("YYYY-MM-DD HH:mm:ss");
-      getTrendChart();
+    case "6": // 最近一年
+      timerActive.value = false;
+      getTrendChart(6);
       break;
 
     default:
@@ -99,7 +97,7 @@ const handleSelect = (val: any) => {
 const changeVal = (val: any) => {
   timeScreen.value[0] = val[0];
   timeScreen.value[1] = val[1];
-  getTrendChart();
+  getTrendChart(0);
 };
 const setBarChart2 = () => {
   if (chartRef.value) {
@@ -184,7 +182,7 @@ const setBarChart2 = () => {
             data: [
               {
                 name: "预警值",
-                yAxis: waringValue.value, // 预警值
+                yAxis: waringValue?.value ? waringValue.value : "", // 预警值
                 label: {
                   formatter: "{b}: {c}"
                 },
@@ -195,7 +193,7 @@ const setBarChart2 = () => {
               },
               {
                 name: "危险值",
-                yAxis: dangerValue.value, // 危险值
+                yAxis: dangerValue?.value ? dangerValue.value : "", // 危险值
                 label: {
                   formatter: "{b}: {c}"
                   // 不显示基准线名称
@@ -230,7 +228,7 @@ onMounted(async () => {
   timeScreen.value[0] = dayjs().subtract(5, "minute").format("YYYY-MM-DD HH:mm:ss");
   timeScreen.value[1] = dayjs().format("YYYY-MM-DD HH:mm:ss");
   if (stationId.value) {
-    await getTrendChart();
+    await getTrendChart(1);
     if (chartRef.value) {
       chartInstance = echarts.init(chartRef.value);
       // 配置项和数据
@@ -328,12 +326,22 @@ onMounted(async () => {
   }
 });
 // 获取数据
-const getTrendChart = async () => {
-  let params = {
-    pointId: stationId.value,
-    startTime: timeScreen.value[0],
-    endTime: timeScreen.value[1]
-  };
+const getTrendChart = async val => {
+  // debugger;
+  let params;
+  if (timeSelect.value == "0") {
+    params = {
+      pointId: stationId.value,
+      startTime: timeScreen.value[0],
+      endTime: timeScreen.value[1],
+      type: val
+    };
+  } else {
+    params = {
+      pointId: stationId.value,
+      type: val
+    };
+  }
   let res: any = await Diagram_trendChart(params);
   if (res.code == "200" && res.data.realData) {
     chartData.value = res.data.realData;
@@ -353,13 +361,61 @@ const getTrendChart = async () => {
     ElMessage.error(res?.message);
   }
 };
+
+// 创建定时器
+let timerId: any = null;
+const toggleTimer = () => {
+  timerActive.value = !timerActive.value;
+};
+// 开启定时器
+const startTimer = () => {
+  timerId = setInterval(() => {
+    // 定时器的逻辑
+    getTrendChart(1);
+  }, 10000);
+};
+// 关闭定时器
+const stopTimer = () => {
+  if (timerId) {
+    clearInterval(timerId);
+    timerId = null;
+  }
+};
 onUnmounted(() => {
+  // 组件卸载时清理 ECharts 实例
   if (chartInstance) {
-    // 组件卸载时清理 ECharts 实例
     chartInstance.dispose();
     chartInstance = null;
   }
+  timerActive.value = false;
 });
+onBeforeUnmount(() => {
+  // debugger;
+});
+onActivated(() => {
+  // alert("进入页面了");
+  console.log("生命周期-onActivated");
+
+  // startTimer();
+});
+import { onBeforeRouteLeave } from "vue-router";
+// 在路由离开前调用
+onBeforeRouteLeave((to, from, next) => {
+  console.log(to, from);
+  timerActive.value = false;
+  next();
+});
+watch(
+  () => timerActive.value,
+  newValue => {
+    if (newValue) {
+      startTimer();
+    } else {
+      stopTimer();
+    }
+  },
+  { immediate: true, deep: true }
+);
 </script>
 
 <style scoped>

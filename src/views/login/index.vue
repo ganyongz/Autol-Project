@@ -1,5 +1,5 @@
 <template>
-  <div class="login-container flx-center" :style="backgroundImageStyle">
+  <div v-if="isShow" class="login-container flx-center" :style="backgroundImageStyle">
     <div class="login-box">
       <SwitchDark class="dark" />
       <!-- <div class="login-left">
@@ -17,7 +17,7 @@
 </template>
 
 <script setup lang="ts" name="login">
-import { onBeforeMount, ref } from "vue";
+import { onMounted, ref, watch, nextTick } from "vue";
 import LoginForm from "./components/LoginForm.vue";
 import SwitchDark from "@/components/SwitchDark/index.vue";
 import { useUserStore } from "@/stores/modules/user";
@@ -27,10 +27,21 @@ const backgroundImageStyle = ref({
   backgroundImage: `url(${imgSrc})`
 });
 let logoText = ref("智慧润滑系统");
-onBeforeMount(() => {
-  backgroundImageStyle.value.backgroundImage = `url(${userStore.loginBackgroundImage != "" && userStore.loginBackgroundImage != undefined ? userStore.loginBackgroundImage : imgSrc})`;
-  logoText.value = userStore.platformName != "" ? userStore.platformName : "智慧润滑系统";
+let isShow = ref(true);
+onMounted(() => {
+  nextTick(() => {
+    backgroundImageStyle.value.backgroundImage = `url(${userStore.loginBackgroundImage != "" && userStore.loginBackgroundImage != undefined ? userStore.loginBackgroundImage : imgSrc})`;
+    logoText.value = userStore.platformName != "" ? userStore.platformName : "智慧润滑系统";
+  });
 });
+watch(
+  () => userStore.loginBackgroundImage,
+  (newVal, oldVal) => {
+    console.log(newVal);
+    console.log(newVal, oldVal);
+  },
+  { deep: true, immediate: true }
+);
 </script>
 
 <style scoped lang="scss">

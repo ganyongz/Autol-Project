@@ -43,6 +43,11 @@ const router = createRouter({
   strict: false,
   scrollBehavior: () => ({ left: 0, top: 0 })
 });
+// beforeEnter 拦截
+// router.beforeResolve((to, from, next) => {
+//   debugger;
+//   console.log(to, from, next);
+// });
 
 /**
  * @description 路由拦截 beforeEach
@@ -51,15 +56,24 @@ router.beforeEach(async (to, from, next) => {
   const userStore = useUserStore();
   const authStore = useAuthStore();
   // 存储登录信息 start
-  let typeId = await extractTenantId(to.fullPath);
-  if (typeId) {
-    // userStore.setLoginUrl(to.fullPath);
-    localStorage.setItem("loginUrl", to.fullPath);
-    userStore.setTenant(typeId);
-    let res: any = await Auth_getTenantInfo({ tenantId: typeId });
-    if (res.code == 200) {
-      userStore.setBgImage(res.data.loginBackgroundImage);
-      userStore.setPlatformName(res.data.platformName);
+  if (to.name === "login") {
+    let typeId = await extractTenantId(to.fullPath);
+    if (typeId) {
+      userStore.setLoginUrl(to.fullPath);
+      // localStorage.setItem("loginUrl", to.fullPath);
+      userStore.setTenant(typeId);
+      let res: any = await Auth_getTenantInfo({ tenantId: typeId });
+      if (res.code == 200) {
+        userStore.setBgImage(res.data.loginBackgroundImage);
+        userStore.setPlatformName(res.data.platformName);
+      }
+    } else {
+      userStore.setLoginUrl("/login");
+      // localStorage.setItem("loginUrl", to.fullPath);
+      userStore.setTenant("");
+      userStore.setBgImage("");
+      userStore.setPlatformName("智慧润滑系统");
+      // next({ path: LOGIN_URL, replace: true });
     }
   }
   // 存储登录信息 end

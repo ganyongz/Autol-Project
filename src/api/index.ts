@@ -50,6 +50,8 @@ class RequestHttp {
           config.headers.set("token", userStore.token);
           config.headers.set("userType", userStore.userType);
           config.headers.set("Tenant", userStore.Tenant);
+        } else {
+          config.headers.set("Tenant", "");
         }
         return config;
       },
@@ -62,11 +64,14 @@ class RequestHttp {
      * @description 响应拦截器
      *  服务器换返回信息 -> [拦截统一处理] -> 客户端JS获取到信息
      */
-    let loginUrl: any = localStorage.getItem("loginUrl") ? localStorage.getItem("loginUrl") : "/login";
+    // const userStore = useUserStore();
+    // let loginUrl: any = localStorage.getItem("loginUrl") ? localStorage.getItem("loginUrl") : "/login";
+    // let loginUrl: any = userStore.loginUrl ? userStore.loginUrl : "/login";
     this.service.interceptors.response.use(
       (response: AxiosResponse & { config: CustomAxiosRequestConfig }) => {
         const { data, config } = response;
         const userStore = useUserStore();
+        let loginUrl: any = userStore.loginUrl ? userStore.loginUrl : "/login";
         axiosCanceler.removePending(config);
         config.loading && tryHideFullScreenLoading();
         // 登录失效
