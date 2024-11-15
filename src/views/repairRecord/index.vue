@@ -38,11 +38,6 @@ const options = reactive([
   { value: 0, label: "是" },
   { value: 1, label: "否" }
 ]);
-const statusOptions = reactive([
-  { value: 0, label: "未接收" },
-  { value: 1, label: "维修中" },
-  { value: 2, label: "已维修" }
-]);
 
 // 表格配置项
 const columns: any = reactive([
@@ -107,13 +102,6 @@ const columns: any = reactive([
       props: { type: "datetime", valueFormat: "YYYY-MM-DD HH:mm:ss" },
       defaultValue: ""
     }
-  },
-  {
-    prop: "status",
-    label: "状态",
-    enum: statusOptions,
-    search: { el: "select", props: { filterable: true } },
-    fieldNames: { label: "label", value: "value" }
   }
 ]);
 </script>
