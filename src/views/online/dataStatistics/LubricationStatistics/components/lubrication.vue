@@ -14,7 +14,7 @@
         end-placeholder="结束日期"
         value-format="YYYY-MM-DD HH:mm:ss"
       ></el-date-picker>
-      <span v-if="!(pumpStationType == 1 || pumpStationType == 4 || pumpStationType == 5)">润滑点号:</span>
+      <span v-if="!(pumpStationType == 1 || pumpStationType == 4 || pumpStationType == 5)">润滑点号: </span>
       <el-input
         v-if="!(pumpStationType == 1 || pumpStationType == 4 || pumpStationType == 5)"
         v-model.number="lubPoint"

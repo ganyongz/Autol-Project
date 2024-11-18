@@ -40,10 +40,10 @@ export const initDynamicRouter = async () => {
       }
       // 全屏处理
       if (
-        item.meta.title == "驾驶舱" ||
-        item.meta.title == "港口驾驶舱" ||
-        item.meta.isFull == true ||
-        item.meta.title == "风电驾驶舱"
+        item.meta?.title == "驾驶舱" ||
+        item.meta?.title == "港口驾驶舱" ||
+        item.meta?.isFull == true ||
+        item.meta?.title == "风电驾驶舱"
       ) {
         router.addRoute(item as unknown as RouteRecordRaw);
       } else {

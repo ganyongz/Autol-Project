@@ -3,7 +3,7 @@
     <p>近30日趋势统计</p>
     <div id="main2" ref="chartContainer" style="width: 100vw; height: 300px"></div>
     <!-- 表格条件搜索 -->
-    <div class="flex flex-wrap gap-4 items-center">
+    <div class="flex flex-wrap gap-4 items-center" style="margin-bottom: 10px">
       <el-date-picker
         v-model="dateRange"
         type="daterange"
@@ -12,7 +12,7 @@
         start-placeholder="开始日期"
         end-placeholder="结束日期"
       ></el-date-picker>
-      <el-button type="primary" @click="searchFun">查询</el-button>
+      <el-button type="primary" @click="searchFun" style="margin-left: 10px">查询</el-button>
       <el-button type="primary" :icon="Download" plain @click="downloadFile">导出报警记录</el-button>
     </div>
     <!-- 表格 -->

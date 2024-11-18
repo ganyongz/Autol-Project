@@ -2,7 +2,7 @@ import { RouteRecordRaw } from "vue-router";
 import { HOME_URL, LOGIN_URL } from "@/config";
 
 /**
- * staticRouter (静态路由)
+ * staticRouter (静态路由 , 路由白名单)
  */
 export const staticRouter: RouteRecordRaw[] = [
   {
@@ -24,6 +24,25 @@ export const staticRouter: RouteRecordRaw[] = [
     // component: () => import("@/layouts/indexAsync.vue"),
     redirect: HOME_URL,
     children: []
+  },
+
+  {
+    path: "/platform/port/index",
+    name: "cockpit",
+    component: () => import("@/views/platform/port/index.vue"),
+    children: [],
+    meta: {
+      title: "港口驾驶舱"
+    }
+  },
+  {
+    path: "/platform/port/windPower",
+    name: "windPower",
+    component: () => import("@/views/platform/port/windPower.vue"),
+    children: [],
+    meta: {
+      title: "风电驾驶舱"
+    }
   }
 ];
 

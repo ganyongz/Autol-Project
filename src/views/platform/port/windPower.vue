@@ -25,6 +25,7 @@
             :render-after-expand="false"
             :props="defaultProps"
             @change="handleSelect"
+            v-if="false"
           />
           <div class="portNavigation" style="border: 1px solid green; border-radius: 10px" @click="inquireEquipByStatus(0)">
             <el-row :gutter="20">
@@ -366,7 +367,7 @@ getDatas(); //下拉列表
     .portNavigation {
       box-sizing: border-box; /* 防止padding导致宽度超出100% */
       width: calc(90% - 10px); /* 假设间隔为10px */
-      height: 120px;
+      height: 130px;
       padding: 10px;
       margin: 20px;
       color: #ffffff;
