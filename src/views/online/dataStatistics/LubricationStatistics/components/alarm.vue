@@ -13,6 +13,7 @@
         end-placeholder="结束日期"
       ></el-date-picker>
       <el-button type="primary" @click="searchFun">查询</el-button>
+      <el-button type="primary" :icon="Download" plain @click="downloadFile">导出报警记录</el-button>
     </div>
     <!-- 表格 -->
     <el-table :data="tableData" height="500px">
@@ -39,8 +40,11 @@
 // 报警记录
 import * as echarts from "echarts";
 import { onMounted, ref, toRefs } from "vue";
-import { ElMessage } from "element-plus";
+import { ElMessage, ElMessageBox } from "element-plus";
+import { Download } from "@element-plus/icons-vue";
+import { useDownload } from "@/hooks/useDownload";
 import { lub_lubAlarmEventPage, lub_lubAlarmTrend } from "@/api/online/anlageuebersicht";
+import { export_lubAlarmEventExcel } from "@/api/common";
 import dayjs from "dayjs";
 const props = defineProps({
   partId: {
@@ -165,6 +169,21 @@ const handleSizeChange = (val: number) => {
 const handleCurrentChange = (val: number) => {
   pageNum.value = val;
   getHisAlarm();
+};
+// 导出报警记录列表
+const downloadFile = async () => {
+  let params = {
+    startTime: dateRange.value.length > 0 ? dateRange.value[0] : "",
+    endTime: dateRange.value.length > 0 ? dateRange.value[1] : "",
+    partId: partId?.value
+  };
+  if (tableData.value.length > 0) {
+    ElMessageBox.confirm("确认导出报警记录?", "温馨提示", { type: "warning" }).then(() =>
+      useDownload(export_lubAlarmEventExcel, "报警记录列表", params)
+    );
+  } else {
+    ElMessage.warning("没有可以导出的数据");
+  }
 };
 // 调用
 getHisAlarm();

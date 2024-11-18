@@ -31,7 +31,7 @@
         <el-option v-for="item in statusOptions" :key="item.value" :label="item.label" :value="item.value" />
       </el-select>
       <el-button type="primary" @click="searchFun">查询</el-button>
-      <el-button type="primary" :icon="Download" plain @click="downloadFile">导出数据</el-button>
+      <el-button type="primary" :icon="Download" plain @click="downloadFile">导出润滑记录</el-button>
     </div>
     <!-- 2 -->
     <div class="d-flex">
@@ -194,9 +194,9 @@
 import * as echarts from "echarts";
 import { onMounted, ref, toRefs } from "vue";
 import { lub_LubRecordByPage, lub_lubStatistics, lub_lubTrend } from "@/api/online/anlageuebersicht";
-import { ElMessage } from "element-plus";
+import { ElMessage, ElMessageBox } from "element-plus";
 import { Download } from "@element-plus/icons-vue";
-// import { useDownload } from "@/hooks/useDownload";
+import { useDownload } from "@/hooks/useDownload";
 import { export_recordExcel } from "@/api/common";
 import dayjs from "dayjs";
 const props = defineProps({
@@ -436,40 +436,22 @@ const handleCurrentChange = (val: number) => {
   pageNum.value = val;
   getLubRecord();
 };
-
-// 导出用户列表
-// const downloadFile = async () => {
-//   let params = {
-//     startTime: dateRange.value.length > 0 ? dateRange.value[0] : "",
-//     endTime: dateRange.value.length > 0 ? dateRange.value[1] : "",
-//     partId: partId?.value,
-//     lubPoint: lubPoint.value,
-//     status: status.value
-//   };
-//   ElMessageBox.confirm("确认导出数据?", "温馨提示", { type: "warning" }).then(() =>
-//     useDownload(export_recordExcel, "列表", params)
-//   );
-// };
-// 22
-// -----------------------------
+// 导出润滑记录列表
 const downloadFile = async () => {
   let params = {
     startTime: dateRange.value.length > 0 ? dateRange.value[0] : "",
     endTime: dateRange.value.length > 0 ? dateRange.value[1] : "",
     partId: partId?.value,
+    lubPoint: lubPoint.value,
     status: status.value
   };
-  let res: any = await export_recordExcel(params);
-  console.log(res);
-  // const blob = new Blob([res]);
-  const link = document.createElement("a");
-  link.download = "1111.xls";
-  link.style.display = "none";
-  link.href = `${"http://192.168.1.6:8905/Lub/LubRecord/recordExcel?" + params}`;
-  document.body.appendChild(link);
-  link.click();
-  URL.revokeObjectURL(link.href); // 释放URL 对象
-  document.body.removeChild(link);
+  if (tableData.value.length > 0) {
+    ElMessageBox.confirm("确认导出润滑记录?", "温馨提示", { type: "warning" }).then(() =>
+      useDownload(export_recordExcel, "润滑记录列表", params)
+    );
+  } else {
+    ElMessage.warning("没有可以导出的数据");
+  }
 };
 </script>
 
