@@ -29,7 +29,10 @@
     </el-form-item>
 
     <el-form-item label="驾驶舱菜单路径" prop="cockpitMenuUrl">
-      <el-input v-model="ruleForm.cockpitMenuUrl" />
+      <!-- <el-input v-model="ruleForm.cockpitMenuUrl" /> -->
+      <el-select v-model="ruleForm.cockpitMenuUrl" placeholder="Select">
+        <el-option v-for="item in menuOptions" :key="item.value" :label="item.label" :value="item.value" />
+      </el-select>
     </el-form-item>
 
     <el-form-item label="售后联系人" prop="afterContacts">
@@ -115,7 +118,10 @@ interface RuleForm {
   dbUserName: string;
   dbPassword: string;
 }
-
+let menuOptions = [
+  { value: "/platform/port/windPower", label: "风电" },
+  { value: "/platform/port/index", label: "港口" }
+];
 const formSize = ref<ComponentSize>("default");
 const ruleFormRef = ref<FormInstance>();
 let ruleForm = reactive<RuleForm>({
