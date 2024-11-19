@@ -1,8 +1,8 @@
 <template>
-  <div class="main-box">
+  <div class="main-box" style="height: calc(100vh - 150px)">
     <el-tree
       ref="treeRef"
-      style="width: 240px; margin-right: 10px"
+      style="width: 240px; margin-right: 10px; overflow: auto"
       :data="treeData"
       :props="defaultProps"
       node-key="id"
@@ -11,12 +11,8 @@
       :highlight-current="true"
       @node-click="handleNodeClick"
     >
-      <template #slot-scope="{ node }">
-        <el-tooltip :disabled="showTitle" effect="dark" :content="tooltipTitle" placement="top">
-          <span class="span-ellipsis" @mouseover="onShowNameTipsMouseenter">
-            {{ node.label }}
-          </span>
-        </el-tooltip>
+      <template #default="{ node }">
+        <span class="custom-tree-node" :title="node.label">{{ node.label }}</span>
       </template>
     </el-tree>
     <div class="table-box">
@@ -207,20 +203,6 @@ const getTrendChart = async () => {
   }
   show1.value += 1;
 };
-// 菜单过长处理
-let tooltipTitle = ref("");
-let showTitle = ref(true);
-const onShowNameTipsMouseenter = e => {
-  let target = e.target;
-  let textLength = target.clientWidth;
-  let containerLength = target.scrollWidth;
-  if (textLength < containerLength) {
-    tooltipTitle.value = e.target.innerText;
-    showTitle.value = false;
-  } else {
-    showTitle.value = true;
-  }
-};
 // 调用
 getTrendChart(); //获取趋势图
 getEquipTreeList();
@@ -233,7 +215,7 @@ getEquipTreeList();
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-:v-deep(.el-tree-node__content) {
+.span-ellipsis {
   display: block;
   width: 100%;
   overflow: hidden;

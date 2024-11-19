@@ -1,15 +1,16 @@
 <template>
   <div class="box" style="background-color: var(--el-fill-color-blank)">
+    <!-- border-image: linear-gradient(to right, #ff33cc, #ffcc33) 30 30 round; -->
     <div
       style="
         display: flex;
         flex: 1;
         align-items: center;
         justify-content: center;
-        height: calc(100vh - 240px);
+        height: calc(100vh - 230px);
         margin-right: 10px;
         overflow: hidden;
-        border-image: linear-gradient(to right, #ff33cc, #ffcc33) 30 30 round;
+        border: 1px solid gray;
         box-shadow: 5px 5px 10px rgb(1 10 0 / 50%);
       "
       class="box3"

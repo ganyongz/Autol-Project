@@ -1,15 +1,12 @@
 <template>
   <div class="table-box">
     <!-- 部件详情 - 部件级 -->
-    <el-container>
-      <el-aside
-        :class="['c_card-gray', 'left-card', 'h-100', 'mr-16', zoomIcon ? 'takeBack' : 'unfold']"
-        style="height: calc(100vh - 150px); overflow: auto"
-      >
+    <el-container style="height: calc(100vh - 150px)">
+      <el-aside :class="['c_card-gray', 'left-card', 'h-100', 'mr-16', zoomIcon ? 'takeBack' : 'unfold']">
         <el-tree
           v-if="caidan"
           ref="treeRef"
-          style="width: 180px; overflow-x: auto"
+          style="width: 200px"
           :data="treeData"
           :props="defaultProps"
           node-key="id"
@@ -17,9 +14,13 @@
           :current-node-key="partId"
           :highlight-current="true"
           @node-click="handleNodeClick"
-        />
+        >
+          <template #default="{ node }">
+            <span class="custom-tree-node" :title="node.label">{{ node.label }}</span>
+          </template>
+        </el-tree>
       </el-aside>
-      <el-main style="height: calc(100vh - 150px); background-color: var(--el-fill-color-blank)">
+      <el-main style="background-color: var(--el-fill-color-blank)">
         <div style="display: flex">
           <div
             class="mt-16 mr-24 cursor-pointer"
@@ -150,7 +151,7 @@ getEquipTreeList();
   color: #409eff;
 }
 .takeBack {
-  width: 180px;
+  width: 200px;
   margin-right: 16px;
   background-color: var(--el-fill-color-blank);
   transition: all 0.3s;
@@ -160,8 +161,15 @@ getEquipTreeList();
   margin-right: 0 !important;
   transition: all 0.3s;
 }
-.el-tree > :nth-child(n + 1) {
-  display: inline-block;
-  min-width: 100%;
+.custom-tree-node {
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
+
+// .el-tree > :nth-child(n + 1) {
+//   display: inline-block;
+//   min-width: 100%;
+// }
 </style>

@@ -1,7 +1,7 @@
 <template>
   <div class="common-layout">
-    <el-container>
-      <el-aside width="240px" style="height: 1000px; margin-right: 10px; background-color: var(--el-bg-color)">
+    <el-container style="height: calc(100vh - 150px)">
+      <el-aside width="240px" style="margin-right: 10px; background-color: var(--el-bg-color)">
         <el-input v-model="filterText" style="width: 240px" placeholder="关键字搜索" />
         <el-tree
           :key="rushKey"
@@ -16,9 +16,13 @@
           :current-node-key="nodeId"
           :highlight-current="true"
           @node-click="nodeClick"
-        />
+        >
+          <template #default="{ node }">
+            <span class="custom-tree-node" :title="node.label">{{ node.label }}</span>
+          </template>
+        </el-tree>
       </el-aside>
-      <el-main style="height: 1000px; background-color: var(--el-bg-color)">
+      <el-main style="background-color: var(--el-bg-color)">
         <div style="margin-bottom: 10px">
           开始时间:
           <el-date-picker v-model="startTime" type="date" placeholder="请选择" value-format="YYYY-MM-DD HH:mm:ss" />
@@ -254,5 +258,11 @@ const getTrend = async () => {
     height: 500px;
     border: 1px solid #c7c7c7;
   }
+}
+.custom-tree-node {
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 </style>

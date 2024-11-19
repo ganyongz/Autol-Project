@@ -15,7 +15,7 @@
           @node-click="handleNodeClick"
         />
       </el-aside>
-      <el-container>
+      <el-container style="height: calc(100vh - 155px); overflow: auto">
         <el-main
           class="departHeader"
           style="padding: 10px; margin-bottom: 10px; font-size: 12px; border-radius: 10px"
@@ -285,12 +285,14 @@ onUnmounted(() => {
 getLocationTreeFun();
 </script>
 <style scoped lang="scss">
+.layout-container-demo {
+  height: calc(100vh - 150px);
+}
 .layout-container-demo .el-aside {
   color: var(--el-text-color-primary);
   background-color: var(--el-bg-color);
 }
 .layout-container-demo .el-main {
-  height: 1000px;
   padding: 0;
 }
 .layout-container-demo .el-container {
