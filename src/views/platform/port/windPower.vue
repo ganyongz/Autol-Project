@@ -17,7 +17,7 @@
           </div>
         </div>
         <div class="portOutLine">
-          <el-tree-select
+          <!-- <el-tree-select
             class="my-tree-select"
             popper-class="yc"
             v-model="selectValue"
@@ -26,7 +26,7 @@
             :props="defaultProps"
             @change="handleSelect"
             v-if="false"
-          />
+          /> -->
           <div class="portNavigation" style="border: 1px solid green; border-radius: 10px" @click="inquireEquipByStatus(0)">
             <el-row :gutter="20">
               <el-col :span="10">
@@ -185,48 +185,27 @@
 </template>
 
 <script setup lang="ts" name="windPower">
-// 风力发电驾驶舱
+// 风电驾驶舱
 import { ref, onBeforeUnmount, onMounted } from "vue";
 import alarmInfoLub from "@/views/platform/port/components/alarmInfoLub.vue";
 import alarmInfoOil from "@/views/platform/port/components/alarmInfoOil.vue";
 import alarmInfoVib from "@/views/platform/port/components/alarmInfoVib.vue";
-import {
-  industry_industryCockpitDropDown,
-  industry_industryCockpitEquipList,
-  industry_industryCockpitAlarmPart
-} from "@/api/dataScreen";
+import { industry_industryCockpitEquipList, industry_industryCockpitAlarmPart } from "@/api/dataScreen";
 import dayjs from "dayjs";
 import { HOME_URL } from "@/config";
 import { useRouter } from "vue-router";
 import { ElMessage } from "element-plus";
 const router = useRouter();
-let selectValue = ref();
-const defaultProps = {
-  children: "children",
-  value: "id",
-  label: "name"
-};
-let selectData = ref();
 const ToTargetPage = (val: any) => {
   // router.push(`/online/anlageuebersicht/index?id=${val}`);
   router.push({ path: "/online/anlageuebersicht/partDetail", query: { id: val.id, name: val.name } });
 };
 const dataScreenRef = ref<HTMLElement | null>(null);
-// 获取下拉数据
-const getDatas = async () => {
-  let res: any = await industry_industryCockpitDropDown({});
-  if (res.code == "200") {
-    selectData.value = res.data;
-    selectValue.value = selectData.value.length > 0 ? selectData.value[0].id : ""; //默认选中第一个
-    getEquipList(); //设备列表
-    getIndustryCockpitAlarmPart(1); //报警列表
-    getIndustryCockpitAlarmPart(2);
-    getIndustryCockpitAlarmPart(3);
-  } else {
-    ElMessage.error(res?.message);
-  }
-};
 onMounted(() => {
+  getEquipList(); //设备列表
+  getIndustryCockpitAlarmPart(1); //报警列表
+  getIndustryCockpitAlarmPart(2);
+  getIndustryCockpitAlarmPart(3);
   if (dataScreenRef.value) {
     dataScreenRef.value.style.transform = `scale(${getScale()}) translate(-50%, -50%)`;
     dataScreenRef.value.style.width = `1920px`;
@@ -263,14 +242,6 @@ const inquireEquipByStatus = (val: number) => {
   status.value = val;
   getEquipList();
 };
-// 租户变更
-const handleSelect = (val: any) => {
-  selectValue.value = val;
-  getEquipList(); //设备列表
-  getIndustryCockpitAlarmPart(1); //报警列表
-  getIndustryCockpitAlarmPart(2);
-  getIndustryCockpitAlarmPart(3);
-};
 //报警部件列表
 let tplKey = ref(1);
 let alarmLub = ref();
@@ -283,8 +254,7 @@ const getIndustryCockpitAlarmPart = async (type: any) => {
   // if (route.query.type) {
   let res: any = await industry_industryCockpitAlarmPart({
     industryType: 1, //1 风电设备 2港口设备 3食品设备 4工程机械 5矿山 6水泥
-    type: type, //查询类型 1润滑 2油液 3振动
-    tenantId: selectValue.value //租户id
+    type: type //查询类型 1润滑 2油液 3振动
   });
   if (res.code == "200") {
     // -> 数据处理 <- 0正常，1预警 2危险
@@ -328,8 +298,7 @@ const getEquipList = async () => {
   // if (route.query.type) {
   let res: any = await industry_industryCockpitEquipList({
     industryType: 1, //1 风电设备 2港口设备 3食品设备 4工程机械 5矿山 6水泥
-    status: status.value, //状态 0全部 1正常 2预警 3报警
-    tenantId: selectValue.value //租户id
+    status: status.value //状态 0全部 1正常 2预警 3报警
   });
   if (res.code == "200") {
     equipDatas.value = res.data.data;
@@ -344,7 +313,6 @@ const getEquipList = async () => {
 };
 
 // 调用
-getDatas(); //下拉列表
 </script>
 
 <style lang="scss" scoped>
