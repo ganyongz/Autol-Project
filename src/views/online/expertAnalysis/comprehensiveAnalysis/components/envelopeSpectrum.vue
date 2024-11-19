@@ -116,6 +116,8 @@ const getTrendChart = async () => {
     tableName: obj["tableName"],
     type: 3
   };
+  // 判断是否存在Id
+  if (!obj["id"]) return;
   let res: any = await Diagram_professionalAtlas(params);
   if (res.code == "200") {
     xAxisData.value = res.data?.frequencies;

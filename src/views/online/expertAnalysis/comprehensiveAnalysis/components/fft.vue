@@ -182,6 +182,8 @@ const getTrendChart = async () => {
     tableName: obj["tableName"],
     type: 7
   };
+  // 判断是否存在Id
+  if (!obj["id"]) return;
   let res: any = await Diagram_professionalAtlas(params);
   if (res.code == "200" && res.data?.frequencies) {
     // 首先，循环 arr1 和 arr2 来创建一个新数组

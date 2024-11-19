@@ -121,6 +121,8 @@ const getTrendChart = async () => {
     tableName: obj["tableName"],
     type: 9
   };
+  // 判断是否存在Id
+  if (!obj["id"]) return;
   let res: any = await Diagram_professionalAtlas(params);
   if (res.code == "200") {
     if (res.data?.amplitudes) {
