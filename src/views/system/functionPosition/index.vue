@@ -2,10 +2,9 @@
   <div>
     <!-- 功能配置 -->
     <el-container class="layout-container-demo">
-      <el-aside style="margin-right: 10px; border-radius: 10px">
+      <el-aside style="width: 200px; padding: 10px; margin-right: 10px; border-radius: 10px">
         <el-tree
           :key="treeKey"
-          style="width: 240px; max-width: 240px"
           :data="treeData"
           :props="defaultProps"
           node-key="id"
@@ -13,7 +12,11 @@
           :current-node-key="currentNodeId"
           :highlight-current="true"
           @node-click="handleNodeClick"
-        />
+        >
+          <template #default="{ node }">
+            <span class="custom-tree-node" :title="node.label">{{ node.label }}</span>
+          </template>
+        </el-tree>
       </el-aside>
       <el-container style="height: calc(100vh - 155px); overflow: auto">
         <el-main
@@ -297,5 +300,11 @@ getLocationTreeFun();
 }
 .layout-container-demo .el-container {
   background-color: var(--el-bg-color);
+}
+.custom-tree-node {
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 </style>

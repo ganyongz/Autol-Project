@@ -32,6 +32,9 @@
           show-checkbox
           :default-expanded-keys="expandData"
         >
+          <template #default="{ node }">
+            <span class="custom-tree-node" :title="node.label">{{ node.label }}</span>
+          </template>
         </el-tree>
       </el-aside>
       <el-main style="position: relative; height: calc(100vh - 210px); margin-left: 10px; background-color: var(--el-bg-color)">
@@ -320,7 +323,10 @@ function getFirstType4Node(nodes: TreeNode[]): any {
 :deep(.el-tree) {
   padding-left: 20px;
 }
-:deep(.custom-tree-node) {
-  padding: 0 10px 0 8px;
+.custom-tree-node {
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 </style>
