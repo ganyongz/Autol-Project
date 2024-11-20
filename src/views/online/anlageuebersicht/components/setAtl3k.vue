@@ -118,7 +118,7 @@ const open = async val => {
       getPumpParams();
     }, 3000);
   } else {
-    ElMessage.error(res?.message);
+    ElMessage.error(res?.error ? res.error : res?.message);
     loading.value = false;
   }
 };
@@ -131,7 +131,7 @@ const getPumpParams = async () => {
   if (res.code == "200") {
     parameterOfApparatus.value = Object.assign(res.data);
   } else {
-    ElMessage.error(res?.message);
+    ElMessage.error(res?.error ? res.error : res?.message);
   }
   loading.value = false;
 };

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="height: calc(100vh - 150px)">
     <span>MQTT管理 </span>
     <el-divider />
     <div style="margin-bottom: 10px">

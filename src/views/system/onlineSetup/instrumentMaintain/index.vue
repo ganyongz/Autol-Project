@@ -1,10 +1,10 @@
 <template>
   <div>
     <!-- 仪器维护 -->
-    <el-container>
+    <el-container style="height: calc(100vh - 150px)">
       <el-aside style="width: 200px">
         <el-tree
-          style="width: 100%; height: 100%; padding: 10px"
+          style="width: 100%; height: 100%"
           :data="data"
           node-key="label"
           :default-checked-keys="['采集器']"
@@ -17,6 +17,7 @@
       <el-main>
         <collector ref="collectorRef" v-if="type == 'Collector'" :point-detail="rowData" />
         <mqtt ref="mqttRef" v-if="type == 'MQTT'" :point-detail="rowData" />
+        <plc-management ref="plcRef" v-if="type == 'PlcChannel'" :point-detail="rowData" />
       </el-main>
     </el-container>
     <div style="text-align: center" v-if="title === '绑定数据测点'">
@@ -29,6 +30,7 @@
 import { ref, toRefs } from "vue";
 import collector from "@/views/system/onlineSetup/instrumentMaintain/components/collector.vue";
 import mqtt from "@/views/system/onlineSetup/instrumentMaintain/components/mqtt.vue";
+import plcManagement from "@/views/system/plcManagement/index.vue";
 const props = defineProps({
   rowData: {
     type: Object,
@@ -60,6 +62,11 @@ const data: Tree[] = [
     label: "MQTT",
     children: [],
     type: "MQTT"
+  },
+  {
+    label: "PLC",
+    children: [],
+    type: "PlcChannel"
   }
 ];
 const defaultProps = {
@@ -70,20 +77,27 @@ const defaultProps = {
 // 保存勾选数据
 const mqttRef = ref();
 const collectorRef = ref();
+let plcRef = ref();
 const emit = defineEmits(["closeDialog", "submitForm"]);
 const SubmitEvent = () => {
+  let tType = ref("");
+  switch (type.value) {
+    case "MQTT":
+      tType.value = mqttRef.value["multipleSelection"][0].id;
+      break;
+    case "Collector":
+      tType.value = collectorRef.value["multipleSelection"][0].id;
+      break;
+    case "PlcChannel":
+      tType.value = plcRef.value["radioId"];
+      break;
+
+    default:
+      break;
+  }
   let obj = {
     equipPointId: rowData.value["id"],
-    serverPointId:
-      type.value == "MQTT" ? mqttRef.value["multipleSelection"][0].id : collectorRef.value["multipleSelection"][0].id, // 待优化
-    //  switch (type.value) {
-    //   case MQTT:
-    //   serverPointId:mqttRef.value["multipleSelection"][0].id
-    //     break;
-
-    //   default:
-    //     break;
-    // }
+    serverPointId: tType.value,
     serverPointType: type.value
   };
   emit("submitForm", obj);
