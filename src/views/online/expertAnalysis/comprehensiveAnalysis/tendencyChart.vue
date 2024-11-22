@@ -191,7 +191,8 @@ const setBarChart2 = () => {
                 },
                 lineStyle: {
                   type: "solid", // 基准线样式为虚线
-                  color: "yellow"
+                  color: "yellow",
+                  width: 3
                 }
               },
               {
@@ -204,7 +205,8 @@ const setBarChart2 = () => {
                 },
                 lineStyle: {
                   type: "solid", // 基准线样式为虚线
-                  color: "red"
+                  color: "red",
+                  width: 3
                 }
               }
             ]
@@ -372,6 +374,9 @@ const getTrendChart = async val => {
 let timerId: any = null;
 const toggleTimer = () => {
   timerActive.value = !timerActive.value;
+  if (timerActive.value) {
+    getTrendChart(1);
+  }
 };
 // 开启定时器
 const startTimer = () => {
