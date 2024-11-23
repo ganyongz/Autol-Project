@@ -49,7 +49,8 @@ import {
   service_serviceList,
   service_deleteServiceById,
   service_stopService,
-  service_startService
+  service_startService,
+  service_updateService
 } from "@/api/system/systemService";
 const props = defineProps({
   pointDetail: {
@@ -109,10 +110,7 @@ const getTableList = (params: any) => {
   let newParams = JSON.parse(JSON.stringify(params));
   return service_serviceList(newParams);
 };
-const MyProps = [
-  { label: "自动", value: 1 },
-  { label: "手动", value: 2 }
-];
+
 const monitorModelProps = [
   { label: "windows命令", value: 1 },
   { label: "http", value: 2 }
@@ -121,6 +119,11 @@ const statusProps = [
   { label: "正常", value: 0 },
   { label: "异常", value: 1 }
 ];
+// 服务类型
+const serviceTypeProps = [
+  { label: "应用服务", value: 1 },
+  { label: "平台服务", value: 2 }
+];
 // 表格配置项
 const columns: any = reactive([
   { type: "index", label: "#", width: 80 },
@@ -128,7 +131,24 @@ const columns: any = reactive([
   {
     prop: "runModel",
     label: "运行模式",
-    enum: MyProps,
+    // 使用 render 自定义表格内容
+    render: scope => {
+      return (
+        <el-switch
+          model-value={scope.row.runModel}
+          active-text={scope.row.runModel == 1 ? "自动" : "手动"}
+          style="--el-switch-on-color: #13ce66; --el-switch-off-color: #409eff"
+          active-value={1}
+          inactive-value={2}
+          onClick={() => changeStatus(scope.row)}
+        />
+      );
+    }
+  },
+  {
+    prop: "serviceType",
+    label: "服务类型",
+    enum: serviceTypeProps,
     fieldNames: { label: "label", value: "value" }
   },
   {
@@ -196,6 +216,21 @@ const stoped = async val => {
       ElMessage.error(res?.message);
     }
   });
+};
+// 切换用户状态
+const changeStatus = async (row: any) => {
+  let params = {
+    id: row.id,
+    serviceName: row.serviceName,
+    monitorUrl: row.monitorUrl,
+    status: row.status,
+    runModel: row.runModel == 1 ? 2 : 1,
+    monitorModel: row.monitorModel,
+    serviceType: row.serviceType,
+    description: row.description
+  };
+  await useHandleData(service_updateService, params, `切换【${row.serviceName}】运行模式`);
+  proTable.value?.getTableList();
 };
 let radioId = ref("");
 watch(

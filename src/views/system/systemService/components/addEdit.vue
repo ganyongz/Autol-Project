@@ -21,6 +21,12 @@
       </el-select>
     </el-form-item>
 
+    <el-form-item label="服务类型" prop="serviceType">
+      <el-select v-model="ruleForm.serviceType" placeholder="Select">
+        <el-option v-for="item in serviceTypeOptions" :key="item.value" :label="item.label" :value="item.value" />
+      </el-select>
+    </el-form-item>
+
     <el-form-item label="运行模式" prop="runModel">
       <el-select v-model="ruleForm.runModel" placeholder="Select">
         <el-option v-for="item in runModelOptions" :key="item.value" :label="item.label" :value="item.value" />
@@ -65,6 +71,7 @@ interface RuleForm {
   status: number | undefined;
   runModel: number | undefined;
   monitorModel: number | undefined;
+  serviceType: number | undefined;
   description: string;
 }
 
@@ -77,6 +84,7 @@ let ruleForm = ref<RuleForm>({
   status: undefined,
   runModel: undefined,
   monitorModel: undefined,
+  serviceType: undefined,
   description: ""
 });
 // 状态
@@ -93,6 +101,11 @@ let runModelOptions = [
 let monitorModelOptions = [
   { value: 1, label: "windows命令" },
   { value: 2, label: "http" }
+];
+// 服务模式
+let serviceTypeOptions = [
+  { value: 1, label: "应用服务" },
+  { value: 2, label: "平台服务" }
 ];
 const rules = reactive<FormRules<RuleForm>>({
   serviceName: [{ required: true, message: "请输入名称", trigger: "blur" }]
