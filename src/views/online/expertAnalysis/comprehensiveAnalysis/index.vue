@@ -144,6 +144,15 @@ import fft from "@/views/online/expertAnalysis/comprehensiveAnalysis/components/
 import { getLocationTree } from "@/api/system/functionPosition";
 import { useRoute } from "vue-router";
 const route = useRoute();
+import { onDeactivated } from "vue";
+// onActivated(() => {
+//   console.log("onActivated: 组件被激活");
+// });
+onDeactivated(() => {
+  sessionStorage.setItem("checkedItemId", "");
+  // sessionStorage.clear('checkedItemId'); // 删除多个
+  console.log("onDeactivated: 组件被停用");
+});
 let tplKey = ref(0);
 let boxingKey = ref(1);
 // tabs 切换
@@ -218,6 +227,7 @@ const checkClick = checkedNode => {
     treeRef.value.setChecked(checkedNode.id, false);
   }
   stationId.value = checkedId.value;
+  sessionStorage.setItem("checkedItemId", checkedId.value);
   tplKey.value += 1;
 };
 // 点击节点
@@ -226,6 +236,7 @@ const handleNodeClick = item => {
   if (item && item.type == 4 && checkedId.value !== item.id) {
     checkedId.value = item.id;
     stationId.value = item.id;
+    sessionStorage.setItem("checkedItemId", item.id);
     treeRef.value.setCheckedKeys([item.id]);
     tplKey.value += 1;
   } else if (item && item.type == 4 && checkedId.value === item.id) {
@@ -241,7 +252,6 @@ const handleNodeClick = item => {
 // 获取子组件的传值
 let dataObj = ref();
 const searchResult = val => {
-  // debugger;
   dataObj.value = val;
   boxingKey.value += 1;
   // tplKey.value += 1;
@@ -268,11 +278,12 @@ onMounted(async () => {
   await getLocationTreeFun();
   if (route.query.pointId) {
     showTRee.value = false;
+    let id = sessionStorage.getItem("checkedItemId") ? sessionStorage.getItem("checkedItemId") : route.query.pointId;
     nextTick(() => {
-      stationId.value = route.query.pointId;
-      checkedId.value = route.query.pointId;
+      stationId.value = id;
+      checkedId.value = id;
       // treeRef.value.setCheckedKeys([route.query.pointId]);
-      expandData.value.push(route.query.pointId);
+      expandData.value.push(id);
       showTRee.value = true;
       tplKey.value += 1;
     });
