@@ -90,7 +90,7 @@ onMounted(async () => {
         },
         splitNumber: 10,
         // 设置Y轴标题
-        name: "振幅（mm/s）",
+        name: "幅值（mm/s）",
         nameLocation: "end", // 坐标轴名称显示位置 'start'，'middle' 或者 'center'，'end'
         nameTextStyle: {
           // fontWeight: "bold",
