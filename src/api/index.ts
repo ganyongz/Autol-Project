@@ -102,8 +102,8 @@ class RequestHttp {
           return response.data;
         }
         // 服务器结果都没有返回(可能服务器错误可能客户端断网)，断网处理:可以跳转到断网页面
-        if (!window.navigator.onLine) router.replace("/500");
-        return Promise.reject(error);
+        // if (!window.navigator.onLine) router.replace("/500");
+        // return Promise.reject(error);
       }
     );
   }

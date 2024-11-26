@@ -1,14 +1,16 @@
 <template>
   <el-dropdown trigger="click">
     <div class="avatar">
-      <img src="@/assets/images/avatar.gif" alt="avatar" />
+      <img src="@/assets/images/avatar.png" alt="avatar" />
     </div>
     <template #dropdown>
       <el-dropdown-menu>
-        <el-dropdown-item @click="openDialog('infoRef')">
+        <!-- 个人信息 -->
+        <el-dropdown-item @click="openDialog('infoRef')" v-if="false">
           <el-icon><User /></el-icon>{{ $t("header.personalData") }}
         </el-dropdown-item>
-        <el-dropdown-item @click="openDialog('passwordRef')">
+        <!-- 修改密码 -->
+        <el-dropdown-item @click="openDialog('passwordRef')" v-if="false">
           <el-icon><Edit /></el-icon>{{ $t("header.changePassword") }}
         </el-dropdown-item>
         <el-dropdown-item divided @click="logout">

@@ -99,7 +99,7 @@ import diqiu from "@/views/dataScreen/components/diqiu.vue";
 // import ringChart from "/@/components/FirstComponent/ringChart.vue";
 // import rowTable from "/@/components/FirstComponent/rowTable.vue";
 import { ref, reactive, toRefs, watch } from "vue";
-import { ElMessage } from "element-plus";
+// import { ElMessage } from "element-plus";
 import { screen_CockpitOnlinePointStatistics } from "@/api/dataScreen";
 const props = defineProps({
   screenDatas: {
@@ -112,10 +112,10 @@ let { screenDatas } = toRefs(props);
 let statistics = ref();
 const getDatas1 = async () => {
   let res: any = await screen_CockpitOnlinePointStatistics({});
-  if (res.code == "200") {
+  if (res?.code == "200") {
     statistics.value = res.data;
   } else {
-    ElMessage.error(res?.message);
+    // ElMessage.error(res?.message);
   }
 };
 let conf = reactive({

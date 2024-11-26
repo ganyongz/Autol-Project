@@ -43,6 +43,15 @@ export const staticRouter: RouteRecordRaw[] = [
     meta: {
       title: "风电驾驶舱"
     }
+  },
+  {
+    path: "/platform/port/diggings",
+    name: "diggings",
+    component: () => import("@/views/platform/port/diggings.vue"),
+    children: [],
+    meta: {
+      title: "矿山驾驶舱"
+    }
   }
 ];
 

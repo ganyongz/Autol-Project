@@ -27,7 +27,7 @@
           </dv-border-box-8>
         </div>
 
-        <div>
+        <div style="cursor: pointer" @click="ToTargetPage">
           <!-- 三级标题 -->
           <div>
             <dv-border-box-5 :color="['#225762', '#225762']" style="top: 120px; left: 40px; width: 280px; height: 40px">
@@ -92,6 +92,13 @@ const props = defineProps({
   }
 });
 let { screenDatas } = toRefs(props);
+import { useRouter } from "vue-router";
+const router = useRouter();
+// 路由跳转 (跳转到对应模块)
+const ToTargetPage = () => {
+  //矿山
+  router.push({ path: "/platform/port/diggings" });
+};
 </script>
 <style scoped lang="scss">
 .showData {
