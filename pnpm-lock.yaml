@@ -68,6 +68,9 @@ importers:
       sortablejs:
         specifier: ^1.15.2
         version: 1.15.2
+      speak-tts:
+        specifier: ^2.0.8
+        version: 2.0.8
       vue:
         specifier: ^3.4.21
         version: 3.4.31(typescript@5.5.3)
@@ -4207,6 +4210,9 @@ packages:
 
   spdx-license-ids@3.0.18:
     resolution: {integrity: sha512-xxRs31BqRYHwiMzudOrpSiHtZ8i/GeionCBDSilhYRj+9gIcI8wCZTlXZKu9vZIVqViP3dcp9qE5G6AlIaD+TQ==}
+
+  speak-tts@2.0.8:
+    resolution: {integrity: sha512-VY6Q6mRjdou6bF+x0LspvM7GJhBxHx8CLyGPTNQQ7jrztiGutyI4QNZn0cA17c4uk0FnFbA4PaMI3skeZ6PiFg==}
 
   split-string@3.1.0:
     resolution: {integrity: sha512-NzNVhJDYpwceVVii8/Hu6DKfD2G+NrQHlS/V/qgv763EYudVwEcMQNxd2lh+0VrUByXN/oJkl5grOhYWvQUYiw==}
@@ -9302,6 +9308,8 @@ snapshots:
       spdx-license-ids: 3.0.18
 
   spdx-license-ids@3.0.18: {}
+
+  speak-tts@2.0.8: {}
 
   split-string@3.1.0:
     dependencies:

@@ -63,7 +63,7 @@ export const lub_lubTrend = (params: any) => {
 
 // 润滑泵报警记录 分页查询
 export const lub_HisAlarmEventByPage = (params: any) => {
-  return http.post(`Lub/HisAlarmEvent/page`, {}, { params });
+  return http.post(`Lub/HisAlarmEvent/page`, params);
 };
 
 // 润滑报警事件 分页查询 (功能位置-报警策略)
