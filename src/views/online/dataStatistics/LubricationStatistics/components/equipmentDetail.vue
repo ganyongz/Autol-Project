@@ -23,7 +23,7 @@
       <!-- 1.振动 -->
       <div
         id="box1"
-        v-if="cards?.VibRealData && cards?.VibRealData.length > 0"
+        v-if="useVib == '1'"
         style="
           padding-bottom: 20px;
           margin-bottom: 20px;
@@ -46,26 +46,29 @@
           <el-button size="small" type="primary" @click="ZDAlarmRecord(cards)">报警记录</el-button>
         </div>
         <div :style="{ height: computedHeight, padding: '20px', 'overflow-y': 'auto' }">
-          <div v-for="(item, index) in cards?.VibRealData" :key="index">
-            <el-popover placement="right" :width="300" trigger="hover">
-              <template #reference>
-                <!-- background: linear-gradient(82deg, #59607b 0%, #253350 99%); -->
-                <div style="display: flex; justify-content: space-between">
-                  <p style="margin: 5px 0; cursor: pointer">{{ item.pointName }} :</p>
-                  <p style="margin: 5px 0; color: #19be6b">{{ item.value }}</p>
+          <div v-if="cards?.VibRealData.length > 0">
+            <div v-for="(item, index) in cards?.VibRealData" :key="index">
+              <el-popover placement="right" :width="300" trigger="hover">
+                <template #reference>
+                  <!-- background: linear-gradient(82deg, #59607b 0%, #253350 99%); -->
+                  <div style="display: flex; justify-content: space-between">
+                    <p style="margin: 5px 0; cursor: pointer">{{ item.pointName }} :</p>
+                    <p style="margin: 5px 0; color: #19be6b">{{ item.value }}</p>
+                  </div>
+                </template>
+                <div>
+                  <el-button @click="openDialog(item)">基本分析</el-button>
+                  <!-- <el-button @click="openDialog('趋势分析')">趋势分析</el-button> -->
                 </div>
-              </template>
-              <div>
-                <el-button @click="openDialog(item)">基本分析</el-button>
-                <!-- <el-button @click="openDialog('趋势分析')">趋势分析</el-button> -->
-              </div>
-            </el-popover>
+              </el-popover>
+            </div>
           </div>
+          <el-empty v-else :image-size="50" description="暂无数据" />
         </div>
       </div>
       <!-- 2.润滑监控 -->
       <div
-        v-if="cards?.LubRealData && cards?.LubRealData.length > 0"
+        v-if="useLub == '1'"
         style="
           padding-bottom: 20px;
           margin-bottom: 20px;
@@ -76,9 +79,20 @@
       >
         <!-- 标题头 -->
         <div
-          style="padding: 5px 25px; background-color: #0000001f; border-bottom: 1px solid #cdd0d6; border-radius: 10px 10px 0 0"
+          style="
+            display: flex;
+            justify-content: space-between;
+            padding: 5px 25px;
+            background-color: #0000001f;
+            border-bottom: 1px solid #cdd0d6;
+            border-radius: 10px 10px 0 0;
+          "
         >
           <div style="padding: 5px, 0; margin-bottom: 5px; color: #009688; text-align: left">润滑监控：</div>
+          <div>
+            <el-icon color="#009688" v-if="LubIsOnline == 1"><Flag /></el-icon>
+            <el-icon color="gray" v-else><Flag /></el-icon>
+          </div>
         </div>
         <div
           style="
@@ -126,12 +140,15 @@
 
         <!-- 润滑信息 -->
         <div :style="{ height: computedHeight, padding: '20px', 'overflow-y': 'auto' }">
-          <div v-for="(item, index) in cards?.LubRealData" :key="index">
-            <div style="display: flex; justify-content: space-between">
-              <p style="margin: 5px 0">{{ item.name }}</p>
-              <p style="margin: 5px 0; color: #19be6b">{{ item.value }}</p>
+          <div v-if="cards?.LubRealData.length > 0">
+            <div v-for="(item, index) in cards?.LubRealData" :key="index">
+              <div style="display: flex; justify-content: space-between">
+                <p style="margin: 5px 0">{{ item.name }}</p>
+                <p style="margin: 5px 0; color: #19be6b">{{ item.value }}</p>
+              </div>
             </div>
           </div>
+          <el-empty v-else :image-size="50" description="暂无数据" />
         </div>
       </div>
       <!-- 3.油液 -->
@@ -143,7 +160,7 @@
           border-radius: 10px;
           box-shadow: 0 0 10px 0 gray;
         "
-        v-if="cards?.OilRealData && cards?.OilRealData.length > 0"
+        v-if="useOil == '1'"
       >
         <div
           style="
@@ -162,24 +179,18 @@
           </div>
         </div>
         <div :style="{ height: computedHeight, padding: '20px', 'overflow-y': 'auto' }">
-          <div v-for="(item, index) in cards?.OilRealData" :key="index">
-            <div style="display: flex; justify-content: space-between">
-              <p style="margin: 5px 0">{{ item.name }}:</p>
-              <p style="margin: 5px 0; color: #19be6b">{{ item.value }}</p>
+          <div v-if="cards?.OilRealData.length > 0">
+            <div v-for="(item, index) in cards?.OilRealData" :key="index">
+              <div style="display: flex; justify-content: space-between">
+                <p style="margin: 5px 0">{{ item.name }}:</p>
+                <p style="margin: 5px 0; color: #19be6b">{{ item.value }}</p>
+              </div>
             </div>
           </div>
+          <el-empty v-else :image-size="50" description="暂无数据" />
         </div>
       </div>
-      <el-empty
-        v-if="
-          !(
-            (cards?.VibRealData && cards?.VibRealData.length > 0) ||
-            (cards?.LubRealData && cards?.LubRealData.length > 0) ||
-            (cards?.OilRealData && cards?.OilRealData.length > 0)
-          )
-        "
-        description="暂无数据记录"
-      />
+      <el-empty v-if="!(useVib == '1' || useLub == '1' || useOil == '1')" description="暂无数据记录" />
     </div>
 
     <!-- 基本分析 -->
@@ -188,6 +199,7 @@
         <analyses v-if="IsShowAdd" ref="addEditRoleRef" :row-data="rowData" :title="detailParams.title" />
       </template>
     </myDialog>
+    <!-- start -->
     <!-- 参数设置(普通泵) -->
     <myDialog title="参数设置" ref="myDialog2" draggable width="30%" :before-close="beforeClose2">
       <template #content>
@@ -212,6 +224,20 @@
         />
       </template>
     </myDialog>
+
+    <!-- 参数设置(双线) -->
+    <myDialog title="参数设置" ref="myDialog4" draggable width="40%" :before-close="beforeClose4">
+      <template #content>
+        <setParameter2
+          v-if="ShowTPL4"
+          ref="setParameterRef"
+          :set-parameters="setParameters"
+          @close-dialog="beforeClose4"
+          title="参数设置(双线)"
+        />
+      </template>
+    </myDialog>
+    <!-- end -->
     <!-- ATL3000 详情 -->
     <myDialog title="ATL3000详情" ref="ATLDialog" draggable width="65%" :before-close="closeDialog2">
       <template #content>
@@ -253,6 +279,7 @@ import { useHandleData2 } from "@/hooks/useHandleData";
 import myDialog from "@/components/dialog/myDialog.vue";
 import analyses from "@/views/online/anlageuebersicht/components/analyses.vue";
 import setParameter from "@/views/online/anlageuebersicht/components/setParameter.vue";
+import setParameter2 from "@/views/online/anlageuebersicht/components/setParameter2.vue";
 import setAtl3k from "@/views/online/anlageuebersicht/components/setAtl3k.vue";
 import ATL3kDetail from "@/views/online/anlageuebersicht/components/ATL3kDetail.vue";
 import { useRouter } from "vue-router";
@@ -279,6 +306,10 @@ const getImgUrl = async imageFileId => {
 };
 let computedHeight: any = ref("9rem");
 //获取页面卡片
+let LubIsOnline = ref();
+let useLub = ref();
+let useOil = ref();
+let useVib = ref();
 let cards = ref();
 let isActive = ref();
 const getCardContent = async () => {
@@ -286,23 +317,18 @@ const getCardContent = async () => {
   if (res.code == "200") {
     getImgUrl(res.data.imageFileId);
     nextTick(() => {
+      LubIsOnline.value = res.data.LubIsOnline;
+      useVib.value = res.data.useVib;
+      useLub.value = res.data.useLub;
+      useOil.value = res.data.useOil;
       cards.value = res.data;
-      const hasA = cards.value?.VibRealData && Array.isArray(cards.value.VibRealData) && cards.value.VibRealData.length > 0;
-      const hasB = cards.value?.LubRealData && Array.isArray(cards.value.LubRealData) && cards.value.LubRealData.length > 0;
-      const hasC = cards.value?.OilRealData && Array.isArray(cards.value.OilRealData) && cards.value.OilRealData.length > 0;
+      const hasA = res.data?.useVib == "1" ? true : false;
+      const hasB = res.data?.useLub == "1" ? true : false;
+      const hasC = res.data?.useOil == "1" ? true : false;
 
-      const isAOnly =
-        hasA &&
-        !(cards.value.LubRealData && cards.value.LubRealData.length > 0) &&
-        !(cards.value.OilRealData && cards.value.OilRealData.length > 0);
-      const isBOnly =
-        hasB &&
-        !(cards.value.VibRealData && cards.value.VibRealData.length > 0) &&
-        !(cards.value.OilRealData && cards.value.OilRealData.length > 0);
-      const isCOnly =
-        hasC &&
-        !(cards.value.VibRealData && cards.value.VibRealData.length > 0) &&
-        !(cards.value.LubRealData && cards.value.LubRealData.length > 0);
+      const isAOnly = hasA && !hasB && !hasC;
+      const isBOnly = hasB && !hasA && !hasC;
+      const isCOnly = hasC && !hasA && !hasB;
       // computedHeight.value = isAOnly || isBOnly || isCOnly ? "calc(100vh - 330px)" : "9rem";
       if (isAOnly || isCOnly) {
         computedHeight.value = "calc(100vh - 330px)";
@@ -364,34 +390,45 @@ const ZDAlarmRecord = (val: any) => {
   });
 };
 // 振动报警记录 end
-const myDialog3 = ref(); //ATL3000泵
 // 参数设置(普通泵)
 const myDialog2 = ref();
 const IsShowSetTpl = ref(false);
 let setParameters = ref();
-// 公用方法
+const beforeClose2 = () => {
+  IsShowSetTpl.value = false;
+  myDialog2.value.close();
+};
+// 参数设置(ATL3000)
+const myDialog3 = ref();
+const ShowSetAtl3k = ref(false);
+const beforeClose3 = () => {
+  ShowSetAtl3k.value = false;
+  myDialog3.value.close();
+};
+// （双线泵）
+const myDialog4 = ref();
+const ShowTPL4 = ref(false);
+const beforeClose4 = () => {
+  ShowTPL4.value = false;
+  myDialog4.value.close();
+};
+
+// 参数设置
 const FunSetParameter = (val: any) => {
   setParameters.value = val;
   if (val?.PumpStationType == 3) {
     // ATL3000泵
     ShowSetAtl3k.value = true;
     myDialog3.value.open();
+  } else if (val?.PumpStationType == 2) {
+    // 双线
+    ShowTPL4.value = true;
+    myDialog4.value.open();
   } else {
     // 其他
     IsShowSetTpl.value = true;
     myDialog2.value.open();
   }
-};
-const beforeClose2 = () => {
-  IsShowSetTpl.value = false;
-  myDialog2.value.close();
-};
-// 参数设置(ATL3000)
-
-const ShowSetAtl3k = ref(false);
-const beforeClose3 = () => {
-  ShowSetAtl3k.value = false;
-  myDialog3.value.close();
 };
 // 数据统计 --- 路由跳转
 // const FunStatistics = (val: any) => {

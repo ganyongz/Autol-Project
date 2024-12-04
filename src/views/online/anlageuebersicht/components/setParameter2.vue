@@ -1,32 +1,33 @@
 <template>
   <div>
+    <!-- 双线泵参数设置 -->
     <el-tabs v-model="activeName" class="demo-tabs" @tab-change="handleClick">
       <el-tab-pane label="普通参数" :name="1">
         <div class="realTimeData-box p-20 my-12">
           <div class="mb-12" style="display: flex; align-items: center; justify-content: space-between">
             <div>
-              <!-- <img src="../../../assets/images/icons/ic_cs.png" class="mr-1" alt=""> -->
               <span style="color: #409eff">参数修改</span>
             </div>
             <div class="fs-14" style="color: #999999">采集时间：{{ parameterOfApparatus.DataTime }}</div>
           </div>
           <div>
             <div class="mb-16 fs-14">
-              休止时间 (P1)：
-              <el-input v-model="parameterOfApparatus.cycH" class="parameter-box mr-8" type="text" /> 时
-              <el-input v-model="parameterOfApparatus.cycM" class="parameter-box mx-8" type="text" /> 分
+              休止时间：
+              <el-input v-model="parameterOfApparatus.pauseTime" class="parameter-box mr-12" type="text" /> 时
             </div>
 
             <div class="mb-16 fs-14">
-              润滑时间 (P3)：
-              <el-input v-model="parameterOfApparatus.runM" class="parameter-box mr-8" type="text" /> 分
-              <el-input v-model="parameterOfApparatus.runS" class="parameter-box mx-8" type="text" /> 秒
+              正转时间：
+              <el-input v-model="parameterOfApparatus.forwardMin" class="parameter-box mr-12" type="text" /> 分
             </div>
+
+            <div class="mb-16 fs-14">
+              反转时间：
+              <el-input v-model="parameterOfApparatus.reverseMin" class="parameter-box mr-12" type="text" /> 分
+            </div>
+
             <div class="mb-16 fs-14">
               温控 (P4)：<el-input v-model="parameterOfApparatus.temperature" class="parameter-box mr-12" type="text" /> ℃
-            </div>
-            <div class="mb-8 fs-14">
-              信号检测 (P2)：<el-input v-model="parameterOfApparatus.signal" class="parameter-box mr-12" type="text" />
             </div>
             <div style="text-align: right">
               <el-button color="#095C98" type="primary" class="mr-12" @click="getDeviceParam()"> 读取 </el-button>
@@ -40,26 +41,17 @@
         <div class="realTimeData-box p-20 my-12">
           <div class="mb-12" style="display: flex; align-items: center; justify-content: space-between">
             <div>
-              <!-- <img src="../../../assets/images/icons/ic_cs.png" class="mr-1" alt=""> -->
               <span style="color: #409eff">高级参数</span>
             </div>
-            <div class="fs-14" style="color: #999999">采集时间：{{ backgroundParameter.DataTime }}</div>
+            <div class="fs-14" style="color: #999999">采集时间：{{ parameterOfApparatus.DataTime }}</div>
           </div>
           <div>
             <div class="mb-16 fs-14">
-              0H油压信号输入形式：<el-input v-model="backgroundParameter.H0" class="parameter-box mr-12" type="text" />
+              0H堵塞信号路数：<el-input v-model="parameterOfApparatus.H0" class="parameter-box mr-12" type="text" />
             </div>
 
             <div class="mb-8 fs-14">
-              1H故障状态：<el-input v-model="backgroundParameter.H1" class="parameter-box mr-12" type="text" />
-            </div>
-
-            <div class="mb-8 fs-14">
-              2H报警检测：<el-input v-model="backgroundParameter.H2" class="parameter-box mr-12" type="text" />
-            </div>
-
-            <div class="mb-8 fs-14">
-              3H报警检测：<el-input v-model="backgroundParameter.H3" class="parameter-box mr-12" type="text" />
+              1H传感器模式：<el-input v-model="parameterOfApparatus.H1" class="parameter-box mr-12" type="text" />
             </div>
 
             <div style="text-align: right">
@@ -67,21 +59,6 @@
               <el-button color="#095C98" type="primary" @click="settingUpFun()"> 设置 </el-button>
             </div>
           </div>
-        </div>
-      </el-tab-pane>
-      <el-tab-pane
-        v-if="setParameters.PumpStationType == 4 || setParameters.PumpStationType == 5 || setParameters.PumpStationType == 6"
-        label="设置上传频次"
-        :name="3"
-      >
-        <div class="mb-16 fs-14">
-          频次设置：
-          <el-input v-model.number="Hour" class="parameter-box mr-8" type="text" /> 时
-          <el-input v-model.number="Min" class="parameter-box mr-8" type="text" /> 分
-          <el-input v-model.number="second" class="parameter-box mx-8" type="text" /> 秒
-        </div>
-        <div style="text-align: right">
-          <el-button color="#095C98" type="primary" @click="settingFrequency()"> 设置 </el-button>
         </div>
       </el-tab-pane>
     </el-tabs>
@@ -110,23 +87,26 @@ const handleClick = tab => {
 };
 
 let parameterOfApparatus: any = ref({
-  cycH: "", // 休止时
-  cycM: "", // 休止分
-  runM: "", // 润滑分
-  runS: "", // 润滑秒
-  temperature: undefined, // 温度
-  signal: "", // 信号检测
-  DataTime: "" // 采集时间
+  pauseTime: "", // 休止时
+  forwardMin: "", // 正转时间 分
+  reverseMin: "", // 反转时间 分
+  temperature: "", // 低温保护阈值
+  numberOfCycles: "", // 循环次数
+  p6: "", // 保压时间
+  t6: "", // 保压系数
+  p7: "", // 7p换向压力值
+  p8: "", // 8p超压报警压力值
+  p9: "", // 泄压设定时间
+  t9: "", // 泄压系数
+  H0: "", // 0H堵塞信号通道数0H=2~4
+  H1: "", // 1H=0不检测油压不检测霍尔 1H=1检测油压不检测霍尔 1H=2检测霍尔不检测油压 1H=3检测霍尔检测油压
+  H2: "", //（ 2h泄压类型） 0不泄压 1泄压时间 2泄压系数）
+  H3: "", //（3h保压类型） 0不保压 1保压时间 2保压系数）
+  H4: "", //（4h休止时间单位=0小时 =1天）
+  H5: "" // 5h液位检测  0 不检测 1检测
 });
-// 后台参数
-const backgroundParameter: any = ref({
-  DataTime: "", // 采集时间
-  h0: "",
-  h1: "",
-  h2: "",
-  h3: ""
-});
-// 读取(下发指令)
+
+// 读取(下发指令) 双线
 const getDeviceParam = async () => {
   const res: any = await pump_OperatePump({
     gatewaySn: setParameters.value["GatewaySn"],
@@ -149,36 +129,12 @@ const getPumpParams = async () => {
     type: activeName.value
   });
   if (res.code == "200") {
-    if (activeName.value == 1) {
-      parameterOfApparatus.value = Object.assign(res.data);
-    } else {
-      backgroundParameter.value = res.data;
-    }
+    parameterOfApparatus.value = Object.assign(res.data);
   } else {
     ElMessage.error(res?.message);
   }
 };
-// 频次设置
-let Hour = ref();
-let Min = ref();
-let second = ref();
-const settingFrequency = async () => {
-  let result = {
-    gatewaySn: setParameters.value["GatewaySn"],
-    pumpStationType: setParameters?.value.PumpStationType,
-    plcAddress: setParameters?.value.PlcAddress,
-    type: 9,
-    Hour: Hour.value,
-    Min: Min.value,
-    second: second.value
-  };
-  const res: any = await pump_OperatePump(result);
-  if (res.code == "200") {
-    ElMessage.success(res?.message);
-  } else {
-    ElMessage.error(res?.message);
-  }
-};
+
 // 设置
 const settingUpFun = async () => {
   let result = {};
@@ -188,13 +144,8 @@ const settingUpFun = async () => {
     plcAddress: setParameters?.value.PlcAddress,
     type: activeName.value == 1 ? 7 : 8
   };
-  if (activeName.value == 1) {
-    delete parameterOfApparatus.value["DataTime"];
-    delete backgroundParameter.value["DataTime"];
-    result = { ...parameters, ...parameterOfApparatus.value };
-  } else {
-    result = { ...parameters, ...backgroundParameter.value };
-  }
+  delete parameterOfApparatus.value["DataTime"];
+  result = { ...parameters, ...parameterOfApparatus.value };
   const res: any = await pump_OperatePump(result);
   if (res.code == "200") {
     ElMessage.success(res?.message);

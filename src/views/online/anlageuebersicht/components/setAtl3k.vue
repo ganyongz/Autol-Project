@@ -2,7 +2,7 @@
   <div>
     <div class="realTimeData-box p-20 my-12">
       <div class="fs-14" style="color: #999999">采集时间：{{ parameterOfApparatus.DataTime }}</div>
-      <div v-loading="loading" element-loading-text="读取中...">
+      <div>
         <div style="width: 350px; margin: 0 auto">
           <div class="mb-8 fs-14">
             <span class="labelClass">组别：</span>
@@ -71,7 +71,6 @@ const props = defineProps({
   }
 });
 const { setParameters }: any = toRefs(props);
-let loading = ref(false);
 // 普通参数设置
 let parameterOfApparatus: any = ref({
   DataTime: "", // 采集时间
@@ -113,13 +112,11 @@ const open = async val => {
     group: val
   });
   if (res.code == "200") {
-    loading.value = true;
     setTimeout(() => {
       getPumpParams();
     }, 3000);
   } else {
     ElMessage.error(res?.error ? res.error : res?.message);
-    loading.value = false;
   }
 };
 // 获取(实时)数据
@@ -133,7 +130,6 @@ const getPumpParams = async () => {
   } else {
     ElMessage.error(res?.error ? res.error : res?.message);
   }
-  loading.value = false;
 };
 
 // 设置

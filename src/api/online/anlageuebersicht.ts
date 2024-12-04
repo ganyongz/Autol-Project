@@ -35,11 +35,12 @@ else if (pumpStationType == 4 || pumpStationType == 5) {
 // pumpStationType == 6 4g单点泵  1开泵 2关泵  3 冻结 4 解冻 5读取设置参数 6读取后台参数 7设置参数 8设置后台参数 9设置上传频次 10恢复出厂设置
 
 */
+// 参数设置
 export const pump_OperatePump = (params: any) => {
   return http.post(`DataParsing/lubTcp/sendCommand`, params);
 };
 
-// 读取润滑泵参数信息 type: 1 设置参数（普通参数设置） 2后台参数（高级参数设置）
+// 读取润参数信息 type: 1 设置参数（普通参数设置） 2后台参数（高级参数设置）
 export const pump_getPumpParams = (params: any) => {
   return http.get(`Lub/LubPumpController/getPumpParams`, {}, { params });
 };
