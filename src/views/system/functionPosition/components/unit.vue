@@ -88,6 +88,16 @@
         <el-form-item label="plc地址" :required="snPlcRequired && TXRequired" v-if="snPlcRequired && TXRequired">
           <el-input v-model="formInline.plcAddress" placeholder="plc地址" clearable />
         </el-form-item>
+        <el-form-item
+          label="版本"
+          prop="communicationVersion"
+          :required="snPlcRequired && TXRequired"
+          v-if="snPlcRequired && TXRequired"
+        >
+          <el-select v-model="formInline.communicationVersion" class="m-2" placeholder="请选择版本">
+            <el-option v-for="item in communicationVersionOptions" :key="item.value" :label="item.label" :value="item.value" />
+          </el-select>
+        </el-form-item>
 
         <el-form-item label="部件图片" prop="imageFileId">
           <UploadImg :key="uploadImgKey" @delete-img="deleteImg" v-model:image-id="formInline.imageFileId" :file-size="5">
@@ -212,6 +222,12 @@ const messageTypeOptions = [
   { value: 2, label: "TCP" },
   { value: 3, label: "舍弗勒接口 " }
 ];
+// 版本字典
+const communicationVersionOptions = [
+  { value: 1, label: "v1" },
+  { value: 2, label: "v2" },
+  { value: 3, label: "v3 " }
+];
 const pointTypeOptions = [
   { value: "Vib", label: "振动" },
   { value: "StartStop", label: "启停" },
@@ -249,7 +265,8 @@ const formInline: any = reactive({
   oilMessageType: null,
   oilTcpSn: null,
   oilTcpAddress: null,
-  oilShowConfig: ""
+  oilShowConfig: "",
+  communicationVersion: ""
 });
 // 获取详情
 let uploadImgKey = ref<number>(1);
@@ -272,6 +289,7 @@ const getEquipPartDetailFun = async () => {
     formInline.gatewaySn = data.gatewaySn;
     formInline.plcAddress = data.plcAddress;
     formInline.imageFileId = data.imageFileId;
+    formInline.communicationVersion = data.communicationVersion;
     // 油液系统相关字段
     formInline.oilDeviceType = data.oilDeviceType;
     formInline.oilMessageType = data.oilMessageType;
@@ -398,7 +416,8 @@ const rules = reactive<any>({
   oilDeviceType: [{ required: true, message: "请输入油液系统型号", trigger: "blur" }],
   oilMessageType: [{ required: true, message: "请选择油液系统通信方式", trigger: "change" }],
   oilTcpSn: [{ required: true, message: "请输入唯一标识", trigger: "blur" }],
-  oilTcpAddress: [{ required: true, message: "请输入油液plc地址", trigger: "blur" }]
+  oilTcpAddress: [{ required: true, message: "请输入油液plc地址", trigger: "blur" }],
+  communicationVersion: [{ required: true, message: "请选择版本", trigger: "change" }]
 });
 
 //  ATL3000配置

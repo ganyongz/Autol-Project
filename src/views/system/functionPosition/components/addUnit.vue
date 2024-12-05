@@ -87,6 +87,17 @@
         <el-input v-model="ruleForm.plcAddress" placeholder="plc地址" clearable />
       </el-form-item>
 
+      <el-form-item
+        label="版本"
+        prop="communicationVersion"
+        :required="snPlcRequired && TXRequired"
+        v-if="snPlcRequired && TXRequired"
+      >
+        <el-select v-model="ruleForm.communicationVersion" class="m-2" placeholder="请选择版本">
+          <el-option v-for="item in communicationVersionOptions" :key="item.value" :label="item.label" :value="item.value" />
+        </el-select>
+      </el-form-item>
+
       <div style="text-align: center">
         <el-button type="primary" @click="submitForm(ruleFormRef)"> 保存 </el-button>
         <el-button @click="resetForm(ruleFormRef)">关闭</el-button>
@@ -109,6 +120,12 @@ const props = defineProps({
   }
 });
 const { rowData, title } = toRefs(props);
+// 版本字典
+const communicationVersionOptions = [
+  { value: 1, label: "v1" },
+  { value: 2, label: "v2" },
+  { value: 3, label: "v3 " }
+];
 const pumpStationTypeOptions = [
   { value: 1, label: "递进单线" },
   { value: 2, label: "递进双线" },
@@ -146,6 +163,7 @@ interface RuleForm {
   oilMessageType: string | null;
   oilTcpSn: string | null;
   oilTcpAddress: string | null;
+  communicationVersion: number | null;
 }
 
 const formSize = ref<ComponentSize>("default");
@@ -157,9 +175,9 @@ let ruleForm = reactive<RuleForm>({
   remark: "",
   code: "",
   sort: 1,
-  useVib: null,
-  useLub: null,
-  useOil: null,
+  useVib: 0,
+  useLub: 0,
+  useOil: 0,
   messageType: null,
   pumpStationType: null,
   schaefflerDeviceId: "",
@@ -168,7 +186,8 @@ let ruleForm = reactive<RuleForm>({
   oilDeviceType: "",
   oilMessageType: "",
   oilTcpSn: "",
-  oilTcpAddress: ""
+  oilTcpAddress: "",
+  communicationVersion: null
 });
 
 const rules = reactive<FormRules<RuleForm>>({
@@ -177,7 +196,8 @@ const rules = reactive<FormRules<RuleForm>>({
   oilDeviceType: [{ required: true, message: "请输入油液系统型号", trigger: "blur" }],
   oilMessageType: [{ required: true, message: "请选择油液系统通信方式", trigger: "change" }],
   oilTcpSn: [{ required: true, message: "请输入唯一标识", trigger: "blur" }],
-  oilTcpAddress: [{ required: true, message: "请输入油液plc地址", trigger: "blur" }]
+  oilTcpAddress: [{ required: true, message: "请输入油液plc地址", trigger: "blur" }],
+  communicationVersion: [{ required: true, message: "请选择版本", trigger: "change" }]
 });
 // 方法区
 // 数据监听

@@ -130,7 +130,7 @@
           <div v-if="cards.PumpStationType == 3" style="margin: 5px 0; font-size: 12px">
             <span>操作：</span>
             <el-button :class="{ active: isActive == '自动' }" size="small" @click="pump_handle('ziDong', cards)">自动</el-button>
-            <el-button :class="{ active: isActive == '手动' }" size="small" @click="pump_handle('shouDong', cards)">
+            <el-button :class="{ active: isActive == '手动润滑' }" size="small" @click="pump_handle('shouDong', cards)">
               手动润滑
             </el-button>
             <el-button type="warning" size="small" @click="pump_handle('fuWei', cards)">复位</el-button>
