@@ -1,34 +1,43 @@
 <template>
   <div>
-    <!-- 弃用 -->
+    <!-- 双线泵参数设置 -->
     <el-tabs v-model="activeName" class="demo-tabs" @tab-change="handleClick">
       <el-tab-pane label="普通参数" :name="1">
         <div class="realTimeData-box p-20 my-12">
           <div class="mb-12" style="display: flex; align-items: center; justify-content: space-between">
             <div>
-              <!-- <img src="../../../assets/images/icons/ic_cs.png" class="mr-1" alt=""> -->
               <span style="color: #409eff">参数修改</span>
             </div>
             <div class="fs-14" style="color: #999999">采集时间：{{ parameterOfApparatus.DataTime }}</div>
           </div>
           <div>
             <div class="mb-16 fs-14">
-              休止时间 (P1)：
-              <el-input v-model="parameterOfApparatus.cycH" class="parameter-box mr-8" type="text" /> 时
-              <el-input v-model="parameterOfApparatus.cycM" class="parameter-box mx-8" type="text" /> 分
+              <span class="labelClass">休止时间：</span>
+              <el-input v-model="parameterOfApparatus.pauseTime" class="parameter-box mr-12" type="text" /> 时
             </div>
 
             <div class="mb-16 fs-14">
-              润滑时间 (P3)：
-              <el-input v-model="parameterOfApparatus.runM" class="parameter-box mr-8" type="text" /> 分
-              <el-input v-model="parameterOfApparatus.runS" class="parameter-box mx-8" type="text" /> 秒
+              <span class="labelClass">休止时间：</span>
+              <el-input v-model="parameterOfApparatus.pauseMin" class="parameter-box mr-12" type="text" /> 分
+            </div>
+
+            <div class="mb-16 fs-14">
+              <span class="labelClass">信号检测：</span>
+              <el-input v-model="parameterOfApparatus.p2" class="parameter-box mr-12" type="text" />
             </div>
             <div class="mb-16 fs-14">
-              温控 (P4)：<el-input v-model="parameterOfApparatus.temperature" class="parameter-box mr-12" type="text" /> ℃
+              <span class="labelClass">润滑计时：</span>
+              <el-input v-model="parameterOfApparatus.runM" class="parameter-box mr-12" type="text" /> 分
             </div>
-            <div class="mb-8 fs-14">
-              信号检测 (P2)：<el-input v-model="parameterOfApparatus.signal" class="parameter-box mr-12" type="text" />
+            <div class="mb-16 fs-14">
+              <span class="labelClass">润滑计时：</span>
+              <el-input v-model="parameterOfApparatus.runS" class="parameter-box mr-12" type="text" /> 秒
             </div>
+            <div class="mb-16 fs-14">
+              <span class="labelClass">低温保护阈值：</span>
+              <el-input v-model="parameterOfApparatus.temperature" class="parameter-box mr-12" type="text" /> ℃
+            </div>
+
             <div style="text-align: right">
               <el-button color="#095C98" type="primary" class="mr-12" @click="getDeviceParam()"> 读取 </el-button>
               <el-button color="#095C98" type="primary" @click="settingUpFun()"> 设置 </el-button>
@@ -41,26 +50,24 @@
         <div class="realTimeData-box p-20 my-12">
           <div class="mb-12" style="display: flex; align-items: center; justify-content: space-between">
             <div>
-              <!-- <img src="../../../assets/images/icons/ic_cs.png" class="mr-1" alt=""> -->
               <span style="color: #409eff">高级参数</span>
             </div>
             <div class="fs-14" style="color: #999999">采集时间：{{ parameterOfApparatus.DataTime }}</div>
           </div>
           <div>
             <div class="mb-16 fs-14">
-              0H油压信号输入形式：<el-input v-model="parameterOfApparatus.H0" class="parameter-box mr-12" type="text" />
+              H0油压信号：<el-input v-model="parameterOfApparatus.H0" class="parameter-box mr-12" type="text" />
             </div>
 
             <div class="mb-8 fs-14">
-              1H故障状态：<el-input v-model="parameterOfApparatus.H1" class="parameter-box mr-12" type="text" />
+              H1故障状态：<el-input v-model="parameterOfApparatus.H1" class="parameter-box mr-12" type="text" />
             </div>
 
             <div class="mb-8 fs-14">
-              2H报警检测：<el-input v-model="parameterOfApparatus.H2" class="parameter-box mr-12" type="text" />
+              H2报警检测：<el-input v-model="parameterOfApparatus.H2" class="parameter-box mr-12" type="text" />
             </div>
-
             <div class="mb-8 fs-14">
-              3H报警检测：<el-input v-model="parameterOfApparatus.H3" class="parameter-box mr-12" type="text" />
+              H3报警检测：<el-input v-model="parameterOfApparatus.H3" class="parameter-box mr-12" type="text" />
             </div>
 
             <div style="text-align: right">
@@ -90,8 +97,8 @@
   </div>
 </template>
 
-<script lang="ts" setup name="setParameter">
-// 参数设置(普通泵)
+<script lang="ts" setup name="setParameter14">
+// 参数设置(单选，递进)
 import { ref, toRefs } from "vue";
 import { pump_OperatePump, pump_getPumpParams } from "@/api/online/anlageuebersicht";
 import { ElMessage } from "element-plus";
@@ -112,15 +119,19 @@ const handleClick = tab => {
 };
 
 let parameterOfApparatus: any = ref({
-  cycH: "", // 休止时
-  cycM: "", // 休止分
-  runM: "", // 润滑分
-  runS: "", // 润滑秒
-  temperature: undefined, // 温度
-  signal: "", // 信号检测
-  DataTime: "" // 采集时间
+  pauseHour: null, // 休止时
+  pauseMin: null, // 休止倒计时:分
+  p2: null, //  信号检测 01
+  runM: null, // 润滑计时:分
+  runS: null, //  润滑计时:秒
+  temperature: null, // 低温保护阈值
+  H0: null, // 0H油压信号
+  H1: null, // 1H故障状态
+  H2: null, // 报警检测
+  H3: null // 报警检测
 });
-// 读取(下发指令)
+
+// 读取(下发指令) 单线，递进
 const getDeviceParam = async () => {
   const res: any = await pump_OperatePump({
     gatewaySn: setParameters.value["GatewaySn"],
@@ -192,6 +203,11 @@ const settingUpFun = async () => {
 };
 </script>
 <style scoped lang="scss">
+.labelClass {
+  display: inline-block;
+  width: 120px;
+  text-align: right;
+}
 .parameter-box {
   width: 72px;
   height: 28px;

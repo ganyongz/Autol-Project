@@ -10,31 +10,40 @@ export const equip_card = (params: any) => {
 export const equip_equipInfo = (params: any) => {
   return http.get(`Lub/equip/equipInfoData`, {}, { params });
 };
+// （新版）泵操作 ***********************
+/**
+  V1
+  单线 
+  if (pumpStationType == 1) {
+  1开泵 2关泵  3冻结 4 解冻 5读取设置参数 6读取后台参数 7设置参数 8设置后台参数
+  //双线
+  else if (pumpStationType == 2) {
+  // 1开泵 2关泵  3冻结 4 解冻 5读取设置参数 6读取后台参数 7设置参数 8设置后台参数
+  ATL3000
+  if (pumpStationType == 3)
+  ATL300   1自动  3复位   4设置参数  5读取参数  6 手动润滑
+  递进
+  else if (pumpStationType == 4) {
+  // 1开泵 2关泵  3冻结 4 解冻 5读取设置参数 6读取后台参数 7设置参数 8设置后台参数
+  单点泵
+  // pumpStationType == 5   1开泵 2关泵  3 冻结 4 解冻 5读取设置参数 6设置参数 
 
-// 泵操作(旧版) （1开泵 2关泵  3冻结运行 4 关闭冻结 5读取设置参数(下发指令) 6读取后台参数（下发指令）7 Atl3000设备读取设置参数命令） 8 Atl3000自动命令  9 Atl3000手动  10 Atl3000复位 11 Atl3000停止
-// export const pump_OperatePump = (params: any) => {
-//   return http.post(`DataParsing/lubTcp/OperatePump`, params);
-// };
-// （新版）泵操作
-
-/*单线 
+V2
+ 单线
 if (pumpStationType == 1) {
-1开泵 2关泵  3冻结运行 4 关闭冻结 5读取设置参数 6读取后台参数 7设置参数 8设置后台参数
-
+1开泵 2关泵  3 冻结 4 解冻 5读取设置参数 6读取后台参数 7设置参数 8设置后台参数 9设置上传频次 10恢复出厂设置
 //双线
 else if (pumpStationType == 2) {
-// 1开泵 2关泵  3冻结运行 4 关闭冻结 5读取设置参数 6读取后台参数 7设置参数 8设置后台参数
+// 1开泵 2关泵  3冻结 4 解冻 5读取参数 6设置参数 9设置上传频次
+递进
+else if (pumpStationType == 4) {
+// 1开泵 2关泵  3冻结 4 解冻 5读取设置参数 6读取后台参数 7设置参数 8设置后台参数 9设置上传频次 10恢复出厂设置
+单点泵
+// pumpStationType == 5   1开泵 2关泵  3 冻结 4 解冻 5读取设置参数 6设置参数  9设置上传频次 10恢复出厂设置
 
-if (pumpStationType == 3)
-ATL300   1自动  3复位   4设置参数  5读取参数  6 手动润滑
-
-// pumpStationType == 4 单双线合一 集成4g
-else if (pumpStationType == 4 || pumpStationType == 5) {
-//1开泵 2关泵  3冻结运行 4 关闭冻结 5读取设置参数 6读取后台参数 7设置参数 8设置后台参数 9设置上传频次 15恢复出厂设置
-
-// pumpStationType == 6 4g单点泵  1开泵 2关泵  3 冻结 4 解冻 5读取设置参数 6读取后台参数 7设置参数 8设置后台参数 9设置上传频次 10恢复出厂设置
-
-*/
+ 版本V1时，均无上传频次和回复出场设置
+ 版本V2时，除ATL3000均有上传频次和回复出场设置
+ */
 // 参数设置
 export const pump_OperatePump = (params: any) => {
   return http.post(`DataParsing/lubTcp/sendCommand`, params);
@@ -43,10 +52,6 @@ export const pump_OperatePump = (params: any) => {
 // 读取润参数信息 type: 1 设置参数（普通参数设置） 2后台参数（高级参数设置）
 export const pump_getPumpParams = (params: any) => {
   return http.get(`Lub/LubPumpController/getPumpParams`, {}, { params });
-};
-// 参数设置(弃用----------) （type 同读取润滑泵参数）
-export const pump_setPumpParams = (params: any) => {
-  return http.post(`DataParsing/lubTcp/setPumpParams`, params);
 };
 
 // 润滑泵润滑记录 分页查询

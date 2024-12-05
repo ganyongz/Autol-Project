@@ -127,12 +127,11 @@ const communicationVersionOptions = [
   { value: 3, label: "v3 " }
 ];
 const pumpStationTypeOptions = [
-  { value: 1, label: "递进单线" },
-  { value: 2, label: "递进双线" },
+  { value: 1, label: "单线" },
+  { value: 2, label: "双线" },
   { value: 3, label: "ATL3000" },
-  { value: 4, label: "递进(AK09)" },
-  { value: 5, label: "递进(AK21)" },
-  { value: 6, label: "4g单点泵(Ak18)" }
+  { value: 4, label: "递进" },
+  { value: 5, label: "单点泵" }
 ];
 const messageTypeOptions = [
   { value: 1, label: "MQTT" },

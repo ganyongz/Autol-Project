@@ -47,11 +47,13 @@
           </div>
           <div>
             <div class="mb-16 fs-14">
-              0H堵塞信号路数：<el-input v-model="parameterOfApparatus.H0" class="parameter-box mr-12" type="text" />
+              <span class="labelClass">0H堵塞信号路数：</span>
+              <el-input v-model="parameterOfApparatus.H0" class="parameter-box mr-12" type="text" />
             </div>
 
             <div class="mb-8 fs-14">
-              1H传感器模式：<el-input v-model="parameterOfApparatus.H1" class="parameter-box mr-12" type="text" />
+              <span class="labelClass">1H传感器模式：</span>
+              <el-input v-model="parameterOfApparatus.H1" class="parameter-box mr-12" type="text" />
             </div>
 
             <div style="text-align: right">
@@ -61,12 +63,28 @@
           </div>
         </div>
       </el-tab-pane>
+      <!-- 3 -->
+      <el-tab-pane
+        v-if="setParameters?.communicationVersion == 2 || setParameters?.communicationVersion == 3"
+        label="设置上传频次"
+        :name="3"
+      >
+        <div class="mb-16 fs-14">
+          频次设置：
+          <el-input v-model.number="Hour" class="parameter-box mr-8" type="text" /> 时
+          <el-input v-model.number="Min" class="parameter-box mr-8" type="text" /> 分
+          <el-input v-model.number="second" class="parameter-box mx-8" type="text" /> 秒
+        </div>
+        <div style="text-align: right">
+          <el-button color="#095C98" type="primary" @click="settingFrequency()"> 设置 </el-button>
+        </div>
+      </el-tab-pane>
     </el-tabs>
   </div>
 </template>
 
-<script lang="ts" setup name="setParameter">
-// 参数设置(普通泵)
+<script lang="ts" setup name="setParameter2">
+// 参数设置(双线)
 import { ref, toRefs } from "vue";
 import { pump_OperatePump, pump_getPumpParams } from "@/api/online/anlageuebersicht";
 import { ElMessage } from "element-plus";
@@ -112,6 +130,7 @@ const getDeviceParam = async () => {
     gatewaySn: setParameters.value["GatewaySn"],
     pumpStationType: setParameters?.value.PumpStationType,
     plcAddress: setParameters?.value.PlcAddress,
+    communicationVersion: setParameters?.value.communicationVersion, //版本号
     type: activeName.value == 1 ? 5 : 6
   });
   if (res.code == "200") {
@@ -134,7 +153,28 @@ const getPumpParams = async () => {
     ElMessage.error(res?.message);
   }
 };
-
+// 频次设置
+let Hour = ref();
+let Min = ref();
+let second = ref();
+const settingFrequency = async () => {
+  let result = {
+    gatewaySn: setParameters.value["GatewaySn"],
+    pumpStationType: setParameters?.value.PumpStationType,
+    plcAddress: setParameters?.value.PlcAddress,
+    communicationVersion: setParameters?.value.communicationVersion, //版本号
+    type: 9,
+    Hour: Hour.value,
+    Min: Min.value,
+    second: second.value
+  };
+  const res: any = await pump_OperatePump(result);
+  if (res.code == "200") {
+    ElMessage.success(res?.message);
+  } else {
+    ElMessage.error(res?.message);
+  }
+};
 // 设置
 const settingUpFun = async () => {
   let result = {};
@@ -142,6 +182,7 @@ const settingUpFun = async () => {
     gatewaySn: setParameters.value["GatewaySn"],
     pumpStationType: setParameters?.value.PumpStationType,
     plcAddress: setParameters?.value.PlcAddress,
+    communicationVersion: setParameters?.value.communicationVersion, //版本号
     type: activeName.value == 1 ? 7 : 8
   };
   delete parameterOfApparatus.value["DataTime"];
@@ -155,6 +196,11 @@ const settingUpFun = async () => {
 };
 </script>
 <style scoped lang="scss">
+.labelClass {
+  display: inline-block;
+  width: 130px;
+  text-align: right;
+}
 .parameter-box {
   width: 72px;
   height: 28px;

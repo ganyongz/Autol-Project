@@ -90,8 +90,8 @@
         >
           <div style="padding: 5px, 0; margin-bottom: 5px; color: #009688; text-align: left">润滑监控：</div>
           <div>
-            <el-icon color="#009688" v-if="LubIsOnline == 1"><Flag /></el-icon>
-            <el-icon color="gray" v-else><Flag /></el-icon>
+            <el-icon color="green" v-if="LubIsOnline == 1" :size="23"><Opportunity /></el-icon>
+            <el-icon color="gray" v-else :size="23"><Opportunity /></el-icon>
           </div>
         </div>
         <div
@@ -113,7 +113,7 @@
               size="small"
               type="primary"
               @click="factorySetting(cards)"
-              v-if="cards.PumpStationType == 4 || cards.PumpStationType == 5 || cards.PumpStationType == 6"
+              v-if="cards?.PumpStationType != 3 && (cards?.communicationVersion == 2 || cards?.communicationVersion == 3)"
             >
               恢复出厂设置
             </el-button>
@@ -200,10 +200,10 @@
       </template>
     </myDialog>
     <!-- start -->
-    <!-- 参数设置(普通泵) -->
+    <!-- 参数设置(单选，递进) -->
     <myDialog title="参数设置" ref="myDialog2" draggable width="30%" :before-close="beforeClose2">
       <template #content>
-        <setParameter
+        <setParameter14
           v-if="IsShowSetTpl"
           ref="setParameterRef"
           :set-parameters="setParameters"
@@ -237,6 +237,20 @@
         />
       </template>
     </myDialog>
+
+    <!-- 参数设置(单点泵) -->
+    <myDialog title="参数设置" ref="myDialog5" draggable width="40%" :before-close="beforeClose5">
+      <template #content>
+        <setParameter5
+          v-if="ShowTPL5"
+          ref="setParameterRef"
+          :set-parameters="setParameters"
+          @close-dialog="beforeClose5"
+          title="参数设置"
+        />
+      </template>
+    </myDialog>
+
     <!-- end -->
     <!-- ATL3000 详情 -->
     <myDialog title="ATL3000详情" ref="ATLDialog" draggable width="65%" :before-close="closeDialog2">
@@ -278,8 +292,10 @@ import { upload_getImageByFileId } from "@/api/modules/upload";
 import { useHandleData2 } from "@/hooks/useHandleData";
 import myDialog from "@/components/dialog/myDialog.vue";
 import analyses from "@/views/online/anlageuebersicht/components/analyses.vue";
-import setParameter from "@/views/online/anlageuebersicht/components/setParameter.vue";
+// import setParameter from "@/views/online/anlageuebersicht/components/setParameter.vue";
 import setParameter2 from "@/views/online/anlageuebersicht/components/setParameter2.vue";
+import setParameter14 from "@/views/online/anlageuebersicht/components/setParameter14.vue";
+import setParameter5 from "@/views/online/anlageuebersicht/components/setParameter5.vue";
 import setAtl3k from "@/views/online/anlageuebersicht/components/setAtl3k.vue";
 import ATL3kDetail from "@/views/online/anlageuebersicht/components/ATL3kDetail.vue";
 import { useRouter } from "vue-router";
@@ -390,7 +406,7 @@ const ZDAlarmRecord = (val: any) => {
   });
 };
 // 振动报警记录 end
-// 参数设置(普通泵)
+// 参数设置(单线，递进)
 const myDialog2 = ref();
 const IsShowSetTpl = ref(false);
 let setParameters = ref();
@@ -412,6 +428,13 @@ const beforeClose4 = () => {
   ShowTPL4.value = false;
   myDialog4.value.close();
 };
+// （单独泵）
+const myDialog5 = ref();
+const ShowTPL5 = ref(false);
+const beforeClose5 = () => {
+  ShowTPL5.value = false;
+  myDialog5.value.close();
+};
 
 // 参数设置
 const FunSetParameter = (val: any) => {
@@ -424,8 +447,12 @@ const FunSetParameter = (val: any) => {
     // 双线
     ShowTPL4.value = true;
     myDialog4.value.open();
+  } else if (val?.PumpStationType == 5) {
+    // 单点泵
+    ShowTPL5.value = true;
+    myDialog5.value.open();
   } else {
-    // 其他
+    // 其他（单线，递进）
     IsShowSetTpl.value = true;
     myDialog2.value.open();
   }

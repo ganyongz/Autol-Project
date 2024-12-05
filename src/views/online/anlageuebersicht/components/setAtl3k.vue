@@ -108,6 +108,7 @@ const open = async val => {
     gatewaySn: setParameters.value["GatewaySn"],
     pumpStationType: setParameters?.value.PumpStationType,
     plcAddress: setParameters?.value.PlcAddress,
+    communicationVersion: setParameters?.value.communicationVersion, //版本号
     type: 5, //ATL3000 操作
     group: val
   });
@@ -143,6 +144,7 @@ const settingUpFun = async () => {
     gatewaySn: setParameters.value["GatewaySn"],
     pumpStationType: setParameters?.value.PumpStationType,
     plcAddress: setParameters?.value.PlcAddress,
+    communicationVersion: setParameters?.value.communicationVersion, //版本号
     type: 4 //ATL3000普通参数设置
   };
   // let variableData = parameterOfApparatus.value;
