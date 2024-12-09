@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="realTimeData-box p-20 my-12">
-      <div class="fs-14" style="color: #999999">采集时间：{{ parameterOfApparatus.DataTime }}</div>
+      <!-- <div class="fs-14" style="color: #999999">采集时间：{{ parameterOfApparatus.DataTime }}</div> -->
       <div>
         <div style="width: 350px; margin: 0 auto">
           <div class="mb-8 fs-14">
@@ -21,7 +21,7 @@
 <script lang="ts" setup name="setParameter5">
 // 参数设置(单点泵)
 import { ref, toRefs } from "vue";
-import { pump_OperatePump, pump_getPumpParams } from "@/api/online/anlageuebersicht";
+import { pump_OperatePump } from "@/api/online/anlageuebersicht";
 import { ElMessage } from "element-plus";
 const props = defineProps({
   setParameters: {
@@ -43,21 +43,7 @@ const getDeviceParam = async () => {
     type: 5
   });
   if (res.code == "200") {
-    setTimeout(() => {
-      getPumpParams();
-    }, 3000);
-  } else {
-    ElMessage.error(res?.error ? res.error : res?.message);
-  }
-};
-// 获取(实时)数据
-const getPumpParams = async () => {
-  const res: any = await pump_getPumpParams({
-    partId: setParameters?.value.partId,
-    type: 1
-  });
-  if (res.code == "200") {
-    parameterOfApparatus.value = Object.assign(res.data);
+    parameterOfApparatus.value = Object.assign(JSON.parse(res.data));
   } else {
     ElMessage.error(res?.error ? res.error : res?.message);
   }
@@ -87,7 +73,6 @@ const settingUpFun = async () => {
     ElMessage.error(res?.message);
   }
 };
-getPumpParams(); //获取数据
 </script>
 <style scoped lang="scss">
 .labelClass {

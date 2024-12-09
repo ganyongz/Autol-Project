@@ -1,5 +1,5 @@
 <template>
-  <div style="height: calc(100vh - 150px)">
+  <div>
     <span>MQTT管理 </span>
     <el-divider />
     <div style="margin-bottom: 10px">
@@ -133,6 +133,9 @@ const getCollectorList = async () => {
   const res: any = await MqttServer_List({});
   if (res.code == "200") {
     tableData.value = res.data;
+    if (tableData.value && tableData.value.length > 0) {
+      getSensorList(tableData.value[0]);
+    }
   } else {
     ElMessage.error(res?.message);
   }

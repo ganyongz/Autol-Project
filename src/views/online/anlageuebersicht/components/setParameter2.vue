@@ -8,7 +8,7 @@
             <div>
               <span style="color: #409eff">参数修改</span>
             </div>
-            <div class="fs-14" style="color: #999999">采集时间：{{ parameterOfApparatus.DataTime }}</div>
+            <!-- <div class="fs-14" style="color: #999999">采集时间：{{ parameterOfApparatus.DataTime }}</div> -->
           </div>
           <div>
             <div class="mb-16 fs-14">
@@ -43,17 +43,17 @@
             <div>
               <span style="color: #409eff">高级参数</span>
             </div>
-            <div class="fs-14" style="color: #999999">采集时间：{{ parameterOfApparatus.DataTime }}</div>
+            <!-- <div class="fs-14" style="color: #999999">采集时间：{{ parameterOfApparatus.DataTime }}</div> -->
           </div>
           <div>
             <div class="mb-16 fs-14">
               <span class="labelClass">0H堵塞信号路数：</span>
-              <el-input v-model="parameterOfApparatus.H0" class="parameter-box mr-12" type="text" />
+              <el-input v-model="parameterOfApparatus.h0" class="parameter-box mr-12" type="text" />
             </div>
 
             <div class="mb-8 fs-14">
               <span class="labelClass">1H传感器模式：</span>
-              <el-input v-model="parameterOfApparatus.H1" class="parameter-box mr-12" type="text" />
+              <el-input v-model="parameterOfApparatus.h1" class="parameter-box mr-12" type="text" />
             </div>
 
             <div style="text-align: right">
@@ -86,7 +86,7 @@
 <script lang="ts" setup name="setParameter2">
 // 参数设置(双线)
 import { ref, toRefs } from "vue";
-import { pump_OperatePump, pump_getPumpParams } from "@/api/online/anlageuebersicht";
+import { pump_OperatePump } from "@/api/online/anlageuebersicht";
 import { ElMessage } from "element-plus";
 const props = defineProps({
   setParameters: {
@@ -98,10 +98,6 @@ const { setParameters }: any = toRefs(props);
 const activeName = ref(1);
 const handleClick = tab => {
   activeName.value = tab;
-  if (activeName.value !== 3) {
-    getPumpParams();
-  }
-  // console.log(activeName.value);
 };
 
 let parameterOfApparatus: any = ref({
@@ -116,12 +112,12 @@ let parameterOfApparatus: any = ref({
   p8: "", // 8p超压报警压力值
   p9: "", // 泄压设定时间
   t9: "", // 泄压系数
-  H0: "", // 0H堵塞信号通道数0H=2~4
-  H1: "", // 1H=0不检测油压不检测霍尔 1H=1检测油压不检测霍尔 1H=2检测霍尔不检测油压 1H=3检测霍尔检测油压
-  H2: "", //（ 2h泄压类型） 0不泄压 1泄压时间 2泄压系数）
-  H3: "", //（3h保压类型） 0不保压 1保压时间 2保压系数）
-  H4: "", //（4h休止时间单位=0小时 =1天）
-  H5: "" // 5h液位检测  0 不检测 1检测
+  h0: "", // 0H堵塞信号通道数0H=2~4
+  h1: "", // 1H=0不检测油压不检测霍尔 1H=1检测油压不检测霍尔 1H=2检测霍尔不检测油压 1H=3检测霍尔检测油压
+  h2: "", //（ 2h泄压类型） 0不泄压 1泄压时间 2泄压系数）
+  h3: "", //（3h保压类型） 0不保压 1保压时间 2保压系数）
+  h4: "", //（4h休止时间单位=0小时 =1天）
+  h5: "" // 5h液位检测  0 不检测 1检测
 });
 
 // 读取(下发指令) 双线
@@ -134,21 +130,7 @@ const getDeviceParam = async () => {
     type: activeName.value == 1 ? 5 : 6
   });
   if (res.code == "200") {
-    setTimeout(() => {
-      getPumpParams();
-    }, 3000);
-  } else {
-    ElMessage.error(res?.message);
-  }
-};
-// 获取(实时)数据
-const getPumpParams = async () => {
-  const res: any = await pump_getPumpParams({
-    partId: setParameters?.value.partId,
-    type: activeName.value
-  });
-  if (res.code == "200") {
-    parameterOfApparatus.value = Object.assign(res.data);
+    parameterOfApparatus.value = Object.assign(JSON.parse(res.data));
   } else {
     ElMessage.error(res?.message);
   }

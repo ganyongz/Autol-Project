@@ -52,8 +52,15 @@
                 <template #reference>
                   <!-- background: linear-gradient(82deg, #59607b 0%, #253350 99%); -->
                   <div style="display: flex; justify-content: space-between">
-                    <p style="margin: 5px 0; cursor: pointer">{{ item.pointName }} :</p>
-                    <p style="margin: 5px 0; color: #19be6b">{{ item.value }}</p>
+                    <p style="margin: 5px 0; cursor: pointer">{{ item.pointName }}:</p>
+                    <p
+                      :style="{
+                        margin: '5px 0',
+                        color: item.alarmLevel == 1 ? '#ffd700' : item.alarmLevel == 2 ? 'red' : '#19be6b'
+                      }"
+                    >
+                      {{ item.value }}
+                    </p>
                   </div>
                 </template>
                 <div>
@@ -134,7 +141,6 @@
               手动润滑
             </el-button>
             <el-button type="warning" size="small" @click="pump_handle('fuWei', cards)">复位</el-button>
-            <!-- <el-button type="danger" size="small" @click="pump_handle('tingZhi', cards)"> 停止</el-button> -->
           </div>
         </div>
 
@@ -322,6 +328,7 @@ const getImgUrl = async imageFileId => {
 };
 let computedHeight: any = ref("9rem");
 //获取页面卡片
+let communicationVersion = ref();
 let LubIsOnline = ref();
 let useLub = ref();
 let useOil = ref();
@@ -337,6 +344,7 @@ const getCardContent = async () => {
       useVib.value = res.data.useVib;
       useLub.value = res.data.useLub;
       useOil.value = res.data.useOil;
+      communicationVersion.value = res.data.communicationVersion;
       cards.value = res.data;
       const hasA = res.data?.useVib == "1" ? true : false;
       const hasB = res.data?.useLub == "1" ? true : false;
@@ -474,7 +482,8 @@ const factorySetting = async val => {
       gatewaySn: val.GatewaySn,
       pumpStationType: val.PumpStationType,
       plcAddress: val.PlcAddress,
-      type: val.PumpStationType == 6 ? 10 : 15
+      communicationVersion: communicationVersion.value,
+      type: 10
     },
     `确认重置该泵`
   );
@@ -482,28 +491,52 @@ const factorySetting = async val => {
 const kaibeng = async val => {
   await useHandleData2(
     pump_OperatePump,
-    { gatewaySn: val.GatewaySn, pumpStationType: val.PumpStationType, plcAddress: val.PlcAddress, type: 1 },
+    {
+      gatewaySn: val.GatewaySn,
+      pumpStationType: val.PumpStationType,
+      plcAddress: val.PlcAddress,
+      communicationVersion: communicationVersion.value,
+      type: 1
+    },
     `确认开启该泵`
   );
 };
 const guanbeng = async val => {
   await useHandleData2(
     pump_OperatePump,
-    { gatewaySn: val.GatewaySn, pumpStationType: val.PumpStationType, plcAddress: val.PlcAddress, type: 2 },
+    {
+      gatewaySn: val.GatewaySn,
+      pumpStationType: val.PumpStationType,
+      plcAddress: val.PlcAddress,
+      communicationVersion: communicationVersion.value,
+      type: 2
+    },
     `确认关闭该泵`
   );
 };
 const dongjie = async val => {
   await useHandleData2(
     pump_OperatePump,
-    { gatewaySn: val.GatewaySn, pumpStationType: val.PumpStationType, plcAddress: val.PlcAddress, type: 3 },
+    {
+      gatewaySn: val.GatewaySn,
+      pumpStationType: val.PumpStationType,
+      plcAddress: val.PlcAddress,
+      communicationVersion: communicationVersion.value,
+      type: 3
+    },
     `确认冻结该泵`
   );
 };
 const jiedong = async val => {
   await useHandleData2(
     pump_OperatePump,
-    { gatewaySn: val.GatewaySn, pumpStationType: val.PumpStationType, plcAddress: val.PlcAddress, type: 4 },
+    {
+      gatewaySn: val.GatewaySn,
+      pumpStationType: val.PumpStationType,
+      plcAddress: val.PlcAddress,
+      communicationVersion: communicationVersion.value,
+      type: 4
+    },
     `确认解冻该泵`
   );
 };
@@ -523,19 +556,25 @@ const pump_handle = async (type, val) => {
   if (type === "ziDong") {
     await useHandleData2(
       pump_OperatePump,
-      { gatewaySn: val.GatewaySn, pumpStationType: val.PumpStationType, plcAddress: val.PlcAddress, type: 1 },
+      {
+        gatewaySn: val.GatewaySn,
+        pumpStationType: val.PumpStationType,
+        plcAddress: val.PlcAddress,
+        communicationVersion: communicationVersion.value,
+        type: 1
+      },
       `确认此操作`
     );
   } else if (type === "fuWei") {
     await useHandleData2(
       pump_OperatePump,
-      { gatewaySn: val.GatewaySn, pumpStationType: val.PumpStationType, plcAddress: val.PlcAddress, type: 3 },
-      `确认此操作`
-    );
-  } else if (type === "tingZhi") {
-    await useHandleData2(
-      pump_OperatePump,
-      { gatewaySn: val.GatewaySn, pumpStationType: val.PumpStationType, plcAddress: val.PlcAddress, type: 11 },
+      {
+        gatewaySn: val.GatewaySn,
+        pumpStationType: val.PumpStationType,
+        plcAddress: val.PlcAddress,
+        communicationVersion: communicationVersion.value,
+        type: 3
+      },
       `确认此操作`
     );
   } else if (type === "shouDong") {
@@ -574,6 +613,7 @@ const ToSet = async (formEl: FormInstance) => {
           gatewaySn: paramsDatas.value.GatewaySn,
           pumpStationType: paramsDatas.value.PumpStationType,
           plcAddress: paramsDatas.value.PlcAddress,
+          communicationVersion: communicationVersion.value,
           type: 6
         },
         `确认此操作`

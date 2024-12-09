@@ -63,7 +63,7 @@
       </el-tab-pane>
     </el-tabs>
     <!-- 绑定数据测点 -->
-    <myDialog :title="Ttitle" ref="myDialog1" draggable width="90%" :before-close="beforeClose1">
+    <myDialog :title="Ttitle" ref="myDialog1" draggable width="90%" height="80%" :before-close="beforeClose1">
       <template #content>
         <bindTmp
           v-if="IsShowBindTmp"

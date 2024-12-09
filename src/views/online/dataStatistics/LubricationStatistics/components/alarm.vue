@@ -6,11 +6,12 @@
     <div class="flex flex-wrap gap-4 items-center" style="margin-bottom: 10px">
       <el-date-picker
         v-model="dateRange"
-        type="daterange"
+        type="datetimerange"
         unlink-panels
         range-separator="至"
         start-placeholder="开始日期"
         end-placeholder="结束日期"
+        value-format="YYYY-MM-DD HH:mm:ss"
       ></el-date-picker>
       <el-button type="primary" @click="searchFun" style="margin-left: 10px">查询</el-button>
       <el-button type="primary" :icon="Download" plain @click="downloadFile">导出报警记录</el-button>
@@ -53,6 +54,8 @@ const props = defineProps({
 });
 const { partId } = toRefs(props);
 console.log(partId?.value);
+// 使用 ref 创建响应式数据，用于绑定到 el-date-picker
+const dateRange: any = ref([]);
 // 获取报警记录
 const getHisAlarm = async () => {
   let params = {
@@ -72,12 +75,7 @@ const getHisAlarm = async () => {
 };
 
 const chartContainer = ref();
-// 使用 Day.js 获取本周的起始和结束日期
-const startOfWeek = dayjs().startOf("day").subtract(7, "day").format("YYYY-MM-DD");
-const endOfWeek = dayjs().format("YYYY-MM-DD");
 
-// 使用 ref 创建响应式数据，用于绑定到 el-date-picker
-const dateRange = ref([startOfWeek, endOfWeek]);
 const searchFun = () => {
   getHisAlarm();
 };
@@ -133,6 +131,13 @@ let option = {
   ]
 };
 onMounted(async () => {
+  // 使用 Day.js 获取本周的起始和结束日期
+  const startOfWeek = dayjs().format("YYYY-MM-DD 00:00:00");
+  const endOfWeek = dayjs().format("YYYY-MM-DD 23:59:59");
+  dateRange.value[0] = startOfWeek;
+  dateRange.value[1] = endOfWeek;
+  console.log(dateRange.value);
+
   await getTrend();
   let chartContainer = echarts.init(document.getElementById("main2"));
   option && chartContainer.setOption(option);

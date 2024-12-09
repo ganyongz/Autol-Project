@@ -126,8 +126,8 @@
         empty-text="暂无数据"
       >
         <el-table-column type="index" label="#" width="55" />
-        <el-table-column prop="startTime" show-overflow-tooltip label="开泵时间" />
-        <el-table-column prop="endTime" show-overflow-tooltip label="关泵时间" />
+        <el-table-column prop="startTime" show-overflow-tooltip label="日期" />
+        <!-- <el-table-column prop="endTime" show-overflow-tooltip label="关泵时间" /> -->
 
         <el-table-column
           prop="pulse_1"
@@ -154,7 +154,7 @@
           v-if="pumpStationType == 1 || pumpStationType == 4 || pumpStationType == 5"
         />
 
-        <el-table-column prop="lubCount" show-overflow-tooltip label="润滑次数" />
+        <!-- <el-table-column prop="lubCount" show-overflow-tooltip label="润滑次数" /> -->
         <el-table-column
           prop="lubPoint"
           show-overflow-tooltip

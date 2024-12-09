@@ -3,6 +3,7 @@
     v-model="visible"
     :title="title"
     :width="width"
+    :height="height"
     :fullscreen="fullscreen"
     :top="top"
     :modal="modal"
@@ -25,6 +26,7 @@
     :close-icon="closeIcon"
     :z-index="ZIndex"
     :header-aria-level="headerAriaLevel"
+    :style="{ overflow: 'auto', height: height }"
   >
     <slot name="content"></slot>
     <template #footer>
@@ -45,10 +47,12 @@ const props = defineProps({
   title: { required: true, type: String, default: "" },
   // 宽度
   width: { required: false, type: String, default: "50%" },
+  // 高度
+  height: { required: false, type: String, default: "" },
   // 是否全屏
   fullscreen: { required: false, type: Boolean, default: false },
   // 距离屏幕顶部距离
-  top: { required: false, type: String, default: "15vh" },
+  top: { required: false, type: String, default: "10vh" },
   // 是否需要遮罩层
   modal: { required: false, type: Boolean, default: true },
   // 遮罩的自定义类名

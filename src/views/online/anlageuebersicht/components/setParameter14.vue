@@ -8,12 +8,12 @@
             <div>
               <span style="color: #409eff">参数修改</span>
             </div>
-            <div class="fs-14" style="color: #999999">采集时间：{{ parameterOfApparatus.DataTime }}</div>
+            <!-- <div class="fs-14" style="color: #999999">采集时间：{{ parameterOfApparatus.DataTime }}</div> -->
           </div>
           <div>
             <div class="mb-16 fs-14">
               <span class="labelClass">休止时间：</span>
-              <el-input v-model="parameterOfApparatus.pauseTime" class="parameter-box mr-12" type="text" /> 时
+              <el-input v-model="parameterOfApparatus.pauseHour" class="parameter-box mr-12" type="text" /> 时
             </div>
 
             <div class="mb-16 fs-14">
@@ -52,22 +52,22 @@
             <div>
               <span style="color: #409eff">高级参数</span>
             </div>
-            <div class="fs-14" style="color: #999999">采集时间：{{ parameterOfApparatus.DataTime }}</div>
+            <!-- <div class="fs-14" style="color: #999999">采集时间：{{ parameterOfApparatus.DataTime }}</div> -->
           </div>
           <div>
             <div class="mb-16 fs-14">
-              H0油压信号：<el-input v-model="parameterOfApparatus.H0" class="parameter-box mr-12" type="text" />
+              H0油压信号：<el-input v-model="parameterOfApparatus.h0" class="parameter-box mr-12" type="text" />
             </div>
 
             <div class="mb-8 fs-14">
-              H1故障状态：<el-input v-model="parameterOfApparatus.H1" class="parameter-box mr-12" type="text" />
+              H1故障状态：<el-input v-model="parameterOfApparatus.h1" class="parameter-box mr-12" type="text" />
             </div>
 
             <div class="mb-8 fs-14">
-              H2报警检测：<el-input v-model="parameterOfApparatus.H2" class="parameter-box mr-12" type="text" />
+              H2报警检测：<el-input v-model="parameterOfApparatus.h2" class="parameter-box mr-12" type="text" />
             </div>
             <div class="mb-8 fs-14">
-              H3报警检测：<el-input v-model="parameterOfApparatus.H3" class="parameter-box mr-12" type="text" />
+              H3报警检测：<el-input v-model="parameterOfApparatus.h3" class="parameter-box mr-12" type="text" />
             </div>
 
             <div style="text-align: right">
@@ -100,7 +100,7 @@
 <script lang="ts" setup name="setParameter14">
 // 参数设置(单选，递进)
 import { ref, toRefs } from "vue";
-import { pump_OperatePump, pump_getPumpParams } from "@/api/online/anlageuebersicht";
+import { pump_OperatePump } from "@/api/online/anlageuebersicht";
 import { ElMessage } from "element-plus";
 const props = defineProps({
   setParameters: {
@@ -112,10 +112,6 @@ const { setParameters }: any = toRefs(props);
 const activeName = ref(1);
 const handleClick = tab => {
   activeName.value = tab;
-  if (activeName.value !== 3) {
-    getPumpParams();
-  }
-  // console.log(activeName.value);
 };
 
 let parameterOfApparatus: any = ref({
@@ -125,10 +121,10 @@ let parameterOfApparatus: any = ref({
   runM: null, // 润滑计时:分
   runS: null, //  润滑计时:秒
   temperature: null, // 低温保护阈值
-  H0: null, // 0H油压信号
-  H1: null, // 1H故障状态
-  H2: null, // 报警检测
-  H3: null // 报警检测
+  h0: null, // 0H油压信号
+  h1: null, // 1H故障状态
+  h2: null, // 报警检测
+  h3: null // 报警检测
 });
 
 // 读取(下发指令) 单线，递进
@@ -141,25 +137,12 @@ const getDeviceParam = async () => {
     type: activeName.value == 1 ? 5 : 6
   });
   if (res.code == "200") {
-    setTimeout(() => {
-      getPumpParams();
-    }, 3000);
+    parameterOfApparatus.value = Object.assign(JSON.parse(res.data));
   } else {
     ElMessage.error(res?.message);
   }
 };
-// 获取(实时)数据
-const getPumpParams = async () => {
-  const res: any = await pump_getPumpParams({
-    partId: setParameters?.value.partId,
-    type: activeName.value
-  });
-  if (res.code == "200") {
-    parameterOfApparatus.value = Object.assign(res.data);
-  } else {
-    ElMessage.error(res?.message);
-  }
-};
+
 // 频次设置
 let Hour = ref();
 let Min = ref();

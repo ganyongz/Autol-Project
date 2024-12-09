@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="height: calc(100vh - 11rem); padding: 10px; overflow: auto; background-color: var(--el-bg-color)">
     <!-- 菜单管理 default-expand-all -->
     <el-button type="primary" @click="addRootMenu" style="margin-bottom: 5px">新增菜单</el-button>
     <el-table :data="tableData" style="width: 100%; margin-bottom: 20px" row-key="id" border>
@@ -111,4 +111,8 @@ const deleteFun = async (id: any) => {
   getMenuListFun();
 };
 </script>
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+:deep(.el-main) {
+  background-color: var(--el-bg-color);
+}
+</style>

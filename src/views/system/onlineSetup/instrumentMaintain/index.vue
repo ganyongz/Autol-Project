@@ -1,10 +1,10 @@
 <template>
-  <div>
+  <div style="overflow: hidden">
     <!-- 仪器维护 -->
-    <el-container style="height: calc(100vh - 150px)">
-      <el-aside style="width: 200px">
+    <el-container style="height: auto; overflow: hidden">
+      <el-aside style="width: 200px; background-color: var(--el-bg-color)">
         <el-tree
-          style="width: 100%; height: 100%"
+          style="width: 100%"
           :data="data"
           node-key="label"
           :default-checked-keys="['采集器']"

@@ -64,7 +64,8 @@ router.beforeEach(async (to, from, next) => {
       userStore.setTenant(typeId);
       let res: any = await Auth_getTenantInfo({ tenantId: typeId });
       if (res.code == 200) {
-        userStore.setBgImage(res.data.loginBackgroundImage);
+        let imgUrl = `${import.meta.env.VITE_API_URL + "/Auth/getImage?fileId=" + res.data.loginBackgroundImageId}`;
+        userStore.setBgImage(imgUrl);
         userStore.setPlatformName(res.data.platformName);
       }
     } else {
