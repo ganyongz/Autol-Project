@@ -6,7 +6,7 @@
         <div style="width: 350px; margin: 0 auto">
           <div class="mb-8 fs-14">
             <span class="labelClass">打油时间（月）：</span>
-            <el-input v-model="parameterOfApparatus.workTime" class="parameter-box mr-12" type="number" />
+            <el-input v-model="parameterOfApparatus.workTime" @change="inputHandle" class="parameter-box mr-12" type="number" />
           </div>
         </div>
         <div style="text-align: center">
@@ -48,7 +48,16 @@ const getDeviceParam = async () => {
     ElMessage.error(res?.error ? res.error : res?.message);
   }
 };
+const inputHandle = val => {
+  let values = [1, 3, 6, 12, 24];
+  console.log(!values.includes(Number(val)));
 
+  if (!values.includes(Number(val))) {
+    ElMessage.warning("打油时间（月）只能输入1，3，6，12，24");
+
+    return (parameterOfApparatus.value.workTime = null);
+  }
+};
 // 设置
 const settingUpFun = async () => {
   if (parameterOfApparatus.value.workTime == "" || parameterOfApparatus.value.workTime == null) {

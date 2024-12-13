@@ -33,7 +33,7 @@
       <el-container>
         <el-header>
           <el-button style="margin-left: 10px" type="primary" @click="bindUsers">绑定用户</el-button>
-          <el-button style="margin-left: 10px" type="primary" @click="bindMeus">绑定菜单</el-button>
+          <el-button style="margin-left: 10px" type="primary" @click="bindMeus">菜单分配</el-button>
         </el-header>
         <el-main>
           <el-table :data="tableData" style="width: 100%">

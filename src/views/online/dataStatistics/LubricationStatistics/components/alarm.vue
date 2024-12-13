@@ -136,9 +136,8 @@ onMounted(async () => {
   const endOfWeek = dayjs().format("YYYY-MM-DD 23:59:59");
   dateRange.value[0] = startOfWeek;
   dateRange.value[1] = endOfWeek;
-  console.log(dateRange.value);
-
   await getTrend();
+  getHisAlarm();
   let chartContainer = echarts.init(document.getElementById("main2"));
   option && chartContainer.setOption(option);
 });
@@ -190,8 +189,6 @@ const downloadFile = async () => {
     ElMessage.warning("没有可以导出的数据");
   }
 };
-// 调用
-getHisAlarm();
 </script>
 
 <style lang="scss" scoped>

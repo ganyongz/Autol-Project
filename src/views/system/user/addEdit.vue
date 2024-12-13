@@ -15,12 +15,12 @@
       <el-form-item label="用户类型" :label-width="formLabelWidth">
         <el-select v-model="ruleForm.type" placeholder="请选择用户类型">
           <el-option label="超级管理员" :value="1" :disabled="userStore.userInfo?.type == 2 || userStore.userInfo?.type == 3" />
-          <el-option label="租户管理员" :value="2" :disabled="userStore.userInfo?.type == 3" />
-          <el-option label="租户下普通用户" :value="3" />
+          <el-option label="管理员" :value="2" :disabled="userStore.userInfo?.type == 3" />
+          <el-option label="普通用户" :value="3" />
         </el-select>
       </el-form-item>
 
-      <el-form-item label="电话" :label-width="formLabelWidth">
+      <el-form-item label="电话" prop="phone" :label-width="formLabelWidth">
         <el-input v-model="ruleForm.phone" autocomplete="off" />
       </el-form-item>
 
@@ -32,11 +32,11 @@
         <el-input v-model="ruleForm.realName" autocomplete="off" />
       </el-form-item>
 
-      <el-form-item label="绑定租户" :label-width="formLabelWidth" v-if="userStore.userInfo?.type == 1">
+      <!-- <el-form-item label="绑定租户" :label-width="formLabelWidth" v-if="userStore.userInfo?.type == 1">
         <el-select v-model="ruleForm.tenantId" filterable placeholder="请选择" clearable style="width: 100%">
           <el-option v-for="item in options" :key="item?.id" :label="item?.name" :value="item?.id" />
         </el-select>
-      </el-form-item>
+      </el-form-item> -->
 
       <!-- <el-form-item label="邮箱" :label-width="formLabelWidth">
         <el-input v-model="form.name" autocomplete="off" />
@@ -65,7 +65,6 @@
 <script lang="ts" setup>
 import { reactive, ref, defineProps, defineEmits, toRefs, onBeforeMount } from "vue";
 import { addOrUpdateUser } from "@/api/system/user";
-import { Tenant_List } from "@/api/system/TenantManagement"; //租户管理list
 import { ElMessage } from "element-plus";
 import type { FormInstance, FormRules } from "element-plus";
 import { useUserStore } from "@/stores/modules/user";
@@ -99,7 +98,7 @@ interface RuleForm {
   sex: number;
   phone: string;
   isDelete: number;
-  tenantId: string;
+  // tenantId: string;
 }
 let ruleForm = reactive({
   id: "",
@@ -110,14 +109,17 @@ let ruleForm = reactive({
   isDisabled: 1,
   sex: 0,
   phone: "",
-  isDelete: 0,
-  tenantId: ""
+  isDelete: 0
+  // tenantId: ""
 });
 const rules = reactive<FormRules<RuleForm>>({
-  userName: [{ required: true, message: "请输入用户名", trigger: "blur" }]
+  userName: [{ required: true, message: "请输入用户名", trigger: "blur" }],
+  phone: [
+    { required: true, pattern: /^1(3[0-9]|5[0-3,5-9]|7[1-3,5-8]|8[0-9])\d{8}$/, message: "请输入正确的电话号码", trigger: "blur" }
+  ]
 });
 onBeforeMount(() => {
-  getUserList({ pageNum: 1, pageSize: 1000 });
+  // getUserList({ pageNum: 1, pageSize: 1000 });
   if (dynamicTitle.value == "编辑") {
     ruleForm = rowData.value as any;
     console.log("数据来了", rowData.value);
@@ -128,8 +130,6 @@ onBeforeMount(() => {
 const emit = defineEmits(["closeDialog", "submitForm"]);
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const closeDialog1 = (formEl: FormInstance | undefined) => {
-  console.log("取消了");
-
   if (!formEl) return;
   formEl.resetFields();
   emit("closeDialog");
@@ -155,15 +155,15 @@ const submit = async (formEl: FormInstance | undefined) => {
   });
 };
 // 绑定租户
-const options = ref();
-const getUserList = async (params: any) => {
-  const res: any = await Tenant_List(params);
-  if (res.code == "200") {
-    // console.log(res);
-    options.value = res.data.records;
-  } else {
-    ElMessage.error(res?.message);
-  }
-};
+// const options = ref();
+// const getUserList = async (params: any) => {
+//   const res: any = await Tenant_List(params);
+//   if (res.code == "200") {
+//     // console.log(res);
+//     options.value = res.data.records;
+//   } else {
+//     ElMessage.error(res?.message);
+//   }
+// };
 </script>
 <style scoped lang=""></style>

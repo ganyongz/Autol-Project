@@ -2,16 +2,18 @@
   <div class="main-box">
     <div class="card table-main">
       <div class="screenAdd">
+        <!-- 隐藏 -->
         <el-select
           v-model="params.type"
           clearable
           placeholder="请选择用户类型"
           style="width: 240px; margin-left: 20px"
           class="mRight"
+          v-if="false"
         >
           <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
-        <el-input v-model="params.userName" style="width: 240px" class="mRight" placeholder="请输入用户名" />
+        <el-input v-model="params.userName" style="width: 240px; margin-left: 20px" class="mRight" placeholder="请输入用户名" />
         <el-input v-model="params.realName" style="width: 240px" class="mRight" placeholder="请输入真实姓名" />
         <el-input v-model="params.phone" style="width: 240px" class="mRight" placeholder="请输入电话号" />
         <el-button type="primary" round @click="search">查询</el-button>
@@ -84,8 +86,8 @@ const submitEvent = () => {
 };
 const options = [
   { label: "超级管理员", value: 1 },
-  { label: "租户管理员", value: 2 },
-  { label: "租户下普通用户", value: 3 }
+  { label: "管理员", value: 2 },
+  { label: "普通用户", value: 3 }
 ];
 // tableData
 let tableData = ref([]);
