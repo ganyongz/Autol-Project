@@ -34,6 +34,7 @@ export interface UserState {
   loginBackgroundImage: string;
   platformName: string;
   loginUrl: string;
+  webSocketPath: string;
 }
 
 /* tabsMenuProps */

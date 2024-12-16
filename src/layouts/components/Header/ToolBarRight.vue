@@ -61,7 +61,8 @@ const startTimer = () => {
   }, 3000);
 };
 // websocket start
-let URL = `${"ws://192.168.1.6:8911/Lub/websocket/" + userStore.userInfo.id + "/DEFAULT"}`;
+// let URL = `${"ws://192.168.1.6:8911/Lub/websocket/" + userStore.userInfo.id + "/DEFAULT"}`;
+let URL = `${userStore.webSocketPath + "/" + userStore.userInfo.id + "/DEFAULT"}`;
 let socketUrl: any = URL; // socket地址
 let websocket: any = null; // websocket 实例
 let heartTime: any = null; // 心跳定时器实例
@@ -87,6 +88,7 @@ onMounted(() => {
 // socket 连接成功
 const websocketOnOpen = () => {
   websocket.onopen = function () {
+    console.log("连接成功");
     resetHeart();
   };
 };
@@ -189,7 +191,7 @@ const speak = (msg: any) => {
   speech
     .init({
       volume: 1, // 音量
-      lang: "en-US", // 语言
+      lang: "zh-CN", // 语言
       rate: 1, // 语速
       pitch: 1, // 音调
       voice: "Microsoft Huihui - Chinese (Simplified, PRC)" // 语音

@@ -42,6 +42,7 @@ import { useKeepAliveStore } from "@/stores/modules/keepAlive";
 import { initDynamicRouter } from "@/routers/modules/dynamicRouter";
 import { CircleClose, UserFilled } from "@element-plus/icons-vue";
 import { ElForm, ElMessage } from "element-plus";
+import { config_getConfig } from "@/api/system/configuration";
 // import md5 from "md5";
 let rememberPassword = ref(true);
 const router = useRouter();
@@ -98,6 +99,8 @@ const login = (formEl: FormInstance | undefined) => {
             duration: 2000
           });
         }, 100);
+        // 5.获取webSocket地址
+        getConfig();
       } else {
         ElMessage.error(data.message);
       }
@@ -106,7 +109,21 @@ const login = (formEl: FormInstance | undefined) => {
     }
   });
 };
-
+// 获取websocket_address
+const getConfig = async () => {
+  const res: any = await config_getConfig({});
+  if (res.code == "200") {
+    if (res.data && res.data.length > 0) {
+      res.data.forEach(datum => {
+        if (datum.keyName === "websocket_address") {
+          userStore.setWebSocketPath(datum.value);
+        }
+      });
+    }
+  } else {
+    ElMessage.error(res?.message);
+  }
+};
 // resetForm
 const resetForm = (formEl: FormInstance | undefined) => {
   if (!formEl) return;

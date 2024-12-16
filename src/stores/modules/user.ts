@@ -11,7 +11,8 @@ export const useUserStore = defineStore({
     userInfo: { realName: "" },
     loginBackgroundImage: "",
     platformName: "",
-    loginUrl: ""
+    loginUrl: "",
+    webSocketPath: ""
   }),
   getters: {},
   actions: {
@@ -61,6 +62,10 @@ export const useUserStore = defineStore({
     // 移除 loginUrl
     removeLoginUrl() {
       this.loginUrl = "";
+    },
+    // set webSocketPath
+    setWebSocketPath(webSocketPath: string) {
+      this.webSocketPath = webSocketPath;
     }
   },
   persist: piniaPersistConfig("geeker-user")
