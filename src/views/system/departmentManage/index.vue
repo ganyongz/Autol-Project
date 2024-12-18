@@ -33,7 +33,7 @@
       </el-aside>
 
       <el-container>
-        <el-header class="departHeader" style="margin-bottom: 10px; font-size: 12px; border-radius: 10px">
+        <el-header class="departHeader" style="padding: 5px 10px; margin-bottom: 10px; font-size: 12px; border-radius: 10px">
           <div style="padding: 8px 0">
             <el-button type="primary" @click="addRootDepart">添加顶级</el-button>
             <el-button type="primary" @click="addLevelDepart">添加子级</el-button>
@@ -56,8 +56,8 @@
                     <el-select v-model="formData.deptType" placeholder="请选择部门类型">
                       <el-option label="集团" :value="0" />
                       <el-option label="厂房" :value="1" />
-                      <el-option label="集团" :value="2" />
-                      <el-option label="厂房" :value="3" />
+                      <el-option label="公司" :value="2" />
+                      <el-option label="部门" :value="3" />
                     </el-select>
                   </el-form-item>
                 </el-col>

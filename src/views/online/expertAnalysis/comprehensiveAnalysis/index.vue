@@ -259,7 +259,7 @@ const searchResult = val => {
 
 // 获取左侧菜单树
 const getLocationTreeFun = async () => {
-  let res: any = await getLocationTree({ type: 4, range: 9, isFiltration: false });
+  let res: any = await getLocationTree({ type: 4, range: 1, isFiltration: true });
   if (res.code == "200") {
     treeData.value = res.data as any;
     setDisabled(treeData.value); //处理数据

@@ -1,8 +1,19 @@
 <template>
   <div class="table-box">
     <ProTable ref="proTable" :columns="columns" :request-api="getTableList" :init-param="initParam" :data-callback="dataCallback">
-      <!-- 表格 header 按钮 -->
+      <!-- 表格操作 -->
+      <template #operation="scope">
+        <el-button type="primary" link :icon="View" @click="openDrawer(scope.row)">详情</el-button>
+      </template>
     </ProTable>
+    <myDialog title="详情" ref="myDialog1" draggable width="900px" height="500px" :before-close="beforeClose1">
+      <template #content>
+        <detail v-if="IsShowAdd" ref="addEditRef" :row-id="rowId" @close-dialog="closeDialog" @submit-form="submitForm" />
+      </template>
+      <template #footer>
+        <el-button @click="closeDialog">关闭</el-button>
+      </template>
+    </myDialog>
   </div>
 </template>
 
@@ -12,6 +23,9 @@ import { ref, reactive } from "vue";
 import ProTable from "@/components/ProTable/index.vue";
 import { ProTableInstance } from "@/components/ProTable/interface";
 import { spotCheckLog_List } from "@/api/sportCheck/sportCheckLog";
+import { View } from "@element-plus/icons-vue";
+import detail from "@/views/sportCheck/sportCheckLog/components/detail.vue";
+import myDialog from "@/components/dialog/myDialog.vue";
 // import { ElMessage } from "element-plus";
 // ProTable 实例
 const proTable = ref<ProTableInstance>();
@@ -89,6 +103,32 @@ const columns: any = reactive([
     label: "点检状态",
     enum: statusOptions,
     fieldNames: { label: "label", value: "value" }
-  }
+  },
+  { prop: "operation", label: "操作", fixed: "right", width: 240 }
 ]);
+// 新增、编辑
+let rowId = ref("");
+const myDialog1 = ref();
+const IsShowAdd = ref(false);
+const beforeClose1 = () => {
+  IsShowAdd.value = false;
+  myDialog1.value.close();
+};
+// 打开详情
+const openDrawer = (row: any) => {
+  rowId.value = row?.id;
+  IsShowAdd.value = true;
+  myDialog1.value.open();
+};
+const submitForm = () => {
+  // 保存
+  proTable.value?.getTableList();
+  myDialog1.value.close();
+  IsShowAdd.value = false;
+};
+const closeDialog = () => {
+  // 取消
+  myDialog1.value.close();
+  IsShowAdd.value = false;
+};
 </script>

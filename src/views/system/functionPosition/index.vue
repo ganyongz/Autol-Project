@@ -40,20 +40,6 @@
                     <el-input v-model="formData.name" />
                   </el-form-item>
                 </el-col>
-
-                <el-col :span="12">
-                  <el-form-item label="类型" required>
-                    <el-select v-model="formData.type" placeholder="请选择类型">
-                      <el-option label="功能位置" :value="1" />
-                      <!-- <el-option label="设备" :value="2" /> -->
-                      <!-- <el-option label="部件" :value="3" />
-                      <el-option label="检测点" :value="4" /> -->
-                    </el-select>
-                  </el-form-item>
-                </el-col>
-              </el-row>
-
-              <el-row :gutter="20">
                 <el-col :span="12">
                   <el-form-item label="排序" required>
                     <el-input v-model="formData.sort" />
@@ -128,21 +114,8 @@ const formData = ref({
   parentId: "-1",
   sort: null, //层级 从1 开始
   name: "",
-  type: undefined //类型
+  type: "1" //类型
 });
-//
-// if (sessionStorage.getItem("nodeDatas")) {
-//   debugger;
-//   let nodeDatas = JSON.parse(sessionStorage.getItem("nodeDatas") as any);
-//   currentNodeId.value = nodeDatas ? nodeDatas["id"] : "";
-//   formData.value.type = nodeDatas ? nodeDatas["type"] : "";
-//   formData.value.id = nodeDatas ? nodeDatas["id"] : "";
-//   formData.value.parentId = nodeDatas ? nodeDatas["parentId"] : "";
-//   nodeData.value = nodeDatas;
-//   formData.value.sort = nodeDatas ? nodeDatas["displayOrder"] : "";
-//   formData.value.name = nodeDatas ? nodeDatas["name"] : "";
-//   setParentId.value = nodeDatas ? nodeDatas["id"] : "";
-// }
 // 添加顶级部门
 const addRootDepart = () => {
   Object.keys(formData.value).forEach(key => {
@@ -167,7 +140,6 @@ const submitFun = async () => {
   if (res.code == "200") {
     ElMessage.success("保存成功");
     editOrDelete.value = "edit";
-    // setTimeout(()=>{},500)
     getLocationTreeFun();
   } else {
     ElMessage.error(res?.message);
@@ -183,7 +155,7 @@ let assembleTreeData = datas => {
 let treeKey = ref(1);
 const getLocationTreeFun = async () => {
   // debugger;
-  let res: any = await getLocationTree({ type: 4, range: 9 });
+  let res: any = await getLocationTree({ type: 4, range: 9, isFiltration: true });
   if (res.code == "200") {
     treeData.value = res.data as any;
     flatData.value = assembleTreeData(treeData.value);

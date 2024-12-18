@@ -81,7 +81,7 @@ let caidan = ref(true);
 const getEquipTreeList = async () => {
   caidan.value = false;
   // 1功能位置，2设备，3部件，4测点
-  let res: any = await getLocationTree({ type: 3, range: 9, isFiltration: false });
+  let res: any = await getLocationTree({ type: 3, range: 9, isFiltration: true });
   if (res.code == "200") {
     treeData.value = res.data as any;
     if (sessionStorage.getItem("deviceID")) {

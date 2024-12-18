@@ -6,3 +6,7 @@ import http from "@/api";
 export const spotCheckLog_List = (params: any) => {
   return http.post(`Lub/spotCheckLog/listPage`, params);
 };
+// 详情
+export const spotCheckLog_detail = (params: any) => {
+  return http.get(`Lub/spotCheckLog/getSpotCheckLog`, {}, { params });
+};

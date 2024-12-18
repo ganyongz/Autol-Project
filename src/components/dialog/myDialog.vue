@@ -26,9 +26,10 @@
     :close-icon="closeIcon"
     :z-index="ZIndex"
     :header-aria-level="headerAriaLevel"
-    :style="{ overflow: 'auto', height: height }"
   >
-    <slot name="content"></slot>
+    <div :style="{ overflow: 'auto', height: height }">
+      <slot name="content"></slot>
+    </div>
     <template #footer>
       <span>
         <slot name="footer"></slot>
@@ -48,7 +49,7 @@ const props = defineProps({
   // 宽度
   width: { required: false, type: String, default: "50%" },
   // 高度
-  height: { required: false, type: String, default: "" },
+  height: { required: false, type: String, default: "600px" },
   // 是否全屏
   fullscreen: { required: false, type: Boolean, default: false },
   // 距离屏幕顶部距离
