@@ -155,7 +155,7 @@ let assembleTreeData = datas => {
 let treeKey = ref(1);
 const getLocationTreeFun = async () => {
   // debugger;
-  let res: any = await getLocationTree({ type: 4, range: 9, isFiltration: true });
+  let res: any = await getLocationTree({ type: 4, range: 9, isFiltration: false });
   if (res.code == "200") {
     treeData.value = res.data as any;
     flatData.value = assembleTreeData(treeData.value);

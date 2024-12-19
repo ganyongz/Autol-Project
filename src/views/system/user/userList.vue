@@ -36,7 +36,7 @@
         <el-table-column fixed="right" label="操作" width="220">
           <template #default="scope">
             <el-button link type="primary" @click="handleClick(scope.row)"> 编辑 </el-button>
-            <el-button link type="primary">重置密码</el-button>
+            <!-- <el-button link type="primary">重置密码</el-button> -->
             <el-button link type="danger" @click="deleteFun([scope.row.id])">删除</el-button>
           </template>
         </el-table-column>

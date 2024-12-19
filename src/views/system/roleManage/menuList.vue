@@ -1,5 +1,6 @@
 <template>
   <div>
+    <div style="font-size: smaller; color: #e6a23c">提示：首页 必须勾选</div>
     <el-tree ref="treeRef" node-key="id" :data="menuTree" :props="defaultProps" @check="handleSelectionChange" show-checkbox />
   </div>
 </template>

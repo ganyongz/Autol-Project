@@ -21,7 +21,9 @@ const config = ref({
   index: false,
   // columnWidth: [50],
   align: ["center"],
-  headerBGC: "rgb(10, 39, 50)"
+  headerBGC: "none",
+  oddRowBGC: "none",
+  evenRowBGC: "none"
 });
 config.value.data = dataArray as any;
 const mouseoverHandler = (e: any) => {

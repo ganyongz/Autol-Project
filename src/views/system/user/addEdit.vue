@@ -46,8 +46,8 @@
         <el-switch
           v-model="ruleForm.isDisabled"
           inline-prompt
-          :active-value="1"
-          :inactive-value="0"
+          :active-value="0"
+          :inactive-value="1"
           active-text="启用"
           inactive-text="停用"
         />
@@ -106,7 +106,7 @@ let ruleForm = reactive({
   realName: "",
   password: "",
   type: 1,
-  isDisabled: 1,
+  isDisabled: 0, // 0启用，1禁用
   sex: 0,
   phone: "",
   isDelete: 0

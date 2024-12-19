@@ -133,10 +133,10 @@ const columns: any = reactive([
     enum: getAlarmStatus,
     fieldNames: { label: "label", value: "value" }
   },
-  { prop: "lowValue", label: "低报" },
-  { prop: "lowerValue", label: "低低报" },
-  { prop: "highValue", label: "高报" },
-  { prop: "higherValue", label: "高高报" },
+  { prop: "lowValue", label: "下限报警值" },
+  { prop: "lowerValue", label: "下限危险值" },
+  { prop: "highValue", label: "上限报警值" },
+  { prop: "higherValue", label: "上限危险值" },
   { prop: "operation", label: "操作", fixed: "right", width: 330 }
 ]);
 

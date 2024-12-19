@@ -19,17 +19,17 @@
       </el-select>
     </el-form-item>
 
-    <el-form-item label="低报" prop="lowValue">
+    <el-form-item label="下限报警值" prop="lowValue">
       <el-input v-model.number="ruleForm.lowValue" />
     </el-form-item>
-    <el-form-item label="低低报" prop="lowerValue">
+    <el-form-item label="下限危险值" prop="lowerValue">
       <el-input v-model.number="ruleForm.lowerValue" />
     </el-form-item>
 
-    <el-form-item label="高报" prop="highValue">
+    <el-form-item label="上限报警值" prop="highValue">
       <el-input v-model.number="ruleForm.highValue" />
     </el-form-item>
-    <el-form-item label="高高报" prop="higherValue">
+    <el-form-item label="上限危险值" prop="higherValue">
       <el-input v-model.number="ruleForm.higherValue" />
     </el-form-item>
 
@@ -80,16 +80,16 @@ let ruleForm = reactive<RuleForm>({
 const rules1 = reactive<FormRules<RuleForm>>({
   name: [{ required: true, message: "请输入名称", trigger: "change" }],
   type: [{ required: true, message: "请选择类型", trigger: "change" }],
-  highValue: [{ required: true, message: "请输入高报值", trigger: "blur" }],
-  higherValue: [{ required: true, message: "请输入高高报值", trigger: "blur" }],
+  highValue: [{ required: true, message: "请输入上限报警值", trigger: "blur" }],
+  higherValue: [{ required: true, message: "请输入上限危险值", trigger: "blur" }],
   lowerValue: [{ required: false }],
   lowValue: [{ required: false }]
 });
 const rules2 = reactive<FormRules<RuleForm>>({
   name: [{ required: true, message: "请输入名称", trigger: "change" }],
   type: [{ required: true, message: "请选择类型", trigger: "change" }],
-  lowerValue: [{ required: true, message: "请输入低低报值", trigger: "blur" }],
-  lowValue: [{ required: true, message: "请输入低报值", trigger: "blur" }],
+  lowerValue: [{ required: true, message: "请输入下限报警值", trigger: "blur" }],
+  lowValue: [{ required: true, message: "请输入下限危险值", trigger: "blur" }],
   highValue: [{ required: false }],
   higherValue: [{ required: false }]
 });

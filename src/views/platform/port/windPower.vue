@@ -140,16 +140,17 @@
             </el-row>
           </div>
         </div>
+
         <div class="bottomBox">
           <el-row :gutter="20" style="height: 100%">
             <el-col :span="8">
               <dv-border-box12>
                 <div style="display: flex; align-items: center; height: 100%; padding: 10px; font-size: 20px; text-align: center">
-                  <div style="width: 30%; padding: 10px">
-                    <p>润滑报警部件数量</p>
-                    <p>{{ nub_alarmLub }}</p>
+                  <div>
+                    <div>润滑统计</div>
+                    <div ref="chartRef1" style="width: 15rem; height: 240px; padding: 10px"></div>
                   </div>
-                  <div style="flex: 1; padding: 5px"><alarmInfoLub :key="tplKey" :transmit-datas="alarmLub" /></div>
+                  <div style="flex: 1; padding: 5px"><alarmInfoLub :key="tplKey" :transmit-datas="lubDataList" /></div>
                 </div>
               </dv-border-box12>
             </el-col>
@@ -157,11 +158,11 @@
             <el-col :span="8">
               <dv-border-box12>
                 <div style="display: flex; align-items: center; height: 100%; font-size: 20px; text-align: center">
-                  <div style="width: 30%; padding: 10px">
-                    <p>油液报警部件数量</p>
-                    <p>{{ nub_alarmOil }}</p>
+                  <div>
+                    <div>油液统计</div>
+                    <div ref="chartRef2" style="width: 15rem; height: 240px; padding: 10px"></div>
                   </div>
-                  <div style="flex: 1; padding: 10px"><alarmInfoOil :key="tplKey" :transmit-datas="alarmOil" /></div>
+                  <div style="flex: 1; padding: 10px"><alarmInfoOil :key="tplKey" :transmit-datas="oilDataList" /></div>
                 </div>
               </dv-border-box12>
             </el-col>
@@ -169,11 +170,11 @@
             <el-col :span="8">
               <dv-border-box12>
                 <div style="display: flex; align-items: center; height: 100%; font-size: 20px; text-align: center">
-                  <div style="width: 30%; padding: 10px">
-                    <p>振动报警部件数量</p>
-                    <p>{{ nub_alarmVib }}</p>
+                  <div>
+                    <div>振动统计</div>
+                    <div ref="chartRef3" style="width: 15rem; height: 240px; padding: 10px"></div>
                   </div>
-                  <div style="flex: 1; padding: 5px"><alarmInfoVib :key="tplKey" :transmit-datas="alarmVib" /></div>
+                  <div style="flex: 1; padding: 5px"><alarmInfoVib :key="tplKey" :transmit-datas="vibDataList" /></div>
                 </div>
               </dv-border-box12>
             </el-col>
@@ -195,17 +196,159 @@ import dayjs from "dayjs";
 import { HOME_URL } from "@/config";
 import { useRouter } from "vue-router";
 import { ElMessage } from "element-plus";
+import * as echarts from "echarts";
 const router = useRouter();
 const ToTargetPage = (val: any) => {
-  // router.push(`/online/anlageuebersicht/index?id=${val}`);
   router.push({ path: "/online/anlageuebersicht/partDetail", query: { id: val.id, name: val.name } });
 };
 const dataScreenRef = ref<HTMLElement | null>(null);
+// 1 润滑
+const chartRef1 = ref<HTMLElement | null>(null);
+let chartInstance1: echarts.ECharts | null = null;
+function setChartOption1() {
+  let option = {
+    tooltip: {
+      trigger: "item"
+    },
+    legend: {
+      top: "0%",
+      left: "center",
+      textStyle: {
+        color: "#ffffff"
+      }
+    },
+    series: [
+      {
+        name: "润滑统计",
+        type: "pie",
+        radius: ["40%", "70%"],
+        avoidLabelOverlap: true,
+        label: {
+          show: true,
+          position: "center"
+        },
+        emphasis: {
+          label: {
+            show: true,
+            fontSize: 20,
+            fontWeight: "bold"
+          }
+        },
+        labelLine: {
+          show: true
+        },
+        data: [
+          { value: 0, name: "正常" },
+          { value: 0, name: "预警" },
+          { value: 0, name: "报警" }
+        ]
+      }
+    ]
+  };
+  chartInstance1?.setOption(option);
+}
+// 2 油液
+const chartRef2 = ref<HTMLElement | null>(null);
+let chartInstance2: echarts.ECharts | null = null;
+function setChartOption2() {
+  let option = {
+    tooltip: {
+      trigger: "item"
+    },
+    legend: {
+      top: "0%",
+      left: "center",
+      textStyle: {
+        color: "#ffffff"
+      }
+    },
+    series: [
+      {
+        name: "油液统计",
+        type: "pie",
+        radius: ["40%", "70%"],
+        avoidLabelOverlap: true,
+        label: {
+          show: true,
+          position: "center"
+        },
+        emphasis: {
+          label: {
+            show: true,
+            fontSize: 20,
+            fontWeight: "bold"
+          }
+        },
+        labelLine: {
+          show: true
+        },
+        data: [
+          { value: 0, name: "正常" },
+          { value: 0, name: "预警" },
+          { value: 0, name: "报警" }
+        ]
+      }
+    ]
+  };
+  chartInstance2?.setOption(option);
+}
+// 3 振动
+const chartRef3 = ref<HTMLElement | null>(null);
+let chartInstance3: echarts.ECharts | null = null;
+function setChartOption3() {
+  let option = {
+    tooltip: {
+      trigger: "item"
+    },
+    legend: {
+      top: "0%",
+      left: "center",
+      textStyle: {
+        color: "#ffffff"
+      }
+    },
+    series: [
+      {
+        name: "振动统计",
+        type: "pie",
+        radius: ["40%", "70%"],
+        avoidLabelOverlap: true,
+        label: {
+          show: true,
+          position: "center"
+        },
+        emphasis: {
+          label: {
+            show: true,
+            fontSize: 20,
+            fontWeight: "bold"
+          }
+        },
+        labelLine: {
+          show: true
+        },
+        data: [
+          { value: 0, name: "正常" },
+          { value: 0, name: "预警" },
+          { value: 0, name: "报警" }
+        ]
+      }
+    ]
+  };
+  chartInstance3?.setOption(option);
+}
 onMounted(() => {
+  // 1.润滑
+  chartInstance1 = echarts.init(chartRef1.value!);
+  setChartOption1();
+  // 2.油液
+  chartInstance2 = echarts.init(chartRef2.value!);
+  setChartOption2();
+  // 3.油液
+  chartInstance3 = echarts.init(chartRef3.value!);
+  setChartOption3();
   getEquipList(); //设备列表
-  getIndustryCockpitAlarmPart(1); //报警列表
-  getIndustryCockpitAlarmPart(2);
-  getIndustryCockpitAlarmPart(3);
+  getIndustryCockpitAlarmPart(); //底部报警列表
   if (dataScreenRef.value) {
     dataScreenRef.value.style.transform = `scale(${getScale()}) translate(-50%, -50%)`;
     dataScreenRef.value.style.width = `1920px`;
@@ -244,17 +387,13 @@ const inquireEquipByStatus = (val: number) => {
 };
 //报警部件列表
 let tplKey = ref(1);
-let alarmLub = ref();
-let nub_alarmLub = ref();
-let alarmOil = ref();
-let nub_alarmOil = ref();
-let alarmVib = ref();
-let nub_alarmVib = ref();
-const getIndustryCockpitAlarmPart = async (type: any) => {
+let lubDataList = ref();
+let oilDataList = ref();
+let vibDataList = ref();
+const getIndustryCockpitAlarmPart = async () => {
   // if (route.query.type) {
   let res: any = await industry_industryCockpitAlarmPart({
-    industryType: 1, //1 风电设备 2港口设备 3食品设备 4工程机械 5矿山 6水泥
-    type: type //查询类型 1润滑 2油液 3振动
+    industryType: 1 //1 风电设备 2港口设备 3食品设备 4工程机械 5矿山 6水泥
   });
   if (res.code == "200") {
     // -> 数据处理 <- 0正常，1预警 2危险
@@ -262,25 +401,60 @@ const getIndustryCockpitAlarmPart = async (type: any) => {
       1: "预警",
       2: "危险"
     };
-    let transformedAlarmLevels = [];
-    if (res.data.data) {
-      transformedAlarmLevels = res.data.data.map(item => ({
+    // 1.润滑
+    if (res.data?.lubDataList) {
+      lubDataList.value = res.data?.lubDataList.map(item => ({
         ...item,
         alarmLevel: levelMap[item.alarmLevel] || "未知" // 如果没有匹配的映射，则使用 '未知'
       }));
     }
-    if (type == 1) {
-      alarmLub.value = transformedAlarmLevels;
-      nub_alarmLub.value = res.data.num;
+    chartInstance1?.setOption({
+      series: [
+        {
+          data: [
+            { value: res.data?.lubNormalNum, name: "正常", itemStyle: { color: "#00FF00" } },
+            { value: res.data?.lubAlarmNum, name: "预警", itemStyle: { color: "yellow" } },
+            { value: res.data?.lubDangerNum, name: "报警", itemStyle: { color: "#FF0000" } }
+          ]
+        }
+      ]
+    });
+    // 2.油液
+    if (res.data?.oilDataList) {
+      oilDataList.value = res.data?.oilDataList.map(item => ({
+        ...item,
+        alarmLevel: levelMap[item.alarmLevel] || "未知" // 如果没有匹配的映射，则使用 '未知'
+      }));
     }
-    if (type == 2) {
-      alarmOil.value = transformedAlarmLevels;
-      nub_alarmOil.value = res.data.num;
+    chartInstance2?.setOption({
+      series: [
+        {
+          data: [
+            { value: res.data?.oilNormalNum, name: "正常", itemStyle: { color: "#00FF00" } },
+            { value: res.data?.oilAlarmNum, name: "预警", itemStyle: { color: "yellow" } },
+            { value: res.data?.oilDangerNum, name: "报警", itemStyle: { color: "#FF0000" } }
+          ]
+        }
+      ]
+    });
+    // 3.振动
+    if (res.data?.vibDataList) {
+      vibDataList.value = res.data?.vibDataList.map(item => ({
+        ...item,
+        alarmLevel: levelMap[item.alarmLevel] || "未知" // 如果没有匹配的映射，则使用 '未知'
+      }));
     }
-    if (type == 3) {
-      alarmVib.value = transformedAlarmLevels;
-      nub_alarmVib.value = res.data.num;
-    }
+    chartInstance3?.setOption({
+      series: [
+        {
+          data: [
+            { value: res.data?.vibNormalNum, name: "正常", itemStyle: { color: "#00FF00" } },
+            { value: res.data?.vibAlarmNum, name: "预警", itemStyle: { color: "yellow" } },
+            { value: res.data?.vibDangerNum, name: "报警", itemStyle: { color: "#FF0000" } }
+          ]
+        }
+      ]
+    });
     tplKey.value += 1;
   } else {
     ElMessage.error(res?.message);
@@ -425,31 +599,4 @@ const getEquipList = async () => {
 //     margin-bottom: 10px;
 //   }
 // }
-</style>
-<style>
-/* 租户切换样式 */
-.yc .el-popper.is-light {
-  background-color: #000000;
-}
-.my-tree-select {
-  background: #000000;
-}
-.yc {
-  background-color: #000000;
-}
-.yc .el-tree-node__content:hover {
-  background-color: #2c2a2a;
-}
-.yc .el-select-dropdown__item {
-  color: #ded6d6 !important;
-}
-.portOutLine .el-select__wrapper {
-  background-color: #000000 !important;
-}
-.yc .el-select__placeholder {
-  color: #ffffff !important;
-}
-.yc .el-popper__arrow::before {
-  background: #231818 !important;
-}
 </style>
