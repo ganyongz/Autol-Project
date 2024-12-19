@@ -28,7 +28,9 @@
       <el-input v-model="ruleForm.spotCheckTime" readonly />
     </el-form-item>
     <el-form-item label="设备图">
-      <el-input v-model="ruleForm.equipImageurl" readonly />
+      <!-- <el-input v-model="ruleForm.equipImageurl" readonly />  -->
+      <el-image style="width: 100px; height: 100px" :src="imageUrl" fit="cover" />
+      <!-- <img v-if="imageUrl" style="width: 100px; height: 100px" :src="imageUrl" alt="工艺图" /> -->
     </el-form-item>
     <el-form-item label="巡检内容">
       <el-input v-model="ruleForm.content" readonly />
@@ -84,6 +86,21 @@
 import { reactive, ref, toRefs } from "vue";
 import { ElMessage } from "element-plus";
 import { spotCheckLog_detail } from "@/api/sportCheck/sportCheckLog";
+import { upload_getImageByFileId } from "@/api/modules/upload";
+// 获取设备图片
+let imageUrl = ref();
+const getImgUrl = async imageFileId => {
+  if (imageFileId) {
+    const res: any = await upload_getImageByFileId({ fileId: imageFileId });
+    let blob = new Blob([res], {
+      type: "image/png"
+    });
+    let url = URL.createObjectURL(blob);
+    imageUrl.value = url;
+  } else {
+    imageUrl.value = null;
+  }
+};
 const props = defineProps({
   rowId: {
     type: String,
@@ -145,6 +162,7 @@ const getInfoById = async () => {
   let res: any = await spotCheckLog_detail({ id: rowId.value });
   if (res.code == "200") {
     ruleForm.value = res.data;
+    getImgUrl(res.data?.equipImageurl);
   } else {
     ElMessage.error(res?.message);
   }
