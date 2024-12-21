@@ -14,17 +14,19 @@
             :props="defaultProps"
             node-key="id"
             :filter-node-method="filterNode"
-            :current-node-key="currentKey"
-            :default-expanded-keys="defaultExpanded"
+            :default-expanded-keys="[currentNodeId]"
+            :current-node-key="currentNodeId"
             highlight-current
-            @node-click="handleNode"
+            @node-click="handleNodeClick"
             :expand-on-click-node="false"
           >
             <template #default="{ node, data }">
               <span class="custom-tree-node">
                 <span class="treeTitle">{{ node.label }}</span>
-                <span>
-                  <el-icon @click="editRole(data)"><Setting /></el-icon>
+                <span class="bindIcon">
+                  <el-tooltip content="关联设备" placement="top">
+                    <el-icon @click="editRole(data)"><Setting /></el-icon>
+                  </el-tooltip>
                 </span>
               </span>
             </template>
@@ -85,12 +87,6 @@
             <el-table :data="tableData">
               <el-table-column prop="userName" label="名称" />
               <el-table-column prop="realName" label="真实名称" />
-              <el-table-column prop="sex" label="性别">
-                <template #default="scope">
-                  <span v-if="scope.row.sex == '1'">男</span>
-                  <span v-else>女</span>
-                </template>
-              </el-table-column>
               <el-table-column prop="phone" label="电话" />
               <el-table-column prop="isDisabled" label="状态">
                 <template #default="scope">
@@ -155,7 +151,8 @@ import {
   getDeptUserPage,
   deptAddUser,
   deptDeleteUser,
-  dept_deptBindEquip
+  dept_deptBindEquip,
+  dept_sysDeptById
 } from "@/api/system/departmentManage";
 import { ElMessage } from "element-plus";
 import { useHandleData } from "@/hooks/useHandleData";
@@ -176,34 +173,48 @@ const filterNode = (value: string, treeData: Tree) => {
   if (!value) return true;
   return treeData.label.includes(value);
 };
+let treeRef = ref();
+// 选中效果添加
+const setCurrentNode = id => {
+  treeRef.value?.setCurrentKey(id);
+};
 // 获取部门树
-const departTreeFun = async () => {
+const departTreeFun = async (type: string) => {
   let res: any = await getDepartTree();
   if (res.code == "200") {
     treeData.value = res.data as any;
     if (res.data.length > 0) {
-      //'nextTick()' 下次dom更新时触发回调函数
-      //默认点击
-      nextTick(() => {
-        const firstNode: any = document.querySelector(".el-tree-node");
-        firstNode.click();
-      });
+      if (sessionStorage.getItem("nodeDatas")) {
+        let nodeDatas = JSON.parse(sessionStorage.getItem("nodeDatas") as any);
+        if (nodeDatas != null) {
+          // 如果有缓存
+          nextTick(() => {
+            // 删除子级 || 保存
+            currentNodeId.value = type == "delete" && nodeDatas?.parentId != "-1" ? nodeDatas?.parentId : nodeDatas.id;
+            getDeptInfoById(currentNodeId.value);
+            setCurrentNode(currentNodeId.value);
+          });
+        } else {
+          // 非子级删除
+          nextTick(() => {
+            const firstNode: any = document.querySelector(".el-tree-node");
+            firstNode.click();
+          });
+        }
+      } else {
+        // 如果没有缓存
+        nextTick(() => {
+          const firstNode: any = document.querySelector(".el-tree-node");
+          firstNode.click();
+        });
+      }
     }
-    // nextTick(() => {
-    //   treeRef.value &&
-    //     treeRef.value.forEach(element => {
-    //       element.setCurrentKey(id); // 因为我的node-key="code" 所以我的是code
-    //     });
-    // });
   } else {
     ElMessage.error(res?.message);
   }
 };
-departTreeFun();
-// 默认展开
-const defaultExpanded = ref();
-// 默认选中
-const currentKey = ref();
+departTreeFun("");
+let currentNodeId = ref(""); //当前节点
 // 添加或更新
 const formData = ref({
   id: "",
@@ -219,26 +230,41 @@ const nodeParams = ref({
   pageNum: 1,
   pageSize: 10
 });
+// 保存
 const submitFun = async () => {
+  // return false;
   let res: any = await addOrUpdateUser(formData.value);
   if (res.code == "200") {
     ElMessage.success("保存成功");
-    departTreeFun();
+    departTreeFun("submit");
   } else {
     ElMessage.error(res?.message);
   }
 };
 // 点击部门
 const setParentId = ref();
-const handleNode = (val: any) => {
-  formData.value.id = val.id;
-  formData.value.address = val?.address; //字段里没有
-  formData.value.deptType = val?.deptType;
-  formData.value.displayOrder = val.displayOrder;
-  formData.value.deptName = val.name;
-  setParentId.value = val.id;
-  nodeParams.value.deptId = val.id;
-  getUserListFun();
+const handleNodeClick = (val: any) => {
+  getDeptInfoById(val.id);
+};
+// 获取部门详情
+const getDeptInfoById = async id => {
+  let res: any = await dept_sysDeptById({ id: id });
+  if (res.code == "200") {
+    let val = res.data;
+    sessionStorage.setItem("nodeDatas", JSON.stringify(val));
+    formData.value.id = val?.id;
+    formData.value.address = val?.address; //字段里没有
+    formData.value.deptType = val?.deptType;
+    formData.value.displayOrder = val.displayOrder;
+    formData.value.deptName = val.deptName;
+    formData.value.parentId = val?.parentId;
+    setParentId.value = val.id;
+    nodeParams.value.deptId = val.id;
+    currentNodeId.value = val.id;
+    getUserListFun();
+  } else {
+    ElMessage.error(res?.message);
+  }
 };
 // 获取部门下的人员列表
 const getUserListFun = async () => {
@@ -263,7 +289,7 @@ const addLevelDepart = () => {
 // 删除
 const deleteDepart = async () => {
   await useHandleData(deleteDepartById, { id: formData.value?.id }, `删除【${formData.value.deptName}】部门`);
-  departTreeFun();
+  departTreeFun("delete");
 };
 // 新增部门用户
 const addUsersRef = ref();
@@ -318,13 +344,11 @@ const beforeClose3 = () => {
 };
 let menuKey = ref(0);
 const submitEquip = async () => {
-  console.log("选中的设备", addEquipRef.value.checkedArrIds);
-
   let res: any = await dept_deptBindEquip({ deptId: bumenId.value, equipIdList: addEquipRef.value.checkedArrIds });
   if (res.code == "200") {
     ElMessage.success("绑定成功");
     myDialog3.value.close();
-    departTreeFun();
+    departTreeFun("submit");
   } else {
     ElMessage.error(res?.message);
   }
@@ -333,7 +357,6 @@ const submitEquip = async () => {
 const total = ref(0);
 const handleSizeChange = (val: any) => {
   //每页数量
-  // console.log(`${val} items per page`);
   nodeParams.value.pageNum = 1;
   nodeParams.value.pageSize = val;
   // getUserList(params);
@@ -424,8 +447,7 @@ const handleCurrentChange = (val: number) => {
 
     // 叶子节点（无子节点）
     &.is-leaf {
-      display: none; //默认注释掉 会有一点空白，丑
-      /* stylelint-disable-next-line scss/double-slash-comment-whitespace-inside */
+      display: none;
       color: black;
     }
   }
@@ -436,5 +458,9 @@ const handleCurrentChange = (val: number) => {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+.bindIcon {
+  position: absolute;
+  right: 5px;
 }
 </style>
