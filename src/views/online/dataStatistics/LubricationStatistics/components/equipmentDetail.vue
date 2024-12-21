@@ -293,7 +293,7 @@
 <script setup lang="ts" name="equipmentDetail">
 import { ref, reactive, toRefs, onUnmounted, nextTick, onDeactivated, onActivated, onMounted } from "vue";
 import { ElMessage, type FormRules, type FormInstance } from "element-plus";
-import { equip_partRealData, pump_OperatePump } from "@/api/online/anlageuebersicht";
+import { equip_partRealData, pump_OperatePump, equip_getImageById } from "@/api/online/anlageuebersicht";
 import { upload_getImageByFileId } from "@/api/modules/upload";
 import { useHandleData2 } from "@/hooks/useHandleData";
 import myDialog from "@/components/dialog/myDialog.vue";
@@ -338,7 +338,6 @@ let isActive = ref();
 const getCardContent = async () => {
   const res: any = await equip_partRealData({ partId: partId?.value });
   if (res.code == "200") {
-    getImgUrl(res.data.imageFileId);
     nextTick(() => {
       LubIsOnline.value = res.data.LubIsOnline;
       useVib.value = res.data.useVib;
@@ -634,7 +633,15 @@ const handleClose = () => {
   ruleForm.startPoint = "";
   ruleForm.endPoint = "";
 };
+// 获取部件图片
+const getImageById = () => {
+  let res: any = equip_getImageById({ id: partId?.value });
+  if (res.code == 200 && res.data.imageFileId) {
+    getImgUrl(res.data.imageFileId);
+  }
+};
 onMounted(() => {
+  getImageById();
   startTimer();
 }),
   // 缓存页面，再次切回时执行

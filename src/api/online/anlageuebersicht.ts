@@ -53,6 +53,10 @@ export const pump_OperatePump = (params: any) => {
 export const pump_getPumpParams = (params: any) => {
   return http.get(`Lub/LubPumpController/getPumpParams`, {}, { params });
 };
+// 根据id获取详情(部件详情获取图片用)
+export const equip_getImageById = (params: any) => {
+  return http.get(`Lub/equipPart/findById`, {}, { params });
+};
 
 // 润滑泵润滑记录 分页查询
 export const lub_LubRecordByPage = (params: any) => {

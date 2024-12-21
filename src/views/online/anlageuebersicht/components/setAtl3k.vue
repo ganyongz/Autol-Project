@@ -42,13 +42,9 @@
 
           <div class="mb-16 fs-14">
             <span class="labelClass">补油时间：</span>
-            <el-input
-              v-model.number="parameterOfApparatus.refuelingTime"
-              oninput="value=value.replace(/^0+(\d)|[^\d]+/g,'')"
-              class="parameter-box mx-8"
-              type="text"
-            />
-            秒
+            <!-- oninput="value=value.replace(/^0+(\d)|[^\d]+/g,'')" -->
+            <el-input v-model.number="parameterOfApparatus.refuelingTime" class="parameter-box mx-8" type="text" />
+            分
           </div>
         </div>
         <div style="text-align: center">
@@ -121,10 +117,10 @@ const open = async val => {
 
 // 设置
 const settingUpFun = async () => {
-  if (parameterOfApparatus.value.refuelingTime == "" || parameterOfApparatus.value.refuelingTime == undefined) {
-    ElMessage.warning("请填写补油时间");
-    return;
-  }
+  // if (parameterOfApparatus.value.refuelingTime == "" || parameterOfApparatus.value.refuelingTime == undefined) {
+  //   ElMessage.warning("请填写补油时间");
+  //   return;
+  // }
   let result = {};
   let parameters = {
     gatewaySn: setParameters.value["GatewaySn"],

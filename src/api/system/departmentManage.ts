@@ -39,3 +39,7 @@ export const dept_deptBindEquipTree = (params: any) => {
 export const dept_deptBindEquip = (params: any) => {
   return http.post(`/Lub/dept/deptBindEquip`, params);
 };
+// 获取部门详情
+export const dept_sysDeptById = (params: any) => {
+  return http.get(`/Lub/dept/sysDeptById`, {}, { params });
+};

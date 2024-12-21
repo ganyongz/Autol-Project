@@ -29,7 +29,7 @@
             <el-button type="primary" @click="addLevelDepart">添加下级</el-button>
             <el-button type="primary" @click="submitFun">保存</el-button>
             <el-button type="danger" @click="deleteFun">删除</el-button>
-            <el-button type="success" @click="addEquipmentFun('添加设备', formData)">添加设备</el-button>
+            <el-button type="success" @click="addEquipmentFun(formData)">添加设备</el-button>
           </div>
           <!-- 添加 -->
           <div style="justify-content: left">
@@ -154,20 +154,16 @@ let assembleTreeData = datas => {
 // 获取位置安装树
 let treeKey = ref(1);
 const getLocationTreeFun = async () => {
-  // debugger;
   let res: any = await getLocationTree({ type: 4, range: 9, isFiltration: false });
   if (res.code == "200") {
     treeData.value = res.data as any;
     flatData.value = assembleTreeData(treeData.value);
-    console.log(assembleTreeData(treeData.value));
     if (sessionStorage.getItem("nodeDatas")) {
       let nodeDatas = JSON.parse(sessionStorage.getItem("nodeDatas") as any);
       if (editOrDelete.value == "delete") {
         // 如果是删除
         const targetId = nodeDatas ? nodeDatas["parentId"] : ""; // 要查找的目标 ID
         let findObject = flatData.value.find(item => item.id === targetId);
-        console.log(findObject);
-
         currentNodeId.value = findObject ? findObject["id"] : "";
         formData.value.type = findObject ? findObject["type"] : "";
         formData.value.id = findObject ? findObject["id"] : "";
@@ -185,7 +181,6 @@ const getLocationTreeFun = async () => {
         formData.value.id = findObject ? findObject["id"] : "";
         formData.value.parentId = findObject ? findObject["parentId"] : "";
         nodeData.value = findObject;
-        console.log(findObject);
 
         formData.value.sort = findObject ? findObject["displayOrder"] : "";
         formData.value.name = findObject ? findObject["name"] : "";
@@ -201,8 +196,6 @@ const getLocationTreeFun = async () => {
 // 删除
 const deleteFun = async () => {
   await useHandleData(deleteById, { id: formData.value?.id, type: formData.value.type }, `删除【${formData.value.name}】节点`);
-  // nodeData.value = {};
-  // formData.value = {};
   editOrDelete.value = "delete";
   getLocationTreeFun();
 };
@@ -219,10 +212,9 @@ const beforeClose1 = () => {
 const detailParams = ref({
   title: "新增"
 });
-const addEquipmentFun = (title: string, row: any) => {
+const addEquipmentFun = (row: any) => {
   if (row.id) {
     IsShowAdd.value = true;
-    // console.log(title, row);
     rowData.value = row;
     myDialog1.value.open();
   } else {
@@ -249,7 +241,6 @@ const closeDialog = () => {
 };
 let editOrDelete = ref("edit");
 mittBus.on("refreshLocationTree", (type: any) => {
-  // console.log(type);
   editOrDelete.value = type;
   getLocationTreeFun();
 });
