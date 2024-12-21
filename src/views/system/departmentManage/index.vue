@@ -184,25 +184,34 @@ const departTreeFun = async (type: string) => {
   if (res.code == "200") {
     treeData.value = res.data as any;
     if (res.data.length > 0) {
-      if (sessionStorage.getItem("nodeDatas")) {
-        let nodeDatas = JSON.parse(sessionStorage.getItem("nodeDatas") as any);
-        if (nodeDatas != null) {
-          // 如果有缓存
+      let nodeDatas = JSON.parse(sessionStorage.getItem("nodeDatas") as any);
+      if (nodeDatas != null) {
+        // 如果有缓存
+        if (type == "delete") {
+          if (nodeDatas?.parentId != "-1") {
+            // 删除子级
+            nextTick(() => {
+              currentNodeId.value = nodeDatas?.parentId;
+              getDeptInfoById(currentNodeId.value);
+              setCurrentNode(currentNodeId.value);
+            });
+          } else {
+            // 删除根级
+            nextTick(() => {
+              const firstNode: any = document.querySelector(".el-tree-node");
+              firstNode.click();
+            });
+          }
+        } else {
+          // 保存 (新增上，下级，编辑)
           nextTick(() => {
-            // 删除子级 || 保存
-            currentNodeId.value = type == "delete" && nodeDatas?.parentId != "-1" ? nodeDatas?.parentId : nodeDatas.id;
+            currentNodeId.value = nodeDatas?.id;
             getDeptInfoById(currentNodeId.value);
             setCurrentNode(currentNodeId.value);
           });
-        } else {
-          // 非子级删除
-          nextTick(() => {
-            const firstNode: any = document.querySelector(".el-tree-node");
-            firstNode.click();
-          });
         }
       } else {
-        // 如果没有缓存
+        // 无缓存
         nextTick(() => {
           const firstNode: any = document.querySelector(".el-tree-node");
           firstNode.click();

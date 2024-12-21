@@ -49,7 +49,7 @@ const props = defineProps({
   // 宽度
   width: { required: false, type: String, default: "50%" },
   // 高度
-  height: { required: false, type: String, default: "600px" },
+  height: { required: false, type: String, default: "" },
   // 是否全屏
   fullscreen: { required: false, type: Boolean, default: false },
   // 距离屏幕顶部距离
