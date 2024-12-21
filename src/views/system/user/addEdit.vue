@@ -13,11 +13,17 @@
       </el-form-item>
 
       <el-form-item label="用户类型" :label-width="formLabelWidth">
-        <el-select v-model="ruleForm.type" placeholder="请选择用户类型">
+        <el-select v-model="ruleForm.type" placeholder="请选择用户类型" style="width: 95%">
           <el-option label="超级管理员" :value="1" :disabled="userStore.userInfo?.type == 2 || userStore.userInfo?.type == 3" />
           <el-option label="管理员" :value="2" :disabled="userStore.userInfo?.type == 3" />
           <el-option label="普通用户" :value="3" />
         </el-select>
+        <el-tooltip placement="bottom" effect="light">
+          <template #content>
+            超级管理员拥有所有菜单权限和数据权限，<br />管理员拥有大部分菜单权限，但无数据权限，<br />普通用户默认无菜单和数据权限
+          </template>
+          <el-badge class="item" value="?" :offset="[10, 5]"> </el-badge>
+        </el-tooltip>
       </el-form-item>
 
       <el-form-item label="电话" prop="phone" :label-width="formLabelWidth">

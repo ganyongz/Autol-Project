@@ -375,10 +375,11 @@ const closeDialog = () => {
 const saveEquipPoint = async () => {
   let res: any = await equipPoint_addOrUpdate(addEditPointRef.value.ruleForm);
   if (res.code == "200") {
-    ElMessage.success("保存成功");
+    // ElMessage.success("保存成功");
     mittBus.emit("refreshLocationTree", "edit");
+    saveUnit();
     closeDialog();
-    getEquipPointList();
+    // getEquipPointList();
   } else {
     ElMessage.error(res?.message);
   }
@@ -386,7 +387,8 @@ const saveEquipPoint = async () => {
 // 删除测点
 const deleteEquipPoint = async (rowData: Object) => {
   await useHandleData(equipPoint_deleteById, { id: rowData["id"] }, `删除【${rowData["name"]}】测点`);
-  getEquipPointList();
+  saveUnit();
+  // getEquipPointList();
 };
 // 数据监听
 let TXRequired = ref(false);
