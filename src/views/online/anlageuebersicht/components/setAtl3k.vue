@@ -49,7 +49,7 @@
         </div>
         <div style="text-align: center">
           <el-button color="#095C98" type="primary" class="mr-12" @click="getDeviceParam()"> 读取 </el-button>
-          <el-button color="#095C98" type="primary" @click="settingUpFun()"> 设置 </el-button>
+          <el-button color="#095C98" type="primary" @click="settingUpFun()" v-if="userType == 1"> 设置 </el-button>
         </div>
       </div>
     </div>
@@ -61,12 +61,21 @@
 import { ref, toRefs } from "vue";
 import { pump_OperatePump } from "@/api/online/anlageuebersicht";
 import { ElMessage, ElMessageBox } from "element-plus";
+import { useUserStore } from "@/stores/modules/user";
+const userStore = useUserStore();
+const userType = userStore.userType;
 const props = defineProps({
   setParameters: {
     type: Object
+  },
+  messageType: {
+    type: Number
+  },
+  siteId: {
+    type: String
   }
 });
-const { setParameters }: any = toRefs(props);
+const { setParameters, messageType, siteId }: any = toRefs(props);
 // 普通参数设置
 let parameterOfApparatus: any = ref({
   DataTime: "", // 采集时间
@@ -101,6 +110,8 @@ const getDeviceParam = () => {
 
 const open = async val => {
   const res: any = await pump_OperatePump({
+    messageType: messageType.value,
+    siteId: siteId.value,
     gatewaySn: setParameters.value["GatewaySn"],
     pumpStationType: setParameters?.value.PumpStationType,
     plcAddress: setParameters?.value.PlcAddress,
@@ -123,14 +134,14 @@ const settingUpFun = async () => {
   // }
   let result = {};
   let parameters = {
+    messageType: messageType.value,
+    siteId: siteId.value,
     gatewaySn: setParameters.value["GatewaySn"],
     pumpStationType: setParameters?.value.PumpStationType,
     plcAddress: setParameters?.value.PlcAddress,
     communicationVersion: setParameters?.value.communicationVersion, //版本号
     type: 4 //ATL3000普通参数设置
   };
-  // let variableData = parameterOfApparatus.value;
-  // delete variableData["DataTime"];
   let variableData = JSON.parse(JSON.stringify(parameterOfApparatus.value));
   delete variableData["DataTime"];
   result = { ...parameters, ...variableData };

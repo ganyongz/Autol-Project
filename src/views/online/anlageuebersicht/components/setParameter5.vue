@@ -11,7 +11,7 @@
         </div>
         <div style="text-align: center">
           <el-button color="#095C98" type="primary" class="mr-12" @click="getDeviceParam()"> 读取 </el-button>
-          <el-button color="#095C98" type="primary" @click="settingUpFun()"> 设置 </el-button>
+          <el-button color="#095C98" type="primary" @click="settingUpFun()" v-if="userType == 1"> 设置 </el-button>
         </div>
       </div>
     </div>
@@ -23,12 +23,21 @@
 import { ref, toRefs } from "vue";
 import { pump_OperatePump } from "@/api/online/anlageuebersicht";
 import { ElMessage } from "element-plus";
+import { useUserStore } from "@/stores/modules/user";
+const userStore = useUserStore();
+const userType = userStore.userType;
 const props = defineProps({
   setParameters: {
     type: Object
+  },
+  messageType: {
+    type: Number
+  },
+  siteId: {
+    type: String
   }
 });
-const { setParameters }: any = toRefs(props);
+const { setParameters, messageType, siteId }: any = toRefs(props);
 let parameterOfApparatus: any = ref({
   DataTime: "",
   workTime: null
@@ -36,6 +45,8 @@ let parameterOfApparatus: any = ref({
 // 读取(下发指令)
 const getDeviceParam = async () => {
   const res: any = await pump_OperatePump({
+    messageType: messageType.value,
+    siteId: siteId.value,
     gatewaySn: setParameters.value["GatewaySn"],
     pumpStationType: setParameters?.value.PumpStationType,
     plcAddress: setParameters?.value.PlcAddress,
@@ -50,8 +61,6 @@ const getDeviceParam = async () => {
 };
 const inputHandle = val => {
   let values = [1, 3, 6, 12, 24];
-  console.log(!values.includes(Number(val)));
-
   if (!values.includes(Number(val))) {
     ElMessage.warning("打油时间（月）只能输入1，3，6，12，24");
 
@@ -66,6 +75,8 @@ const settingUpFun = async () => {
   }
   let result = {};
   let parameters = {
+    messageType: messageType.value,
+    siteId: siteId.value,
     gatewaySn: setParameters.value["GatewaySn"],
     pumpStationType: setParameters?.value.PumpStationType,
     plcAddress: setParameters?.value.PlcAddress,

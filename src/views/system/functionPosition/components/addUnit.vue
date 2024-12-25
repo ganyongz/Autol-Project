@@ -62,8 +62,11 @@
         <el-input v-model="ruleForm.oilTcpAddress" placeholder="请输入油液plc地址" clearable />
       </el-form-item>
       <!-- 油液相关 end -->
-
-      <el-form-item label="通讯方式" prop="messageType" :required="TXRequired" v-if="TXRequired">
+      <!-- 润滑相关 -->
+      <el-form-item label="润滑系统物联网卡号" prop="lubSim" v-if="TXRequired">
+        <el-input v-model="ruleForm.lubSim"></el-input>
+      </el-form-item>
+      <el-form-item label="润滑系统通讯方式" prop="messageType" :required="TXRequired" v-if="TXRequired">
         <el-select v-model="ruleForm.messageType" class="m-2" placeholder="请选择">
           <el-option v-for="item in messageTypeOptions" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
@@ -79,8 +82,16 @@
         <el-input v-model="ruleForm.schaefflerDeviceId" placeholder="舍弗勒的设备字符" clearable />
       </el-form-item>
 
-      <el-form-item label="网关sn号" :required="snPlcRequired && TXRequired" v-if="snPlcRequired && TXRequired">
+      <el-form-item
+        label="网关sn号"
+        :required="(snPlcRequired || MQTTRequired) && TXRequired"
+        v-if="(snPlcRequired || MQTTRequired) && TXRequired"
+      >
         <el-input v-model="ruleForm.gatewaySn" placeholder="网关sn号" clearable />
+      </el-form-item>
+      <!-- MQTT时必填 -->
+      <el-form-item label="地址" prop="siteId" :required="MQTTRequired" v-if="MQTTRequired && TXRequired">
+        <el-input v-model="ruleForm.siteId" placeholder="地址" clearable />
       </el-form-item>
 
       <el-form-item label="plc地址" :required="snPlcRequired && TXRequired" v-if="snPlcRequired && TXRequired">
@@ -97,6 +108,30 @@
           <el-option v-for="item in communicationVersionOptions" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
       </el-form-item>
+      <!-- 单线和递进特有 start -->
+      <div v-if="ruleForm.pumpStationType == 1 || ruleForm.pumpStationType == 4">
+        <el-form-item label="时间单位" prop="timeUnit">
+          <el-select v-model="ruleForm.timeUnit" class="m-2" placeholder="请选择单位" clearable>
+            <el-option v-for="item in timeUnitOptions" :key="item.value" :label="item.label" :value="item.value" />
+          </el-select>
+        </el-form-item>
+
+        <el-form-item label="分配器数量" prop="distributorsNumber">
+          <el-select v-model="ruleForm.distributorsNumber" class="m-2" placeholder="请选择分配器数量" clearable>
+            <el-option v-for="item in distributorsNumberOptions" :key="item.value" :label="item.label" :value="item.value" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="1#分配器脉冲系数" v-if="Number(ruleForm.distributorsNumber) >= 1">
+          <el-input v-model="ruleForm.coefficient" placeholder="请输入分配器脉冲系数" clearable />
+        </el-form-item>
+        <el-form-item label="2#分配器脉冲系数" v-if="Number(ruleForm.distributorsNumber) >= 2">
+          <el-input v-model="ruleForm.coefficient2" placeholder="请输入分配器脉冲系数" clearable />
+        </el-form-item>
+        <el-form-item label="3#分配器脉冲系数" v-if="Number(ruleForm.distributorsNumber) >= 3">
+          <el-input v-model="ruleForm.coefficient3" placeholder="请输入分配器脉冲系数" clearable />
+        </el-form-item>
+      </div>
+      <!-- 单线和递进特有 end -->
 
       <div style="text-align: center">
         <el-button type="primary" @click="submitForm(ruleFormRef)"> 保存 </el-button>
@@ -127,10 +162,10 @@ const communicationVersionOptions = [
   { value: 3, label: "v3 " }
 ];
 const pumpStationTypeOptions = [
+  { value: 4, label: "递进" },
   { value: 1, label: "单线" },
   { value: 2, label: "双线" },
   { value: 3, label: "ATL3000" },
-  { value: 4, label: "递进" },
   { value: 5, label: "单点泵" }
 ];
 const messageTypeOptions = [
@@ -143,6 +178,18 @@ const oilMessageTypeOptions = [
   { value: 0, label: "MQTT" },
   { value: 1, label: "TCP" }
 ];
+// 分配器数量
+const distributorsNumberOptions = [
+  { value: 0, label: "0" },
+  { value: 1, label: "1" },
+  { value: 2, label: "2" },
+  { value: 3, label: "3" }
+];
+// 时间单位
+const timeUnitOptions = [
+  { value: 1, label: "天-小时" },
+  { value: 2, label: "小时-分钟" }
+];
 interface RuleForm {
   equipId: string; //所属设备id
   name: string;
@@ -153,16 +200,24 @@ interface RuleForm {
   useVib: number | null;
   useLub: number | null;
   useOil: number | null;
+  lubSim: string; //润滑系统使用的物联网卡号
   messageType: number | null;
   pumpStationType: number | null;
   schaefflerDeviceId: string;
   gatewaySn: string;
+  siteId: string; //润滑地址
   plcAddress: string;
   oilDeviceType: string | null;
   oilMessageType: string | null;
   oilTcpSn: string | null;
   oilTcpAddress: string | null;
   communicationVersion: number | null;
+  // 分配器相关字段
+  distributorsNumber: string | number;
+  coefficient: string | number;
+  coefficient2: string | number;
+  coefficient3: string | number;
+  timeUnit: number | null;
 }
 
 const formSize = ref<ComponentSize>("default");
@@ -177,16 +232,24 @@ let ruleForm = reactive<RuleForm>({
   useVib: 0,
   useLub: 0,
   useOil: 0,
+  lubSim: "",
   messageType: null,
   pumpStationType: null,
   schaefflerDeviceId: "",
+  siteId: "",
   gatewaySn: "",
   plcAddress: "",
   oilDeviceType: "",
   oilMessageType: "",
   oilTcpSn: "",
   oilTcpAddress: "",
-  communicationVersion: null
+  communicationVersion: null,
+  // 分配器相关字段
+  distributorsNumber: "", //分配器数量 下拉筛选 1,2,3
+  coefficient: "", //分配器脉冲系数
+  coefficient2: "",
+  coefficient3: "",
+  timeUnit: 2
 });
 
 const rules = reactive<FormRules<RuleForm>>({
@@ -203,11 +266,16 @@ const rules = reactive<FormRules<RuleForm>>({
 let TXRequired = ref(false);
 let SFLRequired = ref(false);
 let snPlcRequired = ref(false); //网关sn号，plc地址 必填
+let MQTTRequired = ref(false);
 watchEffect(() => {
   if (ruleForm.useLub == 1) {
+    //使用润滑系统
     TXRequired.value = true;
   } else {
     TXRequired.value = false;
+    ruleForm.messageType = null;
+    ruleForm.pumpStationType = null;
+    ruleForm.lubSim = "";
   }
   if (ruleForm.messageType == 3) {
     SFLRequired.value = true;
@@ -218,6 +286,38 @@ watchEffect(() => {
     snPlcRequired.value = true;
   } else {
     snPlcRequired.value = false;
+  }
+  // 如果使用了润滑系统 && 润滑泵类型是MQTT
+  if (ruleForm.useLub == 1 && ruleForm.messageType == 1) {
+    MQTTRequired.value = true;
+  } else {
+    MQTTRequired.value = false;
+    ruleForm.siteId = "";
+  }
+
+  // 如果不是递进泵，单线，清空分配器数量
+  if (ruleForm.pumpStationType != 1 && ruleForm.pumpStationType != 4) {
+    ruleForm.distributorsNumber = "";
+    ruleForm.timeUnit = null;
+  }
+  if (Number(ruleForm.distributorsNumber) < 1) {
+    ruleForm.coefficient = "";
+    ruleForm.coefficient2 = "";
+    ruleForm.coefficient3 = "";
+  }
+  if (ruleForm.distributorsNumber == 1) {
+    ruleForm.coefficient2 = "";
+    ruleForm.coefficient3 = "";
+  }
+  if (ruleForm.distributorsNumber == 2) {
+    ruleForm.coefficient3 = "";
+  }
+  // 如果不使用油液，以下字段要清空
+  if (ruleForm.useOil == 1) {
+    ruleForm.oilDeviceType = "";
+    ruleForm.oilMessageType = "";
+    ruleForm.oilTcpSn = "";
+    ruleForm.oilTcpAddress = "";
   }
 });
 const emit = defineEmits(["closeDialog", "submitForm"]);

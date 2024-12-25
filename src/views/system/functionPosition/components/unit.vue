@@ -57,8 +57,11 @@
           <el-button type="primary" :icon="Plus" @click="openDialog3" />
         </el-form-item>
         <!-- 油液相关 end -->
-
-        <el-form-item label="通讯方式" prop="messageType" :required="TXRequired" v-if="TXRequired">
+        <!-- 润滑相关 -->
+        <el-form-item label="润滑系统物联网卡号" prop="lubSim" v-if="TXRequired">
+          <el-input v-model="formInline.lubSim"></el-input>
+        </el-form-item>
+        <el-form-item label="润滑系统通讯方式" prop="messageType" :required="TXRequired" v-if="TXRequired">
           <el-select v-model="formInline.messageType" class="m-2" placeholder="请选择">
             <el-option v-for="item in messageTypeOptions" :key="item.value" :label="item.label" :value="item.value" />
           </el-select>
@@ -81,8 +84,17 @@
           <el-input v-model="formInline.schaefflerDeviceId" placeholder="舍弗勒的设备字符" clearable />
         </el-form-item>
 
-        <el-form-item label="网关sn号" :required="snPlcRequired && TXRequired" v-if="snPlcRequired && TXRequired">
+        <el-form-item
+          label="网关sn号"
+          :required="(snPlcRequired || MQTTRequired) && TXRequired"
+          v-if="(snPlcRequired || MQTTRequired) && TXRequired"
+        >
           <el-input v-model="formInline.gatewaySn" placeholder="网关sn号" clearable />
+        </el-form-item>
+
+        <!-- MQTT时必填 -->
+        <el-form-item label="地址" prop="siteId" :required="MQTTRequired" v-if="MQTTRequired && TXRequired">
+          <el-input v-model="formInline.siteId" placeholder="地址" clearable />
         </el-form-item>
 
         <el-form-item label="plc地址" :required="snPlcRequired && TXRequired" v-if="snPlcRequired && TXRequired">
@@ -98,6 +110,30 @@
             <el-option v-for="item in communicationVersionOptions" :key="item.value" :label="item.label" :value="item.value" />
           </el-select>
         </el-form-item>
+        <!-- 单线和递进特有 start -->
+        <div v-if="formInline.pumpStationType == 1 || formInline.pumpStationType == 4">
+          <el-form-item label="时间单位" prop="timeUnit">
+            <el-select v-model="formInline.timeUnit" class="m-2" placeholder="请选择单位" clearable>
+              <el-option v-for="item in timeUnitOptions" :key="item.value" :label="item.label" :value="item.value" />
+            </el-select>
+          </el-form-item>
+
+          <el-form-item label="分配器数量" prop="distributorsNumber">
+            <el-select v-model="formInline.distributorsNumber" class="m-2" placeholder="请选择分配器数量" clearable>
+              <el-option v-for="item in distributorsNumberOptions" :key="item.value" :label="item.label" :value="item.value" />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="1#分配器脉冲系数" v-if="formInline.distributorsNumber >= 1">
+            <el-input v-model="formInline.coefficient" placeholder="请输入分配器脉冲系数" clearable />
+          </el-form-item>
+          <el-form-item label="2#分配器脉冲系数" v-if="formInline.distributorsNumber >= 2">
+            <el-input v-model="formInline.coefficient2" placeholder="请输入分配器脉冲系数" clearable />
+          </el-form-item>
+          <el-form-item label="3#分配器脉冲系数" v-if="formInline.distributorsNumber >= 3">
+            <el-input v-model="formInline.coefficient3" placeholder="请输入分配器脉冲系数" clearable />
+          </el-form-item>
+        </div>
+        <!-- 单线和递进特有 end -->
 
         <el-form-item label="部件图片" prop="imageFileId">
           <UploadImg :key="uploadImgKey" @delete-img="deleteImg" v-model:image-id="formInline.imageFileId" :file-size="5">
@@ -210,10 +246,10 @@ let props = defineProps({
 });
 const { currentNodeId } = toRefs(props);
 const pumpStationTypeOptions = [
+  { value: 4, label: "递进" },
   { value: 1, label: "单线" },
   { value: 2, label: "双线" },
   { value: 3, label: "ATL3000" },
-  { value: 4, label: "递进" },
   { value: 5, label: "单点泵" }
 ];
 const messageTypeOptions = [
@@ -226,6 +262,18 @@ const communicationVersionOptions = [
   { value: 1, label: "v1" },
   { value: 2, label: "v2" },
   { value: 3, label: "v3 " }
+];
+// 分配器数量
+const distributorsNumberOptions = [
+  { value: 0, label: "0" },
+  { value: 1, label: "1" },
+  { value: 2, label: "2" },
+  { value: 3, label: "3" }
+];
+// 时间单位
+const timeUnitOptions = [
+  { value: 1, label: "天-小时" },
+  { value: 2, label: "小时-分钟" }
 ];
 const pointTypeOptions = [
   { value: "Vib", label: "振动" },
@@ -254,6 +302,7 @@ const formInline: any = reactive({
   useVib: null,
   useLub: null,
   useOil: null,
+  lubSim: "",
   messageType: null,
   schaefflerDeviceId: "",
   pumpStationType: null,
@@ -265,7 +314,14 @@ const formInline: any = reactive({
   oilTcpSn: null,
   oilTcpAddress: null,
   oilShowConfig: "",
-  communicationVersion: ""
+  communicationVersion: "",
+  // 分配器相关字段
+  distributorsNumber: "", //分配器数量 下拉筛选 1,2,3
+  coefficient: "", //分配器脉冲系数
+  coefficient2: "",
+  coefficient3: "",
+  timeUnit: 2,
+  siteId: ""
 });
 // 获取详情
 let uploadImgKey = ref<number>(1);
@@ -282,6 +338,7 @@ const getEquipPartDetailFun = async () => {
     formInline.useVib = data.useVib;
     formInline.useLub = data.useLub;
     formInline.useOil = data.useOil;
+    formInline.lubSim = data.lubSim;
     formInline.messageType = data.messageType;
     formInline.schaefflerDeviceId = data.schaefflerDeviceId;
     formInline.pumpStationType = data.pumpStationType;
@@ -295,6 +352,13 @@ const getEquipPartDetailFun = async () => {
     formInline.oilTcpSn = data.oilTcpSn;
     formInline.oilTcpAddress = data.oilTcpAddress;
     formInline.oilShowConfig = data.oilShowConfig;
+    //单线和递进相关字段（分配器相关字段）
+    formInline.distributorsNumber = data.distributorsNumber;
+    formInline.coefficient = data.coefficient;
+    formInline.coefficient2 = data.coefficient2;
+    formInline.coefficient3 = data.coefficient3;
+    formInline.timeUnit = data.timeUnit;
+    formInline.siteId = data.siteId;
     uploadImgKey.value += 1;
     getEquipPointList();
   } else {
@@ -394,11 +458,15 @@ const deleteEquipPoint = async (rowData: Object) => {
 let TXRequired = ref(false);
 let SFLRequired = ref(false);
 let snPlcRequired = ref(false); //网关sn号，plc地址 必填
+let MQTTRequired = ref(false);
 watchEffect(() => {
   if (formInline.useLub == 1) {
     TXRequired.value = true;
   } else {
     TXRequired.value = false;
+    formInline.messageType = null;
+    formInline.pumpStationType = null;
+    formInline.lubSim = "";
   }
   if (formInline.messageType == 3) {
     SFLRequired.value = true;
@@ -409,6 +477,37 @@ watchEffect(() => {
     snPlcRequired.value = true;
   } else {
     snPlcRequired.value = false;
+  }
+  // 如果不是递进泵，单线，清空分配器数量
+  if (formInline.pumpStationType != 1 && formInline.pumpStationType != 4) {
+    formInline.timeUnit = null;
+    formInline.distributorsNumber = "";
+  }
+  if (formInline.distributorsNumber < 1) {
+    formInline.coefficient = "";
+    formInline.coefficient2 = "";
+    formInline.coefficient3 = "";
+  }
+  if (formInline.distributorsNumber == 1) {
+    formInline.coefficient2 = "";
+    formInline.coefficient3 = "";
+  }
+  if (formInline.distributorsNumber == 2) {
+    formInline.coefficient3 = "";
+  }
+  // 如果不使用油液，以下字段要清空
+  if (formInline.useOil == 1) {
+    formInline.oilDeviceType = "";
+    formInline.oilMessageType = "";
+    formInline.oilTcpSn = "";
+    formInline.oilTcpAddress = "";
+  }
+  // 如果使用了润滑系统 && 润滑泵类型是MQTT
+  if (formInline.useLub == 1 && formInline.messageType == 1) {
+    MQTTRequired.value = true;
+  } else {
+    MQTTRequired.value = false;
+    formInline.siteId = "";
   }
 });
 const rules = reactive<any>({

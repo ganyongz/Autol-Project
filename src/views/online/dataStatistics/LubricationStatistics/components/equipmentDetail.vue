@@ -206,13 +206,16 @@
       </template>
     </myDialog>
     <!-- start -->
-    <!-- 参数设置(单选，递进) -->
+    <!-- 参数设置(单线，递进 类型是1和4时) -->
     <myDialog title="参数设置" ref="myDialog2" draggable width="30%" :before-close="beforeClose2">
       <template #content>
         <setParameter14
           v-if="IsShowSetTpl"
           ref="setParameterRef"
           :set-parameters="setParameters"
+          :time-unit="timeUnit"
+          :message-type="messageType"
+          :site-id="siteId"
           @close-dialog="beforeClose2"
           title="参数设置"
         />
@@ -225,6 +228,8 @@
           v-if="ShowSetAtl3k"
           ref="setParameterRef"
           :set-parameters="setParameters"
+          :message-type="messageType"
+          :site-id="siteId"
           @close-dialog="beforeClose3"
           title="参数设置(ATL3000)"
         />
@@ -238,6 +243,8 @@
           v-if="ShowTPL4"
           ref="setParameterRef"
           :set-parameters="setParameters"
+          :message-type="messageType"
+          :site-id="siteId"
           @close-dialog="beforeClose4"
           title="参数设置(双线)"
         />
@@ -251,6 +258,8 @@
           v-if="ShowTPL5"
           ref="setParameterRef"
           :set-parameters="setParameters"
+          :message-type="messageType"
+          :site-id="siteId"
           @close-dialog="beforeClose5"
           title="参数设置"
         />
@@ -417,6 +426,9 @@ const ZDAlarmRecord = (val: any) => {
 const myDialog2 = ref();
 const IsShowSetTpl = ref(false);
 let setParameters = ref();
+let timeUnit = ref(); //时间单位
+let messageType = ref(); //通讯方式
+let siteId = ref(); //从站id
 const beforeClose2 = () => {
   IsShowSetTpl.value = false;
   myDialog2.value.close();
@@ -482,7 +494,9 @@ const factorySetting = async val => {
       pumpStationType: val.PumpStationType,
       plcAddress: val.PlcAddress,
       communicationVersion: communicationVersion.value,
-      type: 10
+      type: 10,
+      messageType: messageType.value,
+      siteId: siteId.value
     },
     `确认重置该泵`
   );
@@ -495,7 +509,9 @@ const kaibeng = async val => {
       pumpStationType: val.PumpStationType,
       plcAddress: val.PlcAddress,
       communicationVersion: communicationVersion.value,
-      type: 1
+      type: 1,
+      messageType: messageType.value,
+      siteId: siteId.value
     },
     `确认开启该泵`
   );
@@ -508,7 +524,9 @@ const guanbeng = async val => {
       pumpStationType: val.PumpStationType,
       plcAddress: val.PlcAddress,
       communicationVersion: communicationVersion.value,
-      type: 2
+      type: 2,
+      messageType: messageType.value,
+      siteId: siteId.value
     },
     `确认关闭该泵`
   );
@@ -521,7 +539,9 @@ const dongjie = async val => {
       pumpStationType: val.PumpStationType,
       plcAddress: val.PlcAddress,
       communicationVersion: communicationVersion.value,
-      type: 3
+      type: 3,
+      messageType: messageType.value,
+      siteId: siteId.value
     },
     `确认冻结该泵`
   );
@@ -534,7 +554,9 @@ const jiedong = async val => {
       pumpStationType: val.PumpStationType,
       plcAddress: val.PlcAddress,
       communicationVersion: communicationVersion.value,
-      type: 4
+      type: 4,
+      messageType: messageType.value,
+      siteId: siteId.value
     },
     `确认解冻该泵`
   );
@@ -560,7 +582,9 @@ const pump_handle = async (type, val) => {
         pumpStationType: val.PumpStationType,
         plcAddress: val.PlcAddress,
         communicationVersion: communicationVersion.value,
-        type: 1
+        type: 1,
+        messageType: messageType.value,
+        siteId: siteId.value
       },
       `确认此操作`
     );
@@ -572,7 +596,9 @@ const pump_handle = async (type, val) => {
         pumpStationType: val.PumpStationType,
         plcAddress: val.PlcAddress,
         communicationVersion: communicationVersion.value,
-        type: 3
+        type: 3,
+        messageType: messageType.value,
+        siteId: siteId.value
       },
       `确认此操作`
     );
@@ -613,7 +639,9 @@ const ToSet = async (formEl: FormInstance) => {
           pumpStationType: paramsDatas.value.PumpStationType,
           plcAddress: paramsDatas.value.PlcAddress,
           communicationVersion: communicationVersion.value,
-          type: 6
+          type: 6,
+          messageType: messageType.value,
+          siteId: siteId.value
         },
         `确认此操作`
       );
@@ -634,10 +662,15 @@ const handleClose = () => {
   ruleForm.endPoint = "";
 };
 // 获取部件图片
-const getImageById = () => {
-  let res: any = equip_getImageById({ id: partId?.value });
-  if (res.code == 200 && res.data.imageFileId) {
-    getImgUrl(res.data.imageFileId);
+const getImageById = async () => {
+  let res: any = await equip_getImageById({ id: partId?.value });
+  if (res.code == 200) {
+    timeUnit.value = res.data.timeUnit;
+    messageType.value = res.data.messageType;
+    siteId.value = res.data.siteId;
+    if (res.data.imageFileId) {
+      getImgUrl(res.data.imageFileId);
+    }
   }
 };
 onMounted(() => {

@@ -17,7 +17,7 @@
 </template>
 <script setup lang="ts">
 import { computed, ref, onMounted } from "vue";
-import { ElMessage, ElNotification } from "element-plus";
+import { ElNotification } from "element-plus";
 import { message_getRealTimeAlarmCount } from "@/api/online/message";
 import { useUserStore } from "@/stores/modules/user";
 // import AssemblySize from "./components/AssemblySize.vue";
@@ -40,10 +40,10 @@ const ToMessage = () => {
 let alarmNum = ref(0);
 const getEquipList = async () => {
   let res: any = await message_getRealTimeAlarmCount({ type: 9 });
-  if (res.code == "200") {
+  if (res?.code == "200") {
     alarmNum.value = res.data.alarmNum;
   } else {
-    ElMessage.error(res?.message ? res.message : res.error);
+    // ElMessage.error(res?.message);
   }
 };
 // 铃铛闪烁
@@ -54,15 +54,14 @@ const startTimer = () => {
     opacity.value -= 0.1;
     if (opacity.value <= 0) opacity.value = 1;
   }, 30);
-  // 3秒后关闭定时器
+  // 5秒后关闭定时器
   setTimeout(() => {
     clearInterval(timerId1);
     opacity.value = 1;
-  }, 3000);
+  }, 5000);
 };
 // websocket start
-// let URL = `${"ws://192.168.1.6:8911/Lub/websocket/" + userStore.userInfo.id + "/DEFAULT"}`;
-let URL = `${userStore.webSocketPath + "/" + userStore.userInfo.id + "/DEFAULT"}`;
+let URL = `${userStore.webSocketPath}`;
 let socketUrl: any = URL; // socket地址
 let websocket: any = null; // websocket 实例
 let heartTime: any = null; // 心跳定时器实例
@@ -72,9 +71,11 @@ let socketError: number = 0; // 错误次数
 
 // 初始化socket
 const initWebSocket = (url: any) => {
-  socketUrl = url;
+  let token = userStore.token;
+  let userType: any = userStore.userType;
+  const subprotocol = `?userType=${userType}&token=${token}`;
   // 初始化 websocket
-  websocket = new WebSocket(url);
+  websocket = new WebSocket(url + subprotocol);
   websocketOnOpen();
   websocketOnMessage(); //接收数据
   websocketOnError();
@@ -104,23 +105,34 @@ const websocketClose = () => {
     console.log("断开连接", e);
   };
 };
+// 创建通知
+const notify = msg => {
+  const notice = ElNotification({
+    title: "提示",
+    message: msg,
+    type: "warning",
+    duration: 10000,
+    onClick: () => {
+      ToMessage();
+      notice.close(); // 点击通知后关闭
+    }
+  });
+};
 // socket 接收数据
 const websocketOnMessage = () => {
   websocket.onmessage = function (e: any) {
-    let msg = JSON.parse(e.data);
-    if (msg.type === "heartbeat") {
+    if (e.data === "PONG") {
       resetHeart();
+      return;
     }
+    let msg = JSON.parse(e.data);
     startTimer();
-    ElNotification({
-      title: "消息",
-      message: msg.message
-    });
+    notify(msg.message);
     if (msg.message) {
       getEquipList();
       speak(msg.message);
     }
-    test(msg); // 测试数据
+    // test(msg); // 测试数据
   };
 };
 // socket 重置心跳
@@ -138,7 +150,7 @@ const sendSocketHeart = () => {
     if (websocket.readyState == 1) {
       // if (socketHeart <= 30) {
       // console.log("心跳发送：", socketHeart);
-      websocket.send("heartbeat");
+      websocket.send("PING");
       // websocket.send(
       //   JSON.stringify({
       //     type: "spot_check_log"
@@ -166,14 +178,14 @@ const reconnect = () => {
 };
 
 // 测试收到消息传递
-const test = (msg: any) => {
-  console.log(msg, "测试收到消息传递");
-  // switch (msg.type) {
-  //   case 'heartbeat': //加入会议
-  //     mitts.emit('heartbeat', msg)
-  //     break;
-  // }
-};
+// const test = (msg: any) => {
+// console.log(msg, "测试收到消息传递");
+// switch (msg.type) {
+//   case 'PING': //加入会议
+//     mitts.emit('PING', msg)
+//     break;
+// }
+// };
 // websocket end
 
 // 语音播报 start

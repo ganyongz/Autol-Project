@@ -31,13 +31,13 @@
             </div>
             <div style="text-align: right">
               <el-button color="#095C98" type="primary" class="mr-12" @click="getDeviceParam()"> 读取 </el-button>
-              <el-button color="#095C98" type="primary" @click="settingUpFun()"> 设置 </el-button>
+              <el-button color="#095C98" type="primary" @click="settingUpFun()" v-if="userType == 1"> 设置 </el-button>
             </div>
           </div>
         </div>
       </el-tab-pane>
       <!-- 2 -->
-      <el-tab-pane label="高级参数" :name="2">
+      <el-tab-pane label="高级参数" :name="2" v-if="userType == 1">
         <div class="realTimeData-box p-20 my-12">
           <div class="mb-12" style="display: flex; align-items: center; justify-content: space-between">
             <div>
@@ -65,7 +65,7 @@
       </el-tab-pane>
       <!-- 3 -->
       <el-tab-pane
-        v-if="setParameters?.communicationVersion == 2 || setParameters?.communicationVersion == 3"
+        v-if="(setParameters?.communicationVersion == 2 || setParameters?.communicationVersion == 3) && userType == 1"
         label="设置上传频次"
         :name="3"
       >
@@ -88,12 +88,21 @@
 import { ref, toRefs } from "vue";
 import { pump_OperatePump } from "@/api/online/anlageuebersicht";
 import { ElMessage } from "element-plus";
+import { useUserStore } from "@/stores/modules/user";
+const userStore = useUserStore();
+const userType = userStore.userType;
 const props = defineProps({
   setParameters: {
     type: Object
+  },
+  messageType: {
+    type: Number
+  },
+  siteId: {
+    type: String
   }
 });
-const { setParameters }: any = toRefs(props);
+const { setParameters, messageType, siteId }: any = toRefs(props);
 // console.log(setParameters, "--setParameters==");
 const activeName = ref(1);
 const handleClick = tab => {
@@ -123,6 +132,8 @@ let parameterOfApparatus: any = ref({
 // 读取(下发指令) 双线
 const getDeviceParam = async () => {
   const res: any = await pump_OperatePump({
+    siteId: siteId.value,
+    messageType: messageType.value,
     gatewaySn: setParameters.value["GatewaySn"],
     pumpStationType: setParameters?.value.PumpStationType,
     plcAddress: setParameters?.value.PlcAddress,
@@ -141,6 +152,8 @@ let Min = ref();
 let second = ref();
 const settingFrequency = async () => {
   let result = {
+    messageType: messageType.value,
+    siteId: siteId.value,
     gatewaySn: setParameters.value["GatewaySn"],
     pumpStationType: setParameters?.value.PumpStationType,
     plcAddress: setParameters?.value.PlcAddress,
@@ -161,6 +174,8 @@ const settingFrequency = async () => {
 const settingUpFun = async () => {
   let result = {};
   let parameters = {
+    messageType: messageType.value,
+    siteId: siteId.value,
     gatewaySn: setParameters.value["GatewaySn"],
     pumpStationType: setParameters?.value.PumpStationType,
     plcAddress: setParameters?.value.PlcAddress,
