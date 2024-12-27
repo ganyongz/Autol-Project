@@ -104,12 +104,12 @@ const emit = defineEmits(["closeDialog", "submitForm"]);
 const submitForm = async (formEl: FormInstance | undefined) => {
   if (!formEl) return;
   if (parseFloat(ruleForm.lowValue) <= parseFloat(ruleForm.lowerValue)) {
-    ElMessage.warning("低低报的值要小于低报");
+    ElMessage.warning("下限危险值的值要小于下限报警值");
     return;
   }
 
   if (parseFloat(ruleForm.higherValue) <= parseFloat(ruleForm.highValue)) {
-    ElMessage.warning("高高报要大于高报");
+    ElMessage.warning("上限危险值要大于上限报警值");
     return;
   }
   await formEl.validate(async (valid, fields) => {

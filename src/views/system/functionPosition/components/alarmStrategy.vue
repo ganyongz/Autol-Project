@@ -12,28 +12,28 @@
         </template>
       </el-table-column>
 
-      <el-table-column prop="lowValue" label="低报">
+      <el-table-column prop="lowValue" label="下限报警值">
         <template #default="scope">
           <el-input v-model="scope.row.lowValue" v-if="scope.row.seen"></el-input>
           <span v-else>{{ scope.row.lowValue }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column prop="lowerValue" label="低低报">
+      <el-table-column prop="lowerValue" label="下限危险值">
         <template #default="scope">
           <el-input v-model="scope.row.lowerValue" v-if="scope.row.seen"></el-input>
           <span v-else>{{ scope.row.lowerValue }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column prop="highValue" label="高报">
+      <el-table-column prop="highValue" label="上限报警值">
         <template #default="scope">
           <el-input v-model="scope.row.highValue" v-if="scope.row.seen"></el-input>
           <span v-else>{{ scope.row.highValue }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column prop="higherValue" label="高高报">
+      <el-table-column prop="higherValue" label="上限危险值">
         <template #default="scope">
           <el-input v-model="scope.row.higherValue" v-if="scope.row.seen"></el-input>
           <span v-else>{{ scope.row.higherValue }}</span>
@@ -154,30 +154,30 @@ const saveRow = async (val: any) => {
   if (val.thresholdType == 1) {
     //超上限校验
     if (!val.highValue) {
-      ElMessage.warning("高报不能为空");
+      ElMessage.warning("上限报警不能为空");
       return;
     }
     if (!val.higherValue) {
-      ElMessage.warning("高高报不能为空");
+      ElMessage.warning("上限危险值不能为空");
       return;
     }
     if (parseFloat(val.higherValue) <= parseFloat(val.highValue)) {
-      ElMessage.warning("高高报要大于高报");
+      ElMessage.warning("上限危险值要大于上限报警");
       return;
     }
   }
   if (val.thresholdType == 2) {
     //超下限校验
     if (!val.lowValue) {
-      ElMessage.warning("低报不能为空");
+      ElMessage.warning("下限报警值不能为空");
       return;
     }
     if (!val.lowerValue) {
-      ElMessage.warning("低低报不能为空");
+      ElMessage.warning("下限危险值不能为空");
       return;
     }
     if (parseFloat(val.lowValue) <= parseFloat(val.lowerValue)) {
-      ElMessage.warning("低低报的值要小于低报");
+      ElMessage.warning("下限危险值的值要小于下限报警值");
       return;
     }
   }
