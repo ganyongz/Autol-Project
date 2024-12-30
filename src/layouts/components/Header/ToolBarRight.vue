@@ -61,12 +61,28 @@ const startTimer = () => {
   }, 5000);
 };
 // websocket start
-let URL = `${userStore.webSocketPath}`;
-let socketUrl: any = URL; // socket地址
+// let URL = `${userStore.webSocketPath}`;
+let myWindow: any = window;
+let baseUrl = myWindow.config.webURL;
+let baseUrl_ww = myWindow.config.webURL_ww;
+let insideUrl = baseUrl.replace(/http:\/\//g, "ws://") + "/Lub/websocket/link";
+let outsideUrl = baseUrl_ww.replace(/http:\/\//g, "ws://") + "/Lub/websocket/link";
+let URL = ref();
+if (
+  window.location.host.indexOf("127.0.0.1") > -1 ||
+  window.location.host.indexOf("192.168") > -1 ||
+  window.location.host.indexOf("localhost") > -1 ||
+  window.location.host.indexOf(baseUrl.substr(7, 8)) > -1
+) {
+  URL.value = insideUrl;
+} else {
+  URL.value = outsideUrl;
+}
+let socketUrl: any = URL.value; // socket地址
 let websocket: any = null; // websocket 实例
 let heartTime: any = null; // 心跳定时器实例
 let socketHeart: number = 0; // 心跳次数
-let HeartTimeOut: number = 50000; // 心跳超时时间
+let HeartTimeOut: number = 30000; // 心跳超时时间
 let socketError: number = 0; // 错误次数
 
 // 初始化socket
@@ -82,6 +98,10 @@ const initWebSocket = (url: any) => {
   websocketClose();
   sendSocketHeart();
 };
+setInterval(() => {
+  console.log("发心跳了");
+  sendFun();
+}, 10000);
 onMounted(() => {
   // 初始化websocket
   initWebSocket(socketUrl);
@@ -122,17 +142,19 @@ const notify = msg => {
 const websocketOnMessage = () => {
   websocket.onmessage = function (e: any) {
     if (e.data === "PONG") {
-      resetHeart();
+      //resetHeart();
       return;
     }
+    console.log(e.data);
+
     let msg = JSON.parse(e.data);
-    startTimer();
+    console.log(msg);
+    startTimer(); //消息铃铛闪烁用
     notify(msg.message);
     if (msg.message) {
       getEquipList();
       speak(msg.message);
     }
-    // test(msg); // 测试数据
   };
 };
 // socket 重置心跳
@@ -140,9 +162,17 @@ const resetHeart = () => {
   socketHeart = 0;
   socketError = 0;
   clearInterval(heartTime);
-  sendSocketHeart();
+  // sendSocketHeart();
 };
-
+// 重置心跳
+const sendFun = () => {
+  if (websocket.readyState == 1) {
+    websocket.send("PING");
+  } else {
+    // 重连
+    reconnect();
+  }
+};
 // socket心跳发送
 const sendSocketHeart = () => {
   heartTime = setInterval(() => {
@@ -169,23 +199,13 @@ const reconnect = () => {
   if (socketError <= 2) {
     clearInterval(heartTime);
     initWebSocket(socketUrl);
-    socketError = socketError + 1;
+    // socketError = socketError + 1;
     // console.log("socket重连", socketError);
   } else {
     // console.log("重试次数已用完的逻辑", socketError);
     clearInterval(heartTime);
   }
 };
-
-// 测试收到消息传递
-// const test = (msg: any) => {
-// console.log(msg, "测试收到消息传递");
-// switch (msg.type) {
-//   case 'PING': //加入会议
-//     mitts.emit('PING', msg)
-//     break;
-// }
-// };
 // websocket end
 
 // 语音播报 start
@@ -197,7 +217,6 @@ if (speech.hasBrowserSupport()) {
 } else {
   console.log("浏览器不支持语音播报");
 }
-
 // 定义播放语音的方法
 const speak = (msg: any) => {
   speech
