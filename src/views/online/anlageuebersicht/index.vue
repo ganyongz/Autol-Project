@@ -47,7 +47,7 @@
               <div style="overflow: auto">
                 <!-- 1.振动 -->
                 <div v-if="outItem.VibRealData && outItem.VibRealData.length > 0">
-                  <div style="color: #009688; text-align: left">轴承振动情况：</div>
+                  <div style="color: #009688; text-align: left">测点监控：</div>
                   <div v-for="(item, index) in outItem.VibRealData" :key="index">
                     <el-popover placement="right" :width="300" trigger="hover">
                       <template #reference>

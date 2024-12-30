@@ -42,7 +42,7 @@
             border-radius: 10px 10px 0 0;
           "
         >
-          <div style="color: #009688; text-align: left">振动情况：</div>
+          <div style="color: #009688; text-align: left">测点监控：</div>
           <el-button size="small" type="primary" @click="ZDAlarmRecord(cards)">报警记录</el-button>
         </div>
         <div :style="{ height: computedHeight, padding: '20px', 'overflow-y': 'auto' }">
