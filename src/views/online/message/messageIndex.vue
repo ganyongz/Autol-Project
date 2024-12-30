@@ -14,17 +14,9 @@
       :pagination="pagination"
       @darg-sort="sortTable"
     >
-      <!-- 表格 header 按钮 -->
-      <template #tableHeader>
-        <span style="font-size: 14px">状态筛选: </span>
-        <el-select v-model="initParam.isDispose" placeholder="状态筛选" style="width: 240px" clearable>
-          <el-option v-for="item in isDisposeOptions" :key="item.value" :label="item.label" :value="item.value" />
-        </el-select>
-      </template>
-
       <!-- 表格操作 -->
       <template #operation="scope">
-        <el-button type="primary" link :icon="View" @click="lookFun(scope.row)"></el-button>
+        <el-button type="primary" link :icon="Operation" @click="lookFun(scope.row)"></el-button>
       </template>
     </ProTable>
   </div>
@@ -36,27 +28,17 @@ import { ElMessage, ElMessageBox } from "element-plus";
 import { ProTableInstance } from "@/components/ProTable/interface";
 import { message_getRealTimeAlarm, message_setIsDispose1 } from "@/api/online/message";
 import { useRoute, useRouter } from "vue-router";
-import { View } from "@element-plus/icons-vue";
+import { Operation } from "@element-plus/icons-vue";
 const router = useRouter();
 const route = useRoute();
 console.log(router, "router内容");
 console.log(route, "route内容");
-const isDisposeOptions = [
-  {
-    value: "0",
-    label: "未读"
-  },
-  {
-    value: "1",
-    label: "已读"
-  }
-];
 const activeName = ref("1");
 let keyTable = ref(1);
 // ProTable 实例
 const proTable = ref<ProTableInstance>();
 // 如果表格需要初始化请求参数，直接定义传给 ProTable (之后每次请求都会自动带上该参数，此参数更改之后也会一直带上，改变此参数会自动刷新表格数据)
-let initParam = reactive({ type: 1, isDispose: "0" }); //（'0'：未读 || '1'：已读）
+let initParam = reactive({ type: 1 });
 const pagination = false;
 // dataCallback 是对于返回的表格数据做处理，如果你后台返回的数据不是 list && total && pageNum && pageSize 这些字段，可以在这里进行处理成这些字段
 // 或者直接去 hooks/useTable.ts 文件中把字段改为你后端对应的就行
