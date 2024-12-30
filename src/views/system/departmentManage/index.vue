@@ -41,7 +41,7 @@
             <el-button type="primary" @click="addLevelDepart">添加子级</el-button>
             <el-button type="primary" @click="submitFun">保存</el-button>
             <el-button type="danger" @click="deleteDepart">删除</el-button>
-            <el-button type="info" @click="addDepartUser">新增部门用户</el-button>
+            <el-button type="info" @click="addDepartUser">绑定用户</el-button>
           </div>
           <!-- 添加 -->
           <div style="justify-content: left">
@@ -300,9 +300,9 @@ const deleteDepart = async () => {
   await useHandleData(deleteDepartById, { id: formData.value?.id }, `删除【${formData.value.deptName}】部门`);
   departTreeFun("delete");
 };
-// 新增部门用户
+// 绑定用户
 const addUsersRef = ref();
-const title2 = ref("新增部门用户");
+const title2 = ref("绑定用户");
 const myDialog2 = ref();
 const beforeClose2 = () => {
   myDialog2.value.close();
