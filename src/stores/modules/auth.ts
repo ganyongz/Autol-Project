@@ -36,7 +36,6 @@ export const useAuthStore = defineStore({
       const { data } = await getAuthMenuListApi();
       let data1: any = data;
       this.authMenuList = !!data1 ? data1.map((org: any) => mapTree(org)) : [];
-      // this.authMenuList = data;
       console.log("菜单数据", this.authMenuList);
     },
     // Set RouteName
@@ -45,6 +44,18 @@ export const useAuthStore = defineStore({
     }
   }
 });
+// 判断路由权限 待用
+// function extractNames(arr: any) {
+//   let names = [];
+//   arr.forEach((item: any) => {
+//     names.push(item.name); // 添加当前对象的 name
+//     if (item.children && item.children.length > 0) {
+//       names = names.concat(extractNames(item.children)); // 递归添加子对象的 name
+//     }
+//   });
+//   return names;
+// }
+// 222
 // 菜单数据递归
 function mapTree(org: any) {
   const haveChildren = Array.isArray(org.children) && org.children.length > 0;

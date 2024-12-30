@@ -14,10 +14,17 @@ export interface CustomAxiosRequestConfig extends InternalAxiosRequestConfig {
   cancel?: boolean;
 }
 let baseUrl = (<any>window).config.webURL;
+let baseUrl_ww = (<any>window).config.webURL_ww;
 const config = {
   // 默认地址请求地址，可在 .env.** 文件中修改
   // baseURL: import.meta.env.VITE_API_URL as string,
-  baseURL: baseUrl,
+  baseURL:
+    window.location.host.indexOf("127.0.0.1") > -1 ||
+    window.location.host.indexOf("192.168") > -1 ||
+    window.location.host.indexOf("localhost") > -1 ||
+    window.location.host.indexOf(baseUrl.substr(7, 8)) > -1
+      ? baseUrl
+      : baseUrl_ww,
   // 设置超时时间
   timeout: ResultEnum.TIMEOUT as number
   // 跨域时候允许携带凭证

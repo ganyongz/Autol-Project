@@ -1,11 +1,10 @@
 <template>
   <div class="table-box bg-color">
     <!-- 润滑、报警记录 -->
-    <el-container>
-      <el-aside style="margin-right: 10px; background-color: var(--el-fill-color-blank)">
+    <el-container style="height: calc(100vh - 200px)">
+      <el-aside style="width: 200px; padding: 10px; margin-right: 10px; background-color: var(--el-fill-color-blank)">
         <el-tree
           ref="treeRef"
-          style="width: 200px"
           :data="treeData"
           :props="defaultProps"
           node-key="id"
@@ -13,7 +12,11 @@
           :current-node-key="partId"
           :highlight-current="true"
           @node-click="handleNodeClick"
-        />
+        >
+          <template #default="{ node }">
+            <span class="custom-tree-node" :title="node.label">{{ node.label }}</span>
+          </template>
+        </el-tree>
       </el-aside>
       <el-main style="background-color: var(--el-fill-color-blank)">
         <el-tabs v-model="activeName" class="demo-tabs" @tab-click="handleClick">
@@ -92,7 +95,7 @@ const defaultProps = {
 let treeData = ref();
 // 获取菜单列表
 const getEquipTreeList = async () => {
-  let res: any = await getLocationTree({ type: 3, range: 9, isFiltration: false });
+  let res: any = await getLocationTree({ type: 3, range: 2, isFiltration: true });
   if (res.code == "200") {
     treeData.value = res.data as any;
   } else {
@@ -121,5 +124,13 @@ getEquipTreeList();
 /*  颜色高亮 */
 :deep(.el-tree--highlight-current .el-tree-node.is-current > .el-tree-node__content) {
   color: #409eff;
+}
+
+// 标准 el-tree
+.custom-tree-node {
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 </style>
