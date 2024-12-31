@@ -8,7 +8,7 @@
     </el-table-column>
     <el-table-column prop="alarmType" label="报警类型">
       <template #default="scope">
-        <span>{{ scope.row.level == 1 ? "超上限" : "超下限" }}</span>
+        <span>{{ scope.row.alarmType == 1 ? "超上限" : "超下限" }}</span>
       </template>
     </el-table-column>
   </el-table>
