@@ -16,7 +16,13 @@
     >
       <!-- 表格操作 -->
       <template #operation="scope">
-        <el-button type="primary" link :icon="Operation" @click="lookFun(scope.row)"></el-button>
+        <el-button
+          :disabled="scope.row.isDispose == '1'"
+          type="primary"
+          link
+          :icon="Operation"
+          @click="lookFun(scope.row)"
+        ></el-button>
       </template>
     </ProTable>
   </div>
@@ -53,6 +59,11 @@ const getTableList = (params: any) => {
   let newParams = JSON.parse(JSON.stringify(params));
   return message_getRealTimeAlarm(newParams);
 };
+// 状态字典
+const stateOption = reactive([
+  { value: "0", label: "未读" },
+  { value: "1", label: "已读" }
+]);
 const eventTypeOptions = [
   {
     value: 1,
@@ -109,6 +120,12 @@ let columns: any = reactive([
   { prop: "unit", label: "报警单位" },
   { prop: "startTime", label: "报警开始时间" },
   { prop: "alarmDuration", label: "报警持续时间（分钟）" },
+  {
+    prop: "isDispose",
+    label: "状态",
+    enum: stateOption,
+    fieldNames: { label: "label", value: "value" }
+  },
   { prop: "operation", label: "操作", fixed: "right", width: 120 }
 ]);
 // 表格拖拽排序
@@ -135,6 +152,12 @@ const tabChange = (val: any) => {
       { prop: "unit", label: "报警单位" },
       { prop: "startTime", label: "报警开始时间" },
       { prop: "alarmDuration", label: "报警持续时间（分钟）" },
+      {
+        prop: "isDispose",
+        label: "状态",
+        enum: stateOption,
+        fieldNames: { label: "label", value: "value" }
+      },
       { prop: "operation", label: "操作", fixed: "right", width: 120 }
     ];
 
@@ -145,6 +168,12 @@ const tabChange = (val: any) => {
       { prop: "alarmMsg", label: "报警信息" },
       { prop: "startTime", label: "报警开始时间" },
       { prop: "alarmDuration", label: "报警持续时间（分钟）" },
+      {
+        prop: "isDispose",
+        label: "状态",
+        enum: stateOption,
+        fieldNames: { label: "label", value: "value" }
+      },
       { prop: "operation", label: "操作", fixed: "right", width: 120 }
     ];
     initParam.type = 2;
