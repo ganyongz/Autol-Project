@@ -33,6 +33,7 @@ import { useUserStore } from "@/stores/modules/user";
 import { ElMessageBox, ElMessage } from "element-plus";
 import InfoDialog from "./InfoDialog.vue";
 import PasswordDialog from "./PasswordDialog.vue";
+import mittBus from "@/utils/mittBus";
 
 const router = useRouter();
 const userStore = useUserStore();
@@ -57,6 +58,7 @@ const logout = () => {
     // 3.重定向到登陆页
     router.replace(loginUrl);
     ElMessage.success("退出登录成功！");
+    mittBus.emit("exitMessagePush"); //退出消息推送
   });
 };
 

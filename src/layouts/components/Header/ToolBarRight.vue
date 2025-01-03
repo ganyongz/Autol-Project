@@ -16,6 +16,7 @@
   </div>
 </template>
 <script setup lang="ts">
+import mittBus from "@/utils/mittBus";
 import { computed, ref, onMounted } from "vue";
 import { ElNotification } from "element-plus";
 import { message_getRealTimeAlarmCount } from "@/api/online/message";
@@ -98,13 +99,14 @@ const initWebSocket = (url: any) => {
   websocketClose();
   sendSocketHeart();
 };
-setInterval(() => {
+let timerId2 = setInterval(() => {
   console.log("发心跳了");
   sendFun();
 }, 10000);
 onMounted(() => {
   // 初始化websocket
   initWebSocket(socketUrl);
+  timerId2;
 });
 // socket 连接成功
 const websocketOnOpen = () => {
@@ -124,6 +126,11 @@ const websocketClose = () => {
   websocket.onclose = function (e: any) {
     console.log("断开连接", e);
   };
+};
+// 关闭 socket
+const websocketStop = () => {
+  websocket.close();
+  console.log("关闭了消息推送");
 };
 // 创建通知
 const notify = msg => {
@@ -237,6 +244,10 @@ const speak = (msg: any) => {
     });
 };
 // 语音播报 end
+mittBus.on("exitMessagePush", () => {
+  websocketStop();
+  clearInterval(timerId2);
+});
 getEquipList();
 </script>
 <style scoped lang="scss">
