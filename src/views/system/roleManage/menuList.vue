@@ -1,7 +1,15 @@
 <template>
   <div>
     <div style="font-size: smaller; color: #e6a23c">提示：首页 必须勾选</div>
-    <el-tree ref="treeRef" node-key="id" :data="menuTree" :props="defaultProps" @check="handleSelectionChange" show-checkbox />
+    <el-tree
+      ref="treeRef"
+      node-key="id"
+      :data="menuTree"
+      :props="defaultProps"
+      @check="handleSelectionChange"
+      :check-strictly="true"
+      show-checkbox
+    />
   </div>
 </template>
 
@@ -82,7 +90,8 @@ const handleObj = (data: any) => {
     currentIds.value.forEach(async (item: any) => {
       // 选中树，获取到树的节点，如果存在isLeaf，则设置回显
       const node = await treeRef.value.getNode(item);
-      if (node !== null && node.isLeaf) {
+      // node !== null && node.isLeaf
+      if (node !== null) {
         treeRef.value.setChecked(node, true);
       }
     });

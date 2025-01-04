@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
 import { AuthState } from "@/stores/interface";
-import { getAuthButtonListApi, getAuthMenuListApi } from "@/api/modules/login";
+// import { getAuthButtonListApi, getAuthMenuListApi } from "@/api/modules/login";
+import { getAuthMenuListApi } from "@/api/modules/login";
 import { getFlatMenuList, getShowMenuList, getAllBreadcrumbList } from "@/utils";
 
 export const useAuthStore = defineStore({
@@ -26,21 +27,42 @@ export const useAuthStore = defineStore({
     breadcrumbListGet: state => getAllBreadcrumbList(state.authMenuList)
   },
   actions: {
-    // Get AuthButtonList
-    async getAuthButtonList() {
-      const { data } = await getAuthButtonListApi();
-      this.authButtonList = data;
-    },
     // 获取动态菜单(接口)
     async getAuthMenuList() {
       const { data } = await getAuthMenuListApi();
       let data1: any = data;
+      let buttonsDatas: any = [];
       this.authMenuList = !!data1 ? data1.map((org: any) => mapTree(org)) : [];
-      console.log("菜单数据", this.authMenuList);
+      // console.log("菜单数据", this.authMenuList);
+      // 获取按钮权限处理
+      if (data1.length > 0) {
+        buttonsDatas = flattenArray(data1);
+        // console.log(buttonsDatas);
+        this.authButtonList = buttonsDatas.reduce((acc, item) => {
+          // 检查按钮数组是否为空
+          if (item.buttons.length > 0) {
+            // 提取按钮名称并转换为字符串数组
+            const buttonNames = item.buttons.map(btn => btn.name);
+            // 将按钮名称数组分配给对应的名称属性
+            acc[item.name] = buttonNames;
+          } else {
+            // 如果按钮数组为空，分配一个空数组
+            acc[item.name] = [];
+          }
+          return acc;
+        }, {});
+      } else {
+        this.authButtonList = {};
+      }
     },
     // Set RouteName
     async setRouteName(name: string) {
       this.routeName = name;
+    },
+    // Get AuthButtonList
+    async getAuthButtonList() {
+      // const { data } = await getAuthButtonListApi();
+      // this.authButtonList = data;
     }
   }
 });
@@ -80,3 +102,17 @@ function mapTree(org: any) {
     children: haveChildren ? org.children.map((i: any) => mapTree(i)) : []
   };
 }
+// 数组扁平化 （多维数组转为一维数组）
+const flattenArray = (array: any) => {
+  const result: any = [];
+  const flatten = (nodes: any) => {
+    nodes.forEach((node: any) => {
+      result.push(node);
+      if (node.children) {
+        flatten(node.children);
+      }
+    });
+  };
+  flatten(array);
+  return result;
+};

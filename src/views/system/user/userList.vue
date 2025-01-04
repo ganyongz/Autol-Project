@@ -29,8 +29,9 @@
         <!-- <el-table-column prop="" label="看板" /> -->
         <el-table-column prop="type" label="类型">
           <template #default="scope">
-            <span v-if="scope.row.type == '0'">普通用户</span>
-            <span v-else>系统用户</span>
+            <span v-if="scope.row.type == '1'">超级管理员</span>
+            <span v-else-if="scope.row.type == '2'">管理员</span>
+            <span v-else>普通用户</span>
           </template>
         </el-table-column>
         <el-table-column fixed="right" label="操作" width="220">

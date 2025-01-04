@@ -37,6 +37,7 @@
   </div>
 </template>
 <script lang="ts" setup name="partDetail">
+// 部件总览
 import { ref, onActivated, onUnmounted } from "vue";
 import { ElMessage } from "element-plus";
 import equipmentDetail from "@/views/online/dataStatistics/LubricationStatistics/components/equipmentDetail.vue";

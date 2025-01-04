@@ -11,7 +11,7 @@
         </div>
         <div style="text-align: center">
           <el-button color="#095C98" type="primary" class="mr-12" @click="getDeviceParam()"> 读取 </el-button>
-          <el-button color="#095C98" type="primary" @click="settingUpFun()" v-if="userType == 1"> 设置 </el-button>
+          <el-button color="#095C98" type="primary" @click="settingUpFun()" v-if="BUTTONS.set"> 设置 </el-button>
         </div>
       </div>
     </div>
@@ -23,9 +23,8 @@
 import { ref, toRefs } from "vue";
 import { pump_OperatePump } from "@/api/online/anlageuebersicht";
 import { ElMessage } from "element-plus";
-import { useUserStore } from "@/stores/modules/user";
-const userStore = useUserStore();
-const userType = userStore.userType;
+import { useAuthButtons } from "@/hooks/useAuthButtons";
+const { BUTTONS } = useAuthButtons();
 const props = defineProps({
   setParameters: {
     type: Object

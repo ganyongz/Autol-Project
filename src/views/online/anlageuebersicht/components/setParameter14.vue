@@ -1,6 +1,6 @@
 <template>
   <div>
-    <!-- 双线泵参数设置 -->
+    <!-- 单选，递进参数设置 -->
     <el-tabs v-model="activeName" class="demo-tabs" @tab-change="handleClick">
       <el-tab-pane label="普通参数" :name="1">
         <div class="realTimeData-box p-20 my-12">
@@ -51,13 +51,13 @@
 
             <div style="text-align: right">
               <el-button color="#095C98" type="primary" class="mr-12" @click="getDeviceParam()"> 读取 </el-button>
-              <el-button color="#095C98" type="primary" @click="settingUpFun()" v-if="userType == 1"> 设置 </el-button>
+              <el-button color="#095C98" type="primary" @click="settingUpFun()" v-if="BUTTONS.set"> 设置 </el-button>
             </div>
           </div>
         </div>
       </el-tab-pane>
       <!-- 2 -->
-      <el-tab-pane label="高级参数" :name="2" v-if="userType == 1">
+      <el-tab-pane label="高级参数" :name="2" v-if="BUTTONS.highSet">
         <div class="realTimeData-box p-20 my-12">
           <div class="mb-12" style="display: flex; align-items: center; justify-content: space-between">
             <div>
@@ -90,7 +90,7 @@
       </el-tab-pane>
       <!-- 3 -->
       <el-tab-pane
-        v-if="(setParameters?.communicationVersion == 2 || setParameters?.communicationVersion == 3) && userType == 1"
+        v-if="(setParameters?.communicationVersion == 2 || setParameters?.communicationVersion == 3) && BUTTONS.frequency"
         label="设置上传频次"
         :name="3"
       >
@@ -113,9 +113,11 @@
 import { ref, toRefs } from "vue";
 import { pump_OperatePump } from "@/api/online/anlageuebersicht";
 import { ElMessage } from "element-plus";
-import { useUserStore } from "@/stores/modules/user";
-const userStore = useUserStore();
-const userType = userStore.userType;
+// import { useUserStore } from "@/stores/modules/user";
+import { useAuthButtons } from "@/hooks/useAuthButtons";
+const { BUTTONS } = useAuthButtons();
+// const userStore = useUserStore();
+// const userType = userStore.userType;
 const props = defineProps({
   setParameters: {
     type: Object
