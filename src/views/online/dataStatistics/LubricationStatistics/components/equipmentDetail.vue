@@ -120,7 +120,11 @@
               size="small"
               type="primary"
               @click="factorySetting(cards)"
-              v-if="cards?.PumpStationType != 3 && (cards?.communicationVersion == 2 || cards?.communicationVersion == 3)"
+              v-if="
+                cards?.PumpStationType != 3 &&
+                (cards?.communicationVersion == 2 || cards?.communicationVersion == 3) &&
+                BUTTONS.reset
+              "
             >
               恢复出厂设置
             </el-button>
@@ -128,19 +132,33 @@
           <!-- 非ATL3000操作 -->
           <div v-if="cards.PumpStationType != 3" style="font-size: 12px">
             <span>操作：</span>
-            <el-button size="small" @click="kaibeng(cards)">开泵</el-button>
-            <el-button size="small" @click="guanbeng(cards)">关泵</el-button>
-            <el-button size="small" @click="dongjie(cards)">冻结</el-button>
-            <el-button size="small" @click="jiedong(cards)">解冻</el-button>
+            <el-button size="small" @click="kaibeng(cards)" v-if="BUTTONS.pumping">开泵</el-button>
+            <el-button size="small" @click="guanbeng(cards)" v-if="BUTTONS.pumpOff">关泵</el-button>
+            <el-button size="small" @click="dongjie(cards)" v-if="BUTTONS.pumpFreeze">冻结</el-button>
+            <el-button size="small" @click="jiedong(cards)" v-if="BUTTONS.pumpUnfreeze">解冻</el-button>
           </div>
           <!-- ATL3000操作 -->
           <div v-if="cards.PumpStationType == 3" style="margin: 5px 0; font-size: 12px">
             <span>操作：</span>
-            <el-button :class="{ active: isActive == '自动' }" size="small" @click="pump_handle('ziDong', cards)">自动</el-button>
-            <el-button :class="{ active: isActive == '手动润滑' }" size="small" @click="pump_handle('shouDong', cards)">
+            <el-button
+              :class="{ active: isActive == '自动' }"
+              size="small"
+              @click="pump_handle('ziDong', cards)"
+              v-if="BUTTONS.automatic"
+            >
+              自动
+            </el-button>
+            <el-button
+              :class="{ active: isActive == '手动润滑' }"
+              size="small"
+              @click="pump_handle('shouDong', cards)"
+              v-if="BUTTONS.manual"
+            >
               手动润滑
             </el-button>
-            <el-button type="warning" size="small" @click="pump_handle('fuWei', cards)">复位</el-button>
+            <el-button type="warning" size="small" @click="pump_handle('fuWei', cards)" v-if="BUTTONS.restoration">
+              复位
+            </el-button>
           </div>
         </div>
 
@@ -313,6 +331,8 @@ import setParameter14 from "@/views/online/anlageuebersicht/components/setParame
 import setParameter5 from "@/views/online/anlageuebersicht/components/setParameter5.vue";
 import setAtl3k from "@/views/online/anlageuebersicht/components/setAtl3k.vue";
 import ATL3kDetail from "@/views/online/anlageuebersicht/components/ATL3kDetail.vue";
+import { useAuthButtons } from "@/hooks/useAuthButtons";
+const { BUTTONS } = useAuthButtons();
 import { useRouter } from "vue-router";
 const router = useRouter();
 const props = defineProps({

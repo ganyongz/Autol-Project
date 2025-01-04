@@ -8,7 +8,7 @@
       <el-table-column prop="icon" label="图标" />
       <el-table-column prop="iconType" label="菜单/按钮">
         <template #default="scope">
-          <span v-if="scope.row.iconType == '1'">按钮</span>
+          <span v-if="scope.row.iconType == '1'" style="color: #009688">按钮</span>
           <span v-else>菜单</span>
         </template>
       </el-table-column>

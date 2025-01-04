@@ -12,12 +12,6 @@
     <el-form-item label="角色名称" prop="name">
       <el-input v-model="ruleForm.name" />
     </el-form-item>
-    <el-form-item label="角色类型" prop="type">
-      <el-select v-model="ruleForm.type" placeholder="请选择角色类型">
-        <el-option label="管理员" :value="1" />
-        <el-option label="普通用户" :value="2" />
-      </el-select>
-    </el-form-item>
     <el-form-item label="是否禁用" prop="isDisabled">
       <el-select v-model="ruleForm.isDisabled" placeholder="是否禁用">
         <el-option label="正常" :value="0" />
@@ -51,7 +45,6 @@ const { rowData, title } = toRefs(props);
 interface RuleForm {
   id: string;
   name: string;
-  type: string[];
   description: string;
   isDisabled: number;
 }
@@ -61,14 +54,12 @@ const ruleFormRef = ref<FormInstance>();
 let ruleForm = reactive<RuleForm>({
   id: "",
   name: "",
-  type: ["2"],
   description: "",
   isDisabled: 0
 });
 
 const rules = reactive<FormRules<RuleForm>>({
-  name: [{ required: true, message: "请输入角色名称", trigger: "blur" }],
-  type: [{ required: true, message: "请选择类型", trigger: "blur" }]
+  name: [{ required: true, message: "请输入角色名称", trigger: "blur" }]
 });
 // 方法区
 onBeforeMount(() => {
