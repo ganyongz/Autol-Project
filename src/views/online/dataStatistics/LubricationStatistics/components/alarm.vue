@@ -94,7 +94,7 @@ let option = {
     {
       type: "inside",
       start: 0,
-      end: 50
+      end: 100
     },
     {
       start: 0,

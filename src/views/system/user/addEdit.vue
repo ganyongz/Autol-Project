@@ -119,10 +119,10 @@ let ruleForm = reactive({
   // tenantId: ""
 });
 const rules = reactive<FormRules<RuleForm>>({
-  userName: [{ required: true, message: "请输入用户名", trigger: "blur" }],
-  phone: [
-    { required: true, pattern: /^1(3[0-9]|5[0-3,5-9]|7[1-3,5-8]|8[0-9])\d{8}$/, message: "请输入正确的电话号码", trigger: "blur" }
-  ]
+  userName: [{ required: true, message: "请输入用户名", trigger: "blur" }]
+  // phone: [
+  //   { required: true, pattern: /^1(3[0-9]|5[0-3,5-9]|7[1-3,5-8]|8[0-9])\d{8}$/, message: "请输入正确的电话号码", trigger: "blur" }
+  // ]
 });
 onBeforeMount(() => {
   // getUserList({ pageNum: 1, pageSize: 1000 });
@@ -152,6 +152,7 @@ const submit = async (formEl: FormInstance | undefined) => {
       if (res.code == "200") {
         emit("submitForm");
         formEl.resetFields();
+        ElMessage.success(res?.message);
       } else {
         ElMessage.error(res?.message);
       }

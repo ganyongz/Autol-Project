@@ -343,8 +343,8 @@ onMounted(async () => {
     dataZoom: [
       {
         type: "inside",
-        start: 10,
-        end: 11
+        start: 0,
+        end: 100
       },
       {
         start: 0,
